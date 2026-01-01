@@ -53,6 +53,20 @@ function getDateString() {
     return today.toLocaleDateString('ko-KR', options);
 }
 
+// 운세 요약 생성 (50자 이내)
+function generateFortuneSummary(fortuneData) {
+    // overall (종합운)이 있으면 그걸 요약, 없으면 다른 운세 사용
+    let text = fortuneData['overall'] || fortuneData['money'] || fortuneData['work'] || '오늘의 운세를 확인하세요!';
+    
+    // 공백 제거 후 50자로 자르기
+    text = text.replace(/\s/g, '');
+    if (text.length > 50) {
+        text = text.substring(0, 47) + '...';
+    }
+    
+    return text;
+}
+
 // 헤더 렌더링
 function renderHeader(zodiac) {
     const info = ZODIAC_INFO[zodiac];
@@ -99,6 +113,52 @@ function renderFortune(fortuneData) {
     content.innerHTML = html;
 }
 
+// 카카오톡 공유 버튼 설정
+function setupKakaoShare(zodiac, fortuneData) {
+    const shareBtn = document.getElementById('kakao-share-btn');
+    if (!shareBtn) return;
+    
+    const info = ZODIAC_INFO[zodiac];
+    const summary = generateFortuneSummary(fortuneData);
+    const shareUrl = `https://fortune.hongspot.com/detail.html?zodiac=${zodiac}`;
+    
+    shareBtn.addEventListener('click', function() {
+        if (!Kakao.isInitialized()) {
+            alert('카카오톡 SDK 초기화 실패');
+            return;
+        }
+        
+        Kakao.Share.sendDefault({
+            objectType: 'feed',
+            content: {
+                title: `${info.emoji} ${info.name} 오늘의 운세`,
+                description: summary,
+                imageUrl: 'https://fortune.hongspot.com/og-image.png',
+                link: {
+                    mobileWebUrl: shareUrl,
+                    webUrl: shareUrl,
+                },
+            },
+            buttons: [
+                {
+                    title: '내 운세 보기',
+                    link: {
+                        mobileWebUrl: shareUrl,
+                        webUrl: shareUrl,
+                    },
+                },
+                {
+                    title: '다른 띠 보기',
+                    link: {
+                        mobileWebUrl: 'https://fortune.hongspot.com',
+                        webUrl: 'https://fortune.hongspot.com',
+                    },
+                },
+            ],
+        });
+    });
+}
+
 // 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', async () => {
     const zodiac = getZodiacFromURL();
@@ -117,4 +177,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const fortuneData = await fetchFortuneData(zodiac);
     renderFortune(fortuneData);
+    
+    // 카카오톡 공유 버튼 설정
+    if (fortuneData && Object.keys(fortuneData).length > 0) {
+        setupKakaoShare(zodiac, fortuneData);
+    }
 });
