@@ -3,7 +3,7 @@
 const CONFIG = {
     // 여기에 구글 스프레드시트 ID를 입력하세요
     // 스프레드시트 URL: https://docs.google.com/spreadsheets/d/[여기가_스프레드시트_ID]/edit
-    SPREADSHEET_ID: 'YOUR_SPREADSHEET_ID_HERE',
+    SPREADSHEET_ID: '1Jav7oWd9bMwV3TmY0R3Hhxus7O_gGXOqiHd81TC5h6A',
     SHEET_NAME: 'fortune_data'
 };
 
