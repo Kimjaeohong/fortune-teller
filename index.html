@@ -12,6 +12,15 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534"
          crossorigin="anonymous"></script>
     
+    <!-- 카카오톡 공유 SDK -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"
+         integrity="sha384-TiCUE00h+9FEe4FHyE7c/9O+Nk8XTmD8RivH5/0vD3HtX8eZ3FDPWaQnE3+Q1lLb"
+         crossorigin="anonymous"></script>
+    <script>
+        // 카카오 JavaScript SDK 초기화
+        Kakao.init('27e9da30e66de45bc054ba884c3bd150');
+    </script>
+    
     <!-- 무효 트래픽 방지 -->
     <script>
         // 페이지 로드 시간 기록
@@ -54,6 +63,11 @@
             <h1>✨ 오늘의 띠별 운세 ✨</h1>
             <p class="date" id="today-date"></p>
             <p class="subtitle">재미로 보는 하루 운세</p>
+            
+            <!-- 카카오톡 공유 버튼 -->
+            <button id="kakao-share-btn" class="kakao-share-button">
+                <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_medium.png" alt="카카오톡 공유하기" />
+            </button>
         </header>
 
         <div class="zodiac-grid" id="zodiac-grid">
@@ -67,5 +81,32 @@
 
     <script src="config.js"></script>
     <script src="script.js"></script>
+    
+    <!-- 카카오톡 공유 기능 -->
+    <script>
+        document.getElementById('kakao-share-btn').addEventListener('click', function() {
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: '오늘의 띠별 운세 🍀',
+                    description: '매일 업데이트되는 12띠별 운세를 확인하세요!',
+                    imageUrl: 'https://fortune.hongspot.com/og-image.png', // 대표 이미지 (선택사항)
+                    link: {
+                        mobileWebUrl: 'https://fortune.hongspot.com',
+                        webUrl: 'https://fortune.hongspot.com',
+                    },
+                },
+                buttons: [
+                    {
+                        title: '운세 보러가기',
+                        link: {
+                            mobileWebUrl: 'https://fortune.hongspot.com',
+                            webUrl: 'https://fortune.hongspot.com',
+                        },
+                    },
+                ],
+            });
+        });
+    </script>
 </body>
 </html>
