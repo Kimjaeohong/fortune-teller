@@ -2,39 +2,37 @@ name: Daily Fortune Generator
 
 on:
   schedule:
-    # 매일 UTC 15:00 (한국시간 00:00) 실행
     - cron: '0 15 * * *'
-  workflow_dispatch:  # 수동 실행 가능
+  workflow_dispatch:
 
 jobs:
   generate-fortune:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    
-    - name: Install dependencies
-      run: |
-        pip install anthropic gspread google-auth
-    
-    - name: Create credentials file
-      run: |
-        echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
-    
-    - name: Generate fortune
-      env:
-        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
-      run: |
-        python generate_fortune.py
-    
-    - name: Clean up credentials
-      if: always()
-      run: |
-        rm -f credentials.json
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          pip install anthropic gspread google-auth
+      
+      - name: Create credentials file
+        run: |
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > credentials.json
+      
+      - name: Generate fortune
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: |
+          python generate_fortune.py
+      
+      - name: Clean up credentials
+        if: always()
+        run: |
+          rm -f credentials.json
