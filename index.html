@@ -4,86 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>오늘의 띠별 운세 🍀</title>
+    <meta name="description" content="매일 업데이트되는 12띠별 운세를 확인하세요. 종합운, 재물운, 직장운, 건강운, 대인관계운을 무료로 제공합니다.">
+    <meta name="keywords" content="운세, 띠별운세, 오늘의운세, 12띠, 점술, 무료운세">
     <link rel="stylesheet" href="styles.css">
     
-    <!-- Google AdSense -->
+    <!-- Google AdSense 자동 광고 -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534"
          crossorigin="anonymous"></script>
+    
+    <!-- 무효 트래픽 방지 -->
+    <script>
+        // 페이지 로드 시간 기록
+        window.pageLoadTime = new Date().getTime();
+        
+        // 의심스러운 클릭 패턴 감지
+        let clickCount = 0;
+        let lastClickTime = 0;
+        
+        document.addEventListener('click', function(e) {
+            const currentTime = new Date().getTime();
+            const timeDiff = currentTime - lastClickTime;
+            
+            // 너무 빠른 연속 클릭 감지 (1초 이내)
+            if (timeDiff < 1000) {
+                clickCount++;
+                if (clickCount > 3) {
+                    console.warn('Suspicious click pattern detected');
+                }
+            } else {
+                clickCount = 0;
+            }
+            
+            lastClickTime = currentTime;
+        });
+        
+        // 페이지 체류 시간 추적
+        window.addEventListener('beforeunload', function() {
+            const stayTime = new Date().getTime() - window.pageLoadTime;
+            // 체류 시간이 너무 짧으면 로그 (3초 미만)
+            if (stayTime < 3000) {
+                console.warn('Very short stay time: ' + stayTime + 'ms');
+            }
+        });
+    </script>
 </head>
 <body>
-    <div class="page-wrapper">
-        <!-- 좌측 사이드바 광고 -->
-        <aside class="sidebar-left">
-            <div class="sticky-ad">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-2438640431184534"
-                     data-ad-slot="1320384080"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </aside>
+    <div class="container">
+        <header>
+            <h1>✨ 오늘의 띠별 운세 ✨</h1>
+            <p class="date" id="today-date"></p>
+            <p class="subtitle">재미로 보는 하루 운세</p>
+        </header>
 
-        <!-- 메인 콘텐츠 -->
-        <div class="container">
-            <header>
-                <h1>✨ 오늘의 띠별 운세 ✨</h1>
-                <p class="date" id="today-date"></p>
-                <p class="subtitle">재미로 보는 하루 운세</p>
-            </header>
-
-            <!-- 상단 광고 -->
-            <div class="ad-container">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-2438640431184534"
-                     data-ad-slot="8880531099"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-
-            <div class="zodiac-grid" id="zodiac-grid">
-                <!-- 12개 띠 카드가 JavaScript로 생성됩니다 -->
-            </div>
-
-            <!-- 하단 광고 -->
-            <div class="ad-container">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-2438640431184534"
-                     data-ad-slot="8880531099"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-
-            <footer>
-                <p>매일 자정 업데이트 | 재미로 봐주세요 💫</p>
-            </footer>
+        <div class="zodiac-grid" id="zodiac-grid">
+            <!-- 12개 띠 카드가 JavaScript로 생성됩니다 -->
         </div>
 
-        <!-- 우측 사이드바 광고 -->
-        <aside class="sidebar-right">
-            <div class="sticky-ad">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-2438640431184534"
-                     data-ad-slot="1320384080"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </aside>
+        <footer>
+            <p>매일 자정 업데이트 | 재미로 봐주세요 💫</p>
+        </footer>
     </div>
 
     <script src="config.js"></script>

@@ -8,47 +8,17 @@ body {
     font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     min-height: 100vh;
-    padding: 0;
-}
-
-/* 페이지 래퍼 - 사이드바 레이아웃 */
-.page-wrapper {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    max-width: 1800px;
-    margin: 0 auto;
     padding: 20px;
-}
-
-/* 사이드바 광고 */
-.sidebar-left,
-.sidebar-right {
-    width: 160px;
-    flex-shrink: 0;
-}
-
-.sticky-ad {
-    position: sticky;
-    top: 20px;
-    background: white;
-    border-radius: 15px;
-    padding: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    min-height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .container {
     max-width: 1200px;
-    flex: 1;
+    margin: 0 auto;
 }
 
 .detail-container {
     max-width: 800px;
-    flex: 1;
+    margin: 0 auto;
 }
 
 header {
@@ -158,20 +128,6 @@ footer {
     box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
-/* 광고 컨테이너 */
-.ad-container {
-    margin: 30px 0;
-    padding: 20px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    text-align: center;
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 /* 상세 페이지 스타일 */
 .back-button {
     display: inline-block;
@@ -265,31 +221,7 @@ footer {
     border-radius: 15px;
 }
 
-/* 반응형 - 태블릿 */
-@media (max-width: 1400px) {
-    .sidebar-left,
-    .sidebar-right {
-        width: 120px;
-    }
-    
-    .sticky-ad {
-        min-height: 500px;
-    }
-}
-
-/* 반응형 - 모바일 */
-@media (max-width: 1024px) {
-    /* 모바일에서는 사이드바 광고 숨김 */
-    .sidebar-left,
-    .sidebar-right {
-        display: none;
-    }
-    
-    .page-wrapper {
-        padding: 20px;
-    }
-}
-
+/* 반응형 */
 @media (max-width: 768px) {
     h1 {
         font-size: 2em;
