@@ -2,7 +2,7 @@ name: Daily Fortune Generator
 
 on:
   schedule:
-    - cron: '0 15 * * *'  # 매일 UTC 15:00 (한국시간 00:00)
+    - cron: '30 14 * * *'  # 매일 UTC 14:30 (한국시간 23:30) → 자정 직전 실행
   workflow_dispatch:  # 수동 실행 가능
 
 permissions:
