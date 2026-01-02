@@ -156,7 +156,7 @@ function setupKakaoShare(zodiac, fortuneData) {
                 content: {
                     title: `${info.emoji} ${info.name} 오늘의 운세`,
                     description: summary,
-                    imageUrl: 'https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg',
+                    imageUrl: 'https://raw.githubusercontent.com/Kimjaeohong/fortune-teller/main/fortune-image.png',
                     link: {
                         mobileWebUrl: shareUrl,
                         webUrl: shareUrl,
