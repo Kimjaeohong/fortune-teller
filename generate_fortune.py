@@ -6,6 +6,7 @@
 import os
 import anthropic
 from datetime import datetime, timedelta
+import pytz
 import gspread
 from google.oauth2.service_account import Credentials
 
@@ -98,8 +99,15 @@ def update_google_sheet(fortune_data):
     spreadsheet_id = os.environ.get("SPREADSHEET_ID")
     sheet = client.open_by_key(spreadsheet_id).worksheet('fortune_data')
     
-    # 내일 날짜 (운세는 다음 날 것을 미리 생성)
-    tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
+    # 한국 시간대 설정
+    kst = pytz.timezone('Asia/Seoul')
+    
+    # 내일 날짜 (한국 시간 기준)
+    now_kst = datetime.now(kst)
+    tomorrow = (now_kst + timedelta(days=1)).strftime('%Y-%m-%d')
+    
+    print(f"📅 현재 한국 시간: {now_kst.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"📅 생성할 날짜: {tomorrow}")
     
     # 모든 데이터 가져오기
     all_values = sheet.get_all_values()
