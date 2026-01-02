@@ -21,7 +21,14 @@ async function fetchFortuneData(zodiac) {
 // CSV 데이터 파싱
 function parseCSVFortuneData(csvText, zodiac) {
     const lines = csvText.split('\n');
-    const today = new Date().toISOString().split('T')[0];
+    
+    // 오늘 날짜 (YYYY-MM-DD 포맷, 0 패딩)
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
+    
     const fortuneData = {};
     
     for (let i = 1; i < lines.length; i++) {
@@ -37,7 +44,7 @@ function parseCSVFortuneData(csvText, zodiac) {
         const content = cells[3];
         
         // 오늘 날짜 & 해당 띠의 데이터만 사용
-        if (date === today && rowZodiac === zodiac) {
+        if (date === todayStr && rowZodiac === zodiac) {
             fortuneData[category] = content;
         }
     }

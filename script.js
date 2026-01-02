@@ -24,7 +24,14 @@ async function fetchFortuneData() {
 // CSV 데이터 파싱
 function parseCSVFortuneData(csvText) {
     const lines = csvText.split('\n');
-    const today = new Date().toISOString().split('T')[0];
+    
+    // 오늘 날짜 (YYYY-MM-DD 포맷, 0 패딩)
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const todayStr = `${year}-${month}-${day}`;
+    
     const fortuneData = {};
     
     // 첫 번째 줄은 헤더이므로 건너뜀
@@ -42,7 +49,7 @@ function parseCSVFortuneData(csvText) {
         const content = cells[3];
         
         // 오늘 날짜의 데이터만 사용
-        if (date === today) {
+        if (date === todayStr) {
             if (!fortuneData[zodiac]) {
                 fortuneData[zodiac] = {};
             }
