@@ -6,38 +6,40 @@ function updateDate() {
     document.getElementById('today-date').textContent = dateString;
 }
 
-// 구글 스프레드시트에서 데이터 가져오기
+// 구글 스프레드시트에서 데이터 가져오기 (CSV 방식 - AdBlocker 우회)
 async function fetchFortuneData() {
     try {
-        const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${CONFIG.SHEET_NAME}`;
+        // CSV export URL 사용 (AdBlocker가 차단하지 않음)
+        const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${CONFIG.SHEET_NAME}`;
         const response = await fetch(url);
         const text = await response.text();
         
-        // Google Sheets API 응답 파싱
-        const json = JSON.parse(text.substr(47).slice(0, -2));
-        
-        return parseFortuneData(json);
+        return parseCSVFortuneData(text);
     } catch (error) {
         console.error('운세 데이터 로딩 실패:', error);
         return null;
     }
 }
 
-// 스프레드시트 데이터 파싱
-function parseFortuneData(json) {
-    const rows = json.table.rows;
+// CSV 데이터 파싱
+function parseCSVFortuneData(csvText) {
+    const lines = csvText.split('\n');
     const today = new Date().toISOString().split('T')[0];
     const fortuneData = {};
     
-    // 헤더: date, zodiac, category, content
-    for (const row of rows) {
-        const cells = row.c;
-        if (!cells || !cells[0] || !cells[0].v) continue;
+    // 첫 번째 줄은 헤더이므로 건너뜀
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
         
-        const date = cells[0].v;
-        const zodiac = cells[1]?.v;
-        const category = cells[2]?.v;
-        const content = cells[3]?.v;
+        // CSV 파싱 (따옴표 처리 포함)
+        const cells = parseCSVLine(line);
+        if (cells.length < 4) continue;
+        
+        const date = cells[0];
+        const zodiac = cells[1];
+        const category = cells[2];
+        const content = cells[3];
         
         // 오늘 날짜의 데이터만 사용
         if (date === today) {
@@ -49,6 +51,37 @@ function parseFortuneData(json) {
     }
     
     return fortuneData;
+}
+
+// CSV 라인 파싱 (따옴표 처리)
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+                // 이스케이프된 따옴표
+                current += '"';
+                i++;
+            } else {
+                // 따옴표 토글
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            // 셀 구분
+            result.push(current);
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    
+    result.push(current);
+    return result;
 }
 
 // 행운 지수 계산 (간단한 알고리즘)

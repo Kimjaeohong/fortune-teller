@@ -4,38 +4,37 @@ function getZodiacFromURL() {
     return params.get('zodiac');
 }
 
-// 구글 스프레드시트에서 데이터 가져오기
+// 구글 스프레드시트에서 데이터 가져오기 (CSV 방식)
 async function fetchFortuneData(zodiac) {
     try {
-        const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${CONFIG.SHEET_NAME}`;
+        const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${CONFIG.SHEET_NAME}`;
         const response = await fetch(url);
         const text = await response.text();
         
-        // Google Sheets API 응답 파싱
-        const json = JSON.parse(text.substr(47).slice(0, -2));
-        
-        return parseFortuneData(json, zodiac);
+        return parseCSVFortuneData(text, zodiac);
     } catch (error) {
         console.error('운세 데이터 로딩 실패:', error);
         return null;
     }
 }
 
-// 스프레드시트 데이터 파싱
-function parseFortuneData(json, zodiac) {
-    const rows = json.table.rows;
+// CSV 데이터 파싱
+function parseCSVFortuneData(csvText, zodiac) {
+    const lines = csvText.split('\n');
     const today = new Date().toISOString().split('T')[0];
     const fortuneData = {};
     
-    // 헤더: date, zodiac, category, content
-    for (const row of rows) {
-        const cells = row.c;
-        if (!cells || !cells[0] || !cells[0].v) continue;
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
         
-        const date = cells[0].v;
-        const rowZodiac = cells[1]?.v;
-        const category = cells[2]?.v;
-        const content = cells[3]?.v;
+        const cells = parseCSVLine(line);
+        if (cells.length < 4) continue;
+        
+        const date = cells[0];
+        const rowZodiac = cells[1];
+        const category = cells[2];
+        const content = cells[3];
         
         // 오늘 날짜 & 해당 띠의 데이터만 사용
         if (date === today && rowZodiac === zodiac) {
@@ -46,25 +45,39 @@ function parseFortuneData(json, zodiac) {
     return fortuneData;
 }
 
+// CSV 라인 파싱
+function parseCSVLine(line) {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        
+        if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+                current += '"';
+                i++;
+            } else {
+                inQuotes = !inQuotes;
+            }
+        } else if (char === ',' && !inQuotes) {
+            result.push(current);
+            current = '';
+        } else {
+            current += char;
+        }
+    }
+    
+    result.push(current);
+    return result;
+}
+
 // 날짜 표시
 function getDateString() {
     const today = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
     return today.toLocaleDateString('ko-KR', options);
-}
-
-// 운세 요약 생성 (50자 이내)
-function generateFortuneSummary(fortuneData) {
-    // overall (종합운)이 있으면 그걸 요약, 없으면 다른 운세 사용
-    let text = fortuneData['overall'] || fortuneData['money'] || fortuneData['work'] || '오늘의 운세를 확인하세요!';
-    
-    // 공백 제거 후 50자로 자르기
-    text = text.replace(/\s/g, '');
-    if (text.length > 50) {
-        text = text.substring(0, 47) + '...';
-    }
-    
-    return text;
 }
 
 // 헤더 렌더링
@@ -113,73 +126,6 @@ function renderFortune(fortuneData) {
     content.innerHTML = html;
 }
 
-// 카카오톡 공유 버튼 설정
-function setupKakaoShare(zodiac, fortuneData) {
-    const shareBtn = document.getElementById('kakao-share-btn');
-    if (!shareBtn) {
-        console.error('공유 버튼을 찾을 수 없습니다');
-        return;
-    }
-    
-    const info = ZODIAC_INFO[zodiac];
-    const summary = generateFortuneSummary(fortuneData);
-    const shareUrl = `https://fortune.hongspot.com/detail.html?zodiac=${zodiac}`;
-    
-    console.log('카카오톡 공유 설정:', { zodiac, summary, shareUrl });
-    
-    shareBtn.addEventListener('click', function() {
-        console.log('카카오톡 공유 버튼 클릭됨');
-        
-        // Kakao SDK 로드 확인
-        if (typeof Kakao === 'undefined') {
-            alert('카카오톡 SDK가 로드되지 않았습니다. 페이지를 새로고침해주세요.');
-            return;
-        }
-        
-        // 초기화 확인
-        if (!Kakao.isInitialized()) {
-            console.log('카카오 SDK 재초기화 시도');
-            try {
-                Kakao.init('27e9da30e66de45bc054ba884c3bd150');
-            } catch (e) {
-                console.error('카카오 초기화 실패:', e);
-                alert('카카오톡 공유 기능을 사용할 수 없습니다.');
-                return;
-            }
-        }
-        
-        console.log('카카오톡 공유 실행');
-        
-        try {
-            Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: `${info.emoji} ${info.name} 오늘의 운세`,
-                    description: summary,
-                    imageUrl: 'https://raw.githubusercontent.com/Kimjaeohong/fortune-teller/main/fortune-image.png?v=' + Date.now(),
-                    link: {
-                        mobileWebUrl: shareUrl,
-                        webUrl: shareUrl,
-                    },
-                },
-                buttons: [
-                    {
-                        title: '운세 보러가기',
-                        link: {
-                            mobileWebUrl: shareUrl,
-                            webUrl: shareUrl,
-                        },
-                    },
-                ],
-            });
-            console.log('카카오톡 공유 성공');
-        } catch (error) {
-            console.error('카카오톡 공유 오류:', error);
-            alert('카카오톡 공유 중 오류가 발생했습니다: ' + error.message);
-        }
-    });
-}
-
 // 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', async () => {
     const zodiac = getZodiacFromURL();
@@ -198,9 +144,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const fortuneData = await fetchFortuneData(zodiac);
     renderFortune(fortuneData);
-    
-    // 카카오톡 공유 버튼 설정
-    if (fortuneData && Object.keys(fortuneData).length > 0) {
-        setupKakaoShare(zodiac, fortuneData);
-    }
 });
