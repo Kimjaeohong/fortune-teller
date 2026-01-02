@@ -5,7 +5,7 @@
 
 import os
 import anthropic
-from datetime import datetime
+from datetime import datetime, timedelta
 import gspread
 from google.oauth2.service_account import Credentials
 
@@ -81,7 +81,7 @@ def generate_fortune(zodiac, category):
     return message.content[0].text.strip()
 
 def update_google_sheet(fortune_data):
-    """구글 스프레드시트에 운세 데이터 업데이트"""
+    """구글 스프레드시트에 운세 데이터 업데이트 (Batch 방식)"""
     
     # 서비스 계정 인증
     scope = ['https://spreadsheets.google.com/feeds',
@@ -98,30 +98,32 @@ def update_google_sheet(fortune_data):
     spreadsheet_id = os.environ.get("SPREADSHEET_ID")
     sheet = client.open_by_key(spreadsheet_id).worksheet('fortune_data')
     
-    # 오늘 날짜
-    today = datetime.now().strftime('%Y-%m-%d')
+    # 내일 날짜 (운세는 다음 날 것을 미리 생성)
+    tomorrow = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
     
-    # 기존 데이터 삭제 (오늘 날짜)
+    # 모든 데이터 가져오기
     all_values = sheet.get_all_values()
-    rows_to_delete = []
-    for i, row in enumerate(all_values[1:], start=2):  # 헤더 제외
-        if row[0] == today:
-            rows_to_delete.append(i)
     
-    # 역순으로 삭제 (인덱스 변경 방지)
-    for row_num in sorted(rows_to_delete, reverse=True):
-        sheet.delete_rows(row_num)
+    # 내일 날짜가 아닌 데이터만 유지 (헤더 포함)
+    filtered_data = [all_values[0]]  # 헤더
+    for row in all_values[1:]:  # 데이터 행
+        if row[0] != tomorrow:  # 내일 날짜가 아닌 것만
+            filtered_data.append(row)
     
     # 새 데이터 추가
-    rows = []
+    new_rows = []
     for zodiac, categories in fortune_data.items():
         for category, content in categories.items():
-            rows.append([today, zodiac, category, content])
+            new_rows.append([tomorrow, zodiac, category, content])
     
-    if rows:
-        sheet.append_rows(rows)
+    # 기존 데이터 + 새 데이터 합치기
+    all_new_data = filtered_data + new_rows
     
-    print(f"✅ {len(rows)}개의 운세가 성공적으로 업데이트되었습니다!")
+    # 한 번에 업데이트 (단 1회의 API 호출!)
+    sheet.clear()  # 시트 전체 클리어
+    sheet.update(all_new_data, value_input_option='RAW')  # 모든 데이터 한 번에 입력
+    
+    print(f"✅ {len(new_rows)}개의 운세가 성공적으로 업데이트되었습니다!")
 
 def main():
     """메인 실행 함수"""

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 타로 | 타로 카드 점</title>
+    <meta name="description" content="타로 카드로 오늘의 운세를 확인하세요. 1장 또는 3장 선택 가능.">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .tarot-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .tarot-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .tarot-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .spread-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .spread-btn {
+            padding: 15px 20px;
+            border: 3px solid #667eea;
+            background: white;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .spread-btn small {
+            display: block;
+            margin-top: 5px;
+            font-weight: 400;
+        }
+        
+        .spread-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .spread-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .card-deck {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+            perspective: 1000px;
+        }
+        
+        .tarot-card {
+            aspect-ratio: 2/3;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .tarot-card:hover {
+            transform: translateY(-10px) rotateZ(5deg);
+        }
+        
+        .tarot-card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-back, .card-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+        }
+        
+        .card-back {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .card-front {
+            background: white;
+            transform: rotateY(180deg);
+            flex-direction: column;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .card-front .emoji {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .card-front .name {
+            font-size: 0.4em;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .draw-btn {
+            display: block;
+            margin: 0 auto 40px;
+            padding: 20px 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .draw-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+        
+        .draw-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .results {
+            display: none;
+            margin-top: 40px;
+        }
+        
+        .results.show {
+            display: block;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .result-emoji {
+            font-size: 4em;
+        }
+        
+        .result-info h2 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .result-position {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .result-meaning {
+            line-height: 1.8;
+            color: #555;
+            font-size: 1.1em;
+        }
+        
+        .reversed-indicator {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+        
+        .share-btn {
+            display: block;
+            margin: 40px auto;
+            padding: 15px 40px;
+            background: #FEE500;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        
+        .reset-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 30px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .tarot-header h1 {
+                font-size: 2em;
+            }
+            
+            .spread-btn {
+                padding: 15px 30px;
+                font-size: 1em;
+            }
+            
+            .card-deck {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 10px;
+            }
+            
+            .draw-btn {
+                padding: 15px 40px;
+                font-size: 1.1em;
+            }
+        }
+    </style>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534"
+         crossorigin="anonymous"></script>
+    
+    <!-- 카카오톡 공유 SDK -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+    <script>
+        Kakao.init('27e9da30e66de45bc054ba884c3bd150');
+    </script>
+</head>
+<body>
+    <div class="tarot-container">
+        <a href="index.html" class="back-button" style="display: inline-block; margin-bottom: 20px;">← 메인으로</a>
+        
+        <div class="tarot-header">
+            <h1>🔮 오늘의 타로</h1>
+            <p class="subtitle">마음속 질문을 떠올리며 카드를 선택하세요</p>
+        </div>
+        
+        <!-- 스프레드 선택 -->
+        <div class="spread-selection">
+            <button class="spread-btn active" data-spread="1" data-type="single">
+                🎴 1장 뽑기<br>
+                <small style="font-size: 0.7em;">현재 상황</small>
+            </button>
+            <button class="spread-btn" data-spread="3" data-type="past-present-future">
+                🎴🎴🎴 과거·현재·미래<br>
+                <small style="font-size: 0.7em;">시간의 흐름</small>
+            </button>
+            <button class="spread-btn" data-spread="3" data-type="love">
+                💕 연애운<br>
+                <small style="font-size: 0.7em;">나·상대방·미래</small>
+            </button>
+            <button class="spread-btn" data-spread="3" data-type="choice">
+                ⚖️ 양자택일<br>
+                <small style="font-size: 0.7em;">A선택·B선택·조언</small>
+            </button>
+            <button class="spread-btn" data-spread="4" data-type="work">
+                💼 직업운<br>
+                <small style="font-size: 0.7em;">현재·장애물·조언·결과</small>
+            </button>
+            <button class="spread-btn" data-spread="3" data-type="money">
+                💰 재물운<br>
+                <small style="font-size: 0.7em;">현재·기회·조언</small>
+            </button>
+            <button class="spread-btn" data-spread="3" data-type="study">
+                📚 학업·시험운<br>
+                <small style="font-size: 0.7em;">현재·극복·결과</small>
+            </button>
+            <button class="spread-btn" data-spread="5" data-type="year">
+                🌟 올해의 운세<br>
+                <small style="font-size: 0.7em;">5가지 영역</small>
+            </button>
+        </div>
+        
+        <!-- 카드 덱 -->
+        <div class="card-deck" id="card-deck">
+            <!-- JavaScript로 생성됩니다 -->
+        </div>
+        
+        <!-- 뽑기 버튼 -->
+        <button class="draw-btn" id="draw-btn" style="display: none;">카드 펼쳐보기</button>
+        
+        <!-- 결과 -->
+        <div class="results" id="results">
+            <div id="result-cards">
+                <!-- JavaScript로 생성됩니다 -->
+            </div>
+            
+            <!-- 카카오톡 공유 버튼 -->
+            <button class="share-btn" id="share-btn">
+                <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png" style="width: 20px; vertical-align: middle; margin-right: 8px;" />
+                카카오톡 공유하기
+            </button>
+            
+            <!-- 다시하기 버튼 -->
+            <button class="reset-btn" id="reset-btn">🔄 다시 뽑기</button>
+        </div>
+    </div>
+    
+    <footer style="text-align: center; padding: 40px 20px; color: #666;">
+        <p>타로는 재미로 봐주세요 💫</p>
+    </footer>
+    
+    <script src="tarot-data.js"></script>
+    <script src="tarot.js"></script>
+</body>
+</html>
