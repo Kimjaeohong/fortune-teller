@@ -152,11 +152,15 @@ function setupKakaoShare(zodiac, fortuneData) {
         
         try {
             Kakao.Share.sendDefault({
-                objectType: 'text',
-                text: `${info.emoji} ${info.name} 오늘의 운세\n\n${summary}`,
-                link: {
-                    mobileWebUrl: shareUrl,
-                    webUrl: shareUrl,
+                objectType: 'feed',
+                content: {
+                    title: `${info.emoji} ${info.name} 오늘의 운세`,
+                    description: summary,
+                    imageUrl: 'https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg',
+                    link: {
+                        mobileWebUrl: shareUrl,
+                        webUrl: shareUrl,
+                    },
                 },
                 buttons: [
                     {
