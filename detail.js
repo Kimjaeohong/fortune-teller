@@ -116,46 +116,63 @@ function renderFortune(fortuneData) {
 // 카카오톡 공유 버튼 설정
 function setupKakaoShare(zodiac, fortuneData) {
     const shareBtn = document.getElementById('kakao-share-btn');
-    if (!shareBtn) return;
+    if (!shareBtn) {
+        console.error('공유 버튼을 찾을 수 없습니다');
+        return;
+    }
     
     const info = ZODIAC_INFO[zodiac];
     const summary = generateFortuneSummary(fortuneData);
     const shareUrl = `https://fortune.hongspot.com/detail.html?zodiac=${zodiac}`;
     
+    console.log('카카오톡 공유 설정:', { zodiac, summary, shareUrl });
+    
     shareBtn.addEventListener('click', function() {
-        if (!Kakao.isInitialized()) {
-            alert('카카오톡 SDK 초기화 실패');
+        console.log('카카오톡 공유 버튼 클릭됨');
+        
+        // Kakao SDK 로드 확인
+        if (typeof Kakao === 'undefined') {
+            alert('카카오톡 SDK가 로드되지 않았습니다. 페이지를 새로고침해주세요.');
             return;
         }
         
-        Kakao.Share.sendDefault({
-            objectType: 'feed',
-            content: {
-                title: `${info.emoji} ${info.name} 오늘의 운세`,
-                description: summary,
-                imageUrl: 'https://fortune.hongspot.com/og-image.png',
+        // 초기화 확인
+        if (!Kakao.isInitialized()) {
+            console.log('카카오 SDK 재초기화 시도');
+            try {
+                Kakao.init('27e9da30e66de45bc054ba884c3bd150');
+            } catch (e) {
+                console.error('카카오 초기화 실패:', e);
+                alert('카카오톡 공유 기능을 사용할 수 없습니다.');
+                return;
+            }
+        }
+        
+        console.log('카카오톡 공유 실행');
+        
+        try {
+            Kakao.Share.sendDefault({
+                objectType: 'text',
+                text: `${info.emoji} ${info.name} 오늘의 운세\n\n${summary}`,
                 link: {
                     mobileWebUrl: shareUrl,
                     webUrl: shareUrl,
                 },
-            },
-            buttons: [
-                {
-                    title: '내 운세 보기',
-                    link: {
-                        mobileWebUrl: shareUrl,
-                        webUrl: shareUrl,
+                buttons: [
+                    {
+                        title: '운세 보러가기',
+                        link: {
+                            mobileWebUrl: shareUrl,
+                            webUrl: shareUrl,
+                        },
                     },
-                },
-                {
-                    title: '다른 띠 보기',
-                    link: {
-                        mobileWebUrl: 'https://fortune.hongspot.com',
-                        webUrl: 'https://fortune.hongspot.com',
-                    },
-                },
-            ],
-        });
+                ],
+            });
+            console.log('카카오톡 공유 성공');
+        } catch (error) {
+            console.error('카카오톡 공유 오류:', error);
+            alert('카카오톡 공유 중 오류가 발생했습니다: ' + error.message);
+        }
     });
 }
 
