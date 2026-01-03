@@ -151,4 +151,63 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const fortuneData = await fetchFortuneData(zodiac);
     renderFortune(fortuneData);
+    
+    // 카카오톡 공유 버튼 설정
+    setupKakaoShare(zodiac, fortuneData);
 });
+
+// 카카오톡 공유 설정
+function setupKakaoShare(zodiac, fortuneData) {
+    const shareBtn = document.getElementById('share-btn');
+    if (!shareBtn) return;
+    
+    shareBtn.addEventListener('click', () => {
+        if (!Kakao.isInitialized()) {
+            alert('카카오톡 SDK 초기화 실패');
+            return;
+        }
+        
+        const info = ZODIAC_INFO[zodiac];
+        const shareUrl = `https://fortune.hongspot.com/detail.html?zodiac=${zodiac}`;
+        
+        // 운세 요약 생성 (50자 이내)
+        let summary = '';
+        if (fortuneData && fortuneData.overall) {
+            summary = fortuneData.overall
+                .replace(/\*\*/g, '') // 마크다운 제거
+                .substring(0, 50)
+                .replace(/\s+/g, ' ') // 공백 정리
+                .trim();
+            if (fortuneData.overall.length > 50) summary += '...';
+        } else {
+            summary = '오늘의 운세를 확인해보세요!';
+        }
+        
+        try {
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: `${info.emoji} ${info.name} 오늘의 운세`,
+                    description: summary,
+                    imageUrl: 'https://raw.githubusercontent.com/Kimjaeohong/fortune-teller/main/fortune-image.png?v=' + Date.now(),
+                    link: {
+                        mobileWebUrl: shareUrl,
+                        webUrl: shareUrl,
+                    },
+                },
+                buttons: [
+                    {
+                        title: '운세 보러가기',
+                        link: {
+                            mobileWebUrl: shareUrl,
+                            webUrl: shareUrl,
+                        },
+                    },
+                ],
+            });
+        } catch (error) {
+            console.error('카카오톡 공유 오류:', error);
+            alert('카카오톡 공유 중 오류가 발생했습니다: ' + error.message);
+        }
+    });
+}
