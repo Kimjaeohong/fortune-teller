@@ -95,15 +95,22 @@ function parseCSVLine(line) {
 function calculateLuckScore(fortuneText) {
     if (!fortuneText) return 3;
     
+    // 텍스트 정리 (마크다운, 줄바꿈 제거)
+    const cleanText = fortuneText
+        .replace(/\*\*/g, '')
+        .replace(/\n+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    
     const positiveWords = ['좋', '행운', '기회', '성공', '발전', '상승', '길', '만남', '이익'];
     const negativeWords = ['주의', '조심', '어려움', '갈등', '손실', '하락'];
     
     let score = 3;
     positiveWords.forEach(word => {
-        if (fortuneText.includes(word)) score += 0.5;
+        if (cleanText.includes(word)) score += 0.5;
     });
     negativeWords.forEach(word => {
-        if (fortuneText.includes(word)) score -= 0.5;
+        if (cleanText.includes(word)) score -= 0.5;
     });
     
     return Math.max(1, Math.min(5, Math.round(score)));

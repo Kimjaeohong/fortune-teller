@@ -117,7 +117,14 @@ function renderFortune(fortuneData) {
     let html = '';
     
     for (const [categoryKey, categoryInfo] of Object.entries(FORTUNE_CATEGORIES)) {
-        const fortuneText = fortuneData[categoryKey] || '오늘은 평온한 하루가 될 것입니다.';
+        let fortuneText = fortuneData[categoryKey] || '오늘은 평온한 하루가 될 것입니다.';
+        
+        // 마크다운 제거 및 텍스트 정리
+        fortuneText = fortuneText
+            .replace(/\*\*/g, '')           // ** 제거
+            .replace(/\n+/g, ' ')           // 줄바꿈을 공백으로
+            .replace(/\s+/g, ' ')           // 여러 공백을 하나로
+            .trim();                        // 앞뒤 공백 제거
         
         html += `
             <div class="fortune-section">
