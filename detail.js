@@ -158,8 +158,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // 카카오톡 공유 설정
 function setupKakaoShare(zodiac, fortuneData) {
-    const shareBtn = document.getElementById('share-btn');
-    if (!shareBtn) return;
+    const shareBtn = document.getElementById('kakao-share-btn');
+    if (!shareBtn) {
+        console.error('카카오톡 공유 버튼을 찾을 수 없습니다');
+        return;
+    }
     
     shareBtn.addEventListener('click', () => {
         if (!Kakao.isInitialized()) {
