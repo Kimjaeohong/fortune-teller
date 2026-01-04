@@ -45,19 +45,86 @@ function resetGame() {
     createCardDeck();
 }
 
+// 타로 카드 이미지 URL 생성
+function getTarotImageUrl(cardId) {
+    // Sacred-texts.com의 Rider-Waite 타로 이미지 (무료)
+    const baseUrl = 'https://www.sacred-texts.com/tarot/pkt/img/';
+    
+    // 메이저 아르카나 (0-21)
+    const majorArcana = [
+        'ar00.jpg', // The Fool
+        'ar01.jpg', // The Magician
+        'ar02.jpg', // The High Priestess
+        'ar03.jpg', // The Empress
+        'ar04.jpg', // The Emperor
+        'ar05.jpg', // The Hierophant
+        'ar06.jpg', // The Lovers
+        'ar07.jpg', // The Chariot
+        'ar08.jpg', // Strength
+        'ar09.jpg', // The Hermit
+        'ar10.jpg', // Wheel of Fortune
+        'ar11.jpg', // Justice
+        'ar12.jpg', // The Hanged Man
+        'ar13.jpg', // Death
+        'ar14.jpg', // Temperance
+        'ar15.jpg', // The Devil
+        'ar16.jpg', // The Tower
+        'ar17.jpg', // The Star
+        'ar18.jpg', // The Moon
+        'ar19.jpg', // The Sun
+        'ar20.jpg', // Judgement
+        'ar21.jpg'  // The World
+    ];
+    
+    // 마이너 아르카나 (22-77)
+    const minorArcana = [
+        // Wands (22-35)
+        'waac.jpg', 'wa02.jpg', 'wa03.jpg', 'wa04.jpg', 'wa05.jpg', 'wa06.jpg', 
+        'wa07.jpg', 'wa08.jpg', 'wa09.jpg', 'wa10.jpg', 'wapa.jpg', 'wakn.jpg', 'waqu.jpg', 'waki.jpg',
+        // Cups (36-49)
+        'cuac.jpg', 'cu02.jpg', 'cu03.jpg', 'cu04.jpg', 'cu05.jpg', 'cu06.jpg',
+        'cu07.jpg', 'cu08.jpg', 'cu09.jpg', 'cu10.jpg', 'cupa.jpg', 'cukn.jpg', 'cuqu.jpg', 'cuki.jpg',
+        // Swords (50-63)
+        'swac.jpg', 'sw02.jpg', 'sw03.jpg', 'sw04.jpg', 'sw05.jpg', 'sw06.jpg',
+        'sw07.jpg', 'sw08.jpg', 'sw09.jpg', 'sw10.jpg', 'swpa.jpg', 'swkn.jpg', 'swqu.jpg', 'swki.jpg',
+        // Pentacles (64-77)
+        'peac.jpg', 'pe02.jpg', 'pe03.jpg', 'pe04.jpg', 'pe05.jpg', 'pe06.jpg',
+        'pe07.jpg', 'pe08.jpg', 'pe09.jpg', 'pe10.jpg', 'pepa.jpg', 'pekn.jpg', 'pequ.jpg', 'peki.jpg'
+    ];
+    
+    const allCards = [...majorArcana, ...minorArcana];
+    
+    if (cardId >= 0 && cardId < allCards.length) {
+        return baseUrl + allCards[cardId];
+    }
+    
+    return null;
+}
+
 // 카드 덱 생성
 function createCardDeck() {
     cardDeck.innerHTML = '';
     
-    // 22장의 뒷면 카드 생성 (충분한 선택지)
-    for (let i = 0; i < 22; i++) {
+    // 타로 카드 뒷면 이미지 (공통)
+    const cardBackImage = 'https://www.sacred-texts.com/tarot/pkt/img/ar00.jpg'; // 임시
+    
+    // 78장 모두 생성 (실제 카드 수만큼)
+    const totalCards = Math.min(TAROT_CARDS.length, 22); // 화면에는 22장만 표시
+    
+    for (let i = 0; i < totalCards; i++) {
         const card = document.createElement('div');
         card.className = 'tarot-card';
         card.dataset.index = i;
         
+        // 카드 뒷면 패턴 (CSS로 생성)
         card.innerHTML = `
-            <div class="card-back">🔮</div>
+            <div class="card-back">
+                <div class="card-back-pattern"></div>
+            </div>
             <div class="card-front">
+                <div class="card-image-container">
+                    <img class="card-image" src="" alt="타로 카드" style="display:none;">
+                </div>
                 <div class="emoji">?</div>
                 <div class="name">?</div>
             </div>
@@ -89,11 +156,33 @@ function selectCard(cardElement, index) {
         reversed: isReversed
     });
     
-    // 카드 앞면 업데이트
+    // 카드 앞면 업데이트 (이미지 포함)
     setTimeout(() => {
+        const imageContainer = cardElement.querySelector('.card-image-container');
+        const cardImage = cardElement.querySelector('.card-image');
         const emoji = cardElement.querySelector('.emoji');
         const name = cardElement.querySelector('.name');
-        emoji.textContent = isReversed ? '🔄' : randomCard.emoji;
+        
+        // 타로 이미지 URL 가져오기
+        const imageUrl = getTarotImageUrl(randomCard.id);
+        
+        if (imageUrl) {
+            // 이미지 사용
+            cardImage.src = imageUrl;
+            cardImage.style.display = 'block';
+            cardImage.style.width = '100%';
+            cardImage.style.height = 'auto';
+            cardImage.style.borderRadius = '5px';
+            if (isReversed) {
+                cardImage.style.transform = 'rotate(180deg)';
+            }
+            emoji.style.display = 'none';
+        } else {
+            // 이미지 없으면 이모지 사용
+            emoji.textContent = isReversed ? '🔄' : randomCard.emoji;
+            cardImage.style.display = 'none';
+        }
+        
         name.textContent = randomCard.name;
     }, 300);
     
@@ -123,10 +212,19 @@ function showResults() {
         
         const meaning = result.reversed ? result.card.reversed : result.card.upright;
         const positionLabel = spreadPositions[index] || `카드 ${index + 1}`;
+        const imageUrl = getTarotImageUrl(result.card.id);
+        
+        let imageHtml = '';
+        if (imageUrl) {
+            const rotateStyle = result.reversed ? 'transform: rotate(180deg);' : '';
+            imageHtml = `<img src="${imageUrl}" alt="${result.card.name}" style="width: 120px; height: auto; border-radius: 8px; margin-bottom: 10px; ${rotateStyle}">`;
+        } else {
+            imageHtml = `<div class="result-emoji">${result.reversed ? '🔄' : result.card.emoji}</div>`;
+        }
         
         resultCard.innerHTML = `
             <div class="result-header">
-                <div class="result-emoji">${result.reversed ? '🔄' : result.card.emoji}</div>
+                ${imageHtml}
                 <div class="result-info">
                     <h2>
                         ${result.card.name}

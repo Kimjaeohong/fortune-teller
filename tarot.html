@@ -103,27 +103,72 @@
         }
         
         .card-back {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-back-pattern {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.05) 20px),
+                repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.05) 10px, rgba(255,255,255,0.05) 20px);
+        }
+        
+        .card-back::before {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
+            opacity: 0.3;
+            color: #d4af37;
         }
         
         .card-front {
-            background: white;
+            background: linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%);
             transform: rotateY(180deg);
             flex-direction: column;
-            padding: 10px;
+            padding: 5px;
             text-align: center;
+            border: 3px solid #d4af37;
+            box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        .card-image-container {
+            width: 100%;
+            height: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .card-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
         
         .card-front .emoji {
-            font-size: 3em;
-            margin-bottom: 10px;
+            font-size: 2.5em;
+            margin: 5px 0;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
         
         .card-front .name {
-            font-size: 0.4em;
+            font-size: 0.35em;
             font-weight: 600;
             color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Georgia', serif;
+            padding: 5px;
+            line-height: 1.2;
         }
         
         .draw-btn {
