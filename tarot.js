@@ -189,15 +189,18 @@ function selectCard(cardElement, index) {
         const showEmojiInstead = () => {
             emoji.textContent = isReversed ? '🔄' : randomCard.emoji;
             emoji.style.display = 'block';
-            emoji.style.fontSize = '5em';
+            emoji.style.fontSize = '4em';
             cardImage.style.display = 'none';
             imageContainer.style.display = 'flex';
         };
         
         if (imageUrl) {
-            // 이미지 사용 시도
-            cardImage.onload = () => {
+            // 이미지 미리 로드
+            const img = new Image();
+            
+            img.onload = () => {
                 // 이미지 로딩 성공
+                cardImage.src = imageUrl;
                 cardImage.style.display = 'block';
                 if (isReversed) {
                     cardImage.style.transform = 'rotate(180deg)';
@@ -208,27 +211,27 @@ function selectCard(cardElement, index) {
                 imageContainer.style.display = 'flex';
             };
             
-            cardImage.onerror = () => {
+            img.onerror = () => {
                 // 이미지 로딩 실패 → 이모지로 대체
-                console.log('Image loading failed, using emoji instead');
+                console.log('Image loading failed for:', imageUrl);
                 showEmojiInstead();
             };
             
-            cardImage.src = imageUrl;
+            img.src = imageUrl;
             
-            // 3초 후에도 안 뜨면 이모지로
+            // 2초 후에도 안 뜨면 이모지로 (타임아웃 단축)
             setTimeout(() => {
                 if (cardImage.style.display !== 'block') {
                     showEmojiInstead();
                 }
-            }, 3000);
+            }, 2000);
         } else {
             // 이미지 URL 없으면 이모지 사용
             showEmojiInstead();
         }
         
         name.textContent = randomCard.name;
-    }, 300);
+    }, 400); // 애니메이션 시작 후 약간 지연
     
     // 모든 카드 선택 완료
     if (selectedCards.length === selectedSpread) {
@@ -256,13 +259,24 @@ function showResults() {
         
         const meaning = result.reversed ? result.card.reversed : result.card.upright;
         const positionLabel = spreadPositions[index] || `카드 ${index + 1}`;
+        const imageUrl = getTarotImageUrl(result.card.id);
         
-        // 이미지는 시도하지 않고 항상 이모지 사용 (더 안정적)
-        const emojiDisplay = result.reversed ? '🔄' : result.card.emoji;
+        let imageHtml = '';
+        if (imageUrl) {
+            const rotateStyle = result.reversed ? 'transform: rotate(180deg);' : '';
+            imageHtml = `
+                <div style="width: 150px; height: 220px; background: linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%); border: 3px solid #d4af37; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.3);">
+                    <img src="${imageUrl}" alt="${result.card.name}" style="max-width: 100%; max-height: 180px; object-fit: contain; ${rotateStyle}">
+                    <div style="margin-top: 8px; font-size: 0.7em; font-weight: 700; color: #2c3e50; text-align: center; font-family: Georgia, serif;">${result.card.name.split('(')[0].trim()}</div>
+                </div>
+            `;
+        } else {
+            imageHtml = `<div class="result-emoji">${result.reversed ? '🔄' : result.card.emoji}</div>`;
+        }
         
         resultCard.innerHTML = `
             <div class="result-header">
-                <div class="result-emoji">${emojiDisplay}</div>
+                ${imageHtml}
                 <div class="result-info">
                     <h2>
                         ${result.card.name}
