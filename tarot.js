@@ -185,22 +185,46 @@ function selectCard(cardElement, index) {
         // 타로 이미지 URL 가져오기
         const imageUrl = getTarotImageUrl(randomCard.id);
         
-        if (imageUrl) {
-            // 이미지 사용
-            cardImage.src = imageUrl;
-            cardImage.style.display = 'block';
-            if (isReversed) {
-                cardImage.style.transform = 'rotate(180deg)';
-            } else {
-                cardImage.style.transform = 'none';
-            }
-            emoji.style.display = 'none';
-            imageContainer.style.display = 'flex';
-        } else {
-            // 이미지 없으면 이모지 사용
+        // 이미지 로딩 실패 시 대체 함수
+        const showEmojiInstead = () => {
             emoji.textContent = isReversed ? '🔄' : randomCard.emoji;
             emoji.style.display = 'block';
-            imageContainer.style.display = 'none';
+            emoji.style.fontSize = '5em';
+            cardImage.style.display = 'none';
+            imageContainer.style.display = 'flex';
+        };
+        
+        if (imageUrl) {
+            // 이미지 사용 시도
+            cardImage.onload = () => {
+                // 이미지 로딩 성공
+                cardImage.style.display = 'block';
+                if (isReversed) {
+                    cardImage.style.transform = 'rotate(180deg)';
+                } else {
+                    cardImage.style.transform = 'none';
+                }
+                emoji.style.display = 'none';
+                imageContainer.style.display = 'flex';
+            };
+            
+            cardImage.onerror = () => {
+                // 이미지 로딩 실패 → 이모지로 대체
+                console.log('Image loading failed, using emoji instead');
+                showEmojiInstead();
+            };
+            
+            cardImage.src = imageUrl;
+            
+            // 3초 후에도 안 뜨면 이모지로
+            setTimeout(() => {
+                if (cardImage.style.display !== 'block') {
+                    showEmojiInstead();
+                }
+            }, 3000);
+        } else {
+            // 이미지 URL 없으면 이모지 사용
+            showEmojiInstead();
         }
         
         name.textContent = randomCard.name;
@@ -232,19 +256,13 @@ function showResults() {
         
         const meaning = result.reversed ? result.card.reversed : result.card.upright;
         const positionLabel = spreadPositions[index] || `카드 ${index + 1}`;
-        const imageUrl = getTarotImageUrl(result.card.id);
         
-        let imageHtml = '';
-        if (imageUrl) {
-            const rotateStyle = result.reversed ? 'transform: rotate(180deg);' : '';
-            imageHtml = `<img src="${imageUrl}" alt="${result.card.name}" style="width: 120px; height: auto; border-radius: 8px; margin-bottom: 10px; ${rotateStyle}">`;
-        } else {
-            imageHtml = `<div class="result-emoji">${result.reversed ? '🔄' : result.card.emoji}</div>`;
-        }
+        // 이미지는 시도하지 않고 항상 이모지 사용 (더 안정적)
+        const emojiDisplay = result.reversed ? '🔄' : result.card.emoji;
         
         resultCard.innerHTML = `
             <div class="result-header">
-                ${imageHtml}
+                <div class="result-emoji">${emojiDisplay}</div>
                 <div class="result-info">
                     <h2>
                         ${result.card.name}
