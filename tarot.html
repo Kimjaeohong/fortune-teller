@@ -128,13 +128,14 @@
         }
         
         .card-front {
-            background: white;
             transform: rotateY(180deg);
             flex-direction: column;
-            padding: 8px;
+            padding: 0;
             text-align: center;
             border: 3px solid #d4af37;
-            box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            background: transparent;
         }
         
         .card-image-container {
@@ -145,32 +146,41 @@
             justify-content: center;
             overflow: hidden;
             background: white;
+            padding: 5px;
+            position: relative;
+            z-index: 1;
         }
         
         .card-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             display: block;
+            position: relative;
+            z-index: 2;
         }
         
         .card-front .emoji {
-            font-size: 2.5em;
-            margin: 5px 0;
+            font-size: 4em;
+            margin: auto;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            position: relative;
+            z-index: 2;
         }
         
         .card-front .name {
-            font-size: 0.32em;
+            font-size: 0.45em;
             font-weight: 600;
-            color: #333;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-family: 'Georgia', serif;
-            padding: 4px;
+            padding: 8px 5px;
             line-height: 1.1;
-            background: rgba(255,255,255,0.9);
-            margin-top: auto;
+            margin: 0;
+            position: relative;
+            z-index: 3;
         }
         
         .draw-btn {
