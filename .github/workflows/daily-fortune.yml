@@ -1,13 +1,10 @@
 name: Daily Fortune Generator
-
 on:
   schedule:
     - cron: '30 14 * * *'  # 매일 UTC 14:30 (한국시간 23:30) → 자정 직전 실행
   workflow_dispatch:  # 수동 실행 가능
-
 permissions:
   contents: write  # 저장소에 쓰기 권한 부여
-
 jobs:
   generate-fortune:
     runs-on: ubuntu-latest
@@ -15,6 +12,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 전체 히스토리 가져오기
+      
+      - name: Pull latest changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git pull origin main --rebase
       
       - name: Set up Python
         uses: actions/setup-python@v4
