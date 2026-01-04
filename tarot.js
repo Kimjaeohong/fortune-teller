@@ -170,17 +170,18 @@ function selectCard(cardElement, index) {
             // 이미지 사용
             cardImage.src = imageUrl;
             cardImage.style.display = 'block';
-            cardImage.style.width = '100%';
-            cardImage.style.height = 'auto';
-            cardImage.style.borderRadius = '5px';
             if (isReversed) {
                 cardImage.style.transform = 'rotate(180deg)';
+            } else {
+                cardImage.style.transform = 'none';
             }
             emoji.style.display = 'none';
+            imageContainer.style.display = 'flex';
         } else {
             // 이미지 없으면 이모지 사용
             emoji.textContent = isReversed ? '🔄' : randomCard.emoji;
-            cardImage.style.display = 'none';
+            emoji.style.display = 'block';
+            imageContainer.style.display = 'none';
         }
         
         name.textContent = randomCard.name;
