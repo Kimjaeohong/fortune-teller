@@ -65,10 +65,13 @@
         
         .card-deck {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 15px;
             margin-bottom: 40px;
             perspective: 1000px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .tarot-card {
@@ -77,16 +80,19 @@
             cursor: pointer;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.6s;
+            transition: transform 0.6s, z-index 0s;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1;
         }
         
         .tarot-card:hover {
             transform: translateY(-10px) rotateZ(5deg);
+            z-index: 10;
         }
         
         .tarot-card.flipped {
             transform: rotateY(180deg);
+            z-index: 50;
         }
         
         .card-back, .card-front {
@@ -131,10 +137,10 @@
             background: linear-gradient(to bottom, #fdfbfb 0%, #ebedee 100%);
             transform: rotateY(180deg);
             flex-direction: column;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
             border: 3px solid #d4af37;
-            box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2), inset 0 0 15px rgba(212, 175, 55, 0.2);
             display: flex;
         }
         
@@ -145,33 +151,35 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            margin-bottom: 4px;
         }
         
         .card-image {
-            max-width: 100%;
-            max-height: 100%;
+            max-width: 95%;
+            max-height: 95%;
             object-fit: contain;
             display: block;
         }
         
         .card-front .emoji {
-            font-size: 4em;
+            font-size: 3.5em;
             margin: auto;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
         }
         
         .card-front .name {
-            font-size: 0.5em;
+            font-size: 0.55em;
             font-weight: 700;
             color: #2c3e50;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             font-family: 'Georgia', serif;
-            padding: 8px 5px;
-            line-height: 1.2;
-            margin-top: 8px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 5px;
+            padding: 6px 4px;
+            line-height: 1.1;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            border-top: 2px solid #d4af37;
+            box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
         }
         
         .draw-btn {
