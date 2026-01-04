@@ -105,8 +105,23 @@ function getTarotImageUrl(cardId) {
 function createCardDeck() {
     cardDeck.innerHTML = '';
     
-    // 타로 카드 뒷면 이미지 (공통)
-    const cardBackImage = 'https://www.sacred-texts.com/tarot/pkt/img/ar00.jpg'; // 임시
+    // 다양한 그라데이션 색상
+    const gradients = [
+        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', // 보라
+        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', // 핑크
+        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', // 파랑
+        'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', // 청록
+        'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', // 주황
+        'linear-gradient(135deg, #30cfd0 0%, #330867 100%)', // 남색
+        'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)', // 파스텔
+        'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)', // 연핑크
+        'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)', // 피치
+        'linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)', // 산호
+        'linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)', // 라벤더
+        'linear-gradient(135deg, #f8b500 0%, #fceabb 100%)'  // 골드
+    ];
+    
+    const mysticalSymbols = ['✦', '✧', '◈', '◆', '❖', '✵', '✶', '✷', '✸', '✹', '✺', '✻'];
     
     // 78장 모두 생성 (실제 카드 수만큼)
     const totalCards = Math.min(TAROT_CARDS.length, 22); // 화면에는 22장만 표시
@@ -116,14 +131,18 @@ function createCardDeck() {
         card.className = 'tarot-card';
         card.dataset.index = i;
         
-        // 카드 뒷면 패턴 (CSS로 생성)
+        const gradientIndex = i % gradients.length;
+        const gradient = gradients[gradientIndex];
+        const symbol = mysticalSymbols[i % mysticalSymbols.length];
+        
+        // 카드 뒷면 패턴 (다양한 색상)
         card.innerHTML = `
-            <div class="card-back">
-                <div class="card-back-pattern"></div>
+            <div class="card-back" style="background: ${gradient}">
+                <div class="card-back-symbol">${symbol}</div>
             </div>
             <div class="card-front">
                 <div class="card-image-container">
-                    <img class="card-image" src="" alt="타로 카드" style="display:none;">
+                    <img class="card-image" src="" alt="타로 카드">
                 </div>
                 <div class="emoji">?</div>
                 <div class="name">?</div>
