@@ -39,6 +39,7 @@
                 <a href="./" aria-current="page">띠별 운세</a>
                 <a href="star.html">별자리</a>
                 <a href="tarot.html">타로</a>
+                <a href="lotto.html">로또</a>
             </nav>
         </header>
 
@@ -65,21 +66,27 @@
 
         <div class="zodiac-grid" id="zodiac-grid" aria-live="polite"></div>
 
-        <a class="promo" href="star.html">
-            <div>
-                <h3>오늘의 별자리 운세 · 순위</h3>
-                <p>생일만 넣으면 내 별자리를 찾아드려요. 12별자리 중 오늘 1위는?</p>
+        <section class="more" aria-labelledby="more-title">
+            <div class="section-head"><h2 id="more-title">더 둘러보기</h2></div>
+            <div class="more-grid">
+                <a class="more-tile" href="star.html">
+                    <span class="more-icon" aria-hidden="true">✦</span>
+                    <strong>별자리 운세</strong>
+                    <small>오늘의 별자리 순위와 12별자리 운세</small>
+                </a>
+                <a class="more-tile" href="tarot.html">
+                    <span class="more-icon" aria-hidden="true">☾</span>
+                    <strong>오늘의 타로</strong>
+                    <small>연애·재물·양자택일까지 8가지 스프레드</small>
+                </a>
+                <a class="more-tile" href="lotto.html">
+                    <span class="more-icon" aria-hidden="true">◎</span>
+                    <strong>행운의 로또 번호</strong>
+                    <small>내 띠·별자리 운세로 뽑는 5게임</small>
+                </a>
             </div>
-            <span class="arrow" aria-hidden="true">→</span>
-        </a>
+        </section>
 
-        <a class="promo promo--tight" href="tarot.html">
-            <div>
-                <h3>오늘의 타로 한 장</h3>
-                <p>마음속 질문을 떠올리고 카드를 골라보세요. 연애·재물·선택 스프레드까지.</p>
-            </div>
-            <span class="arrow" aria-hidden="true">→</span>
-        </a>
         <div class="share-row">
             <button type="button" class="btn btn-kakao" id="share-kakao">카카오톡 공유</button>
             <button type="button" class="btn btn-ghost" id="share-link">링크 복사</button>

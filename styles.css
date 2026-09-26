@@ -1000,3 +1000,239 @@ img { max-width: 100%; display: block; }
 @media (max-width: 360px) {
     .brand-text { display: none; }
 }
+
+/* ═════════════ 로또 번호 ═════════════ */
+
+.lotto-panel {
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    display: grid;
+    gap: 14px;
+}
+
+.seg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 4px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(0, 0, 0, 0.2);
+}
+.seg-btn {
+    border: 0;
+    background: none;
+    cursor: pointer;
+    padding: 10px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: .95rem;
+    color: var(--text-2);
+    transition: background .2s, color .2s;
+}
+.seg-btn[aria-selected="true"] {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #231b0c;
+}
+
+.basis {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.basis label { font-size: .9rem; color: var(--text-2); flex: none; }
+.basis select {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    color: var(--text);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--gold) 50%), linear-gradient(135deg, var(--gold) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 52%, calc(100% - 13px) 52%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+}
+.basis select option, .basis select optgroup { background: var(--surface); color: var(--text); }
+
+.panel-hint { font-size: .82rem; color: var(--muted); line-height: 1.6; }
+.panel-hint b { font-weight: 600; }
+.inc-dot { color: var(--gold-bright); }
+.exc-dot { color: var(--rose); }
+
+.picker {
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+}
+.picker summary {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: .92rem;
+    list-style: none;
+}
+.picker summary::-webkit-details-marker { display: none; }
+.picker summary::after { content: '＋'; color: var(--gold); margin-left: 6px; }
+.picker[open] summary::after { content: '－'; }
+.picker-count { margin-left: auto; color: var(--muted); font-size: .8rem; }
+.picker[open] > .panel-hint { margin: 10px 0; }
+
+.num-grid {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    gap: 6px;
+    margin-bottom: 12px;
+}
+.num {
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-2);
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-variant-numeric: tabular-nums;
+    transition: transform .15s;
+}
+.num:active { transform: scale(.92); }
+.num.inc { color: #1a1408; border-color: transparent; box-shadow: 0 0 0 2px var(--gold-bright); }
+.num.inc.b1 { background: #f2c34a; } .num.inc.b2 { background: #6aa8e8; }
+.num.inc.b3 { background: #ec6f66; } .num.inc.b4 { background: #a8a8ad; } .num.inc.b5 { background: #7fc47f; }
+.num.exc { opacity: .3; text-decoration: line-through; }
+.btn-sm { padding: 7px 14px; font-size: .85rem; }
+.btn-block { width: 100%; padding: 15px; font-size: 1.05rem; }
+
+.lotto-results { margin-top: 26px; }
+.games { list-style: none; display: grid; gap: 10px; }
+.game {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+}
+.game:first-child { border-color: var(--line-strong); }
+.game-label {
+    flex: none;
+    width: 26px;
+    font-family: var(--serif);
+    font-weight: 700;
+    color: var(--gold);
+    text-align: center;
+}
+.balls { display: flex; gap: 6px; flex-wrap: nowrap; }
+
+.ball {
+    width: 40px; height: 40px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: .98rem;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    font-variant-numeric: tabular-nums;
+    box-shadow: inset -3px -4px 8px rgba(0, 0, 0, 0.25), inset 3px 3px 6px rgba(255, 255, 255, 0.35);
+    animation: pop .45s var(--ease) backwards;
+}
+@media (max-width: 400px) {
+    .ball { width: 36px; height: 36px; font-size: .9rem; }
+    .balls { gap: 5px; }
+    .game { gap: 8px; padding: 12px 10px; }
+}
+/* 동행복권 공 색상 구간 */
+.ball.b1 { background: radial-gradient(circle at 35% 30%, #ffe08a, #f2b705 70%); }
+.ball.b2 { background: radial-gradient(circle at 35% 30%, #9cc9ff, #2f7fd8 70%); }
+.ball.b3 { background: radial-gradient(circle at 35% 30%, #ff9f98, #e0443a 70%); }
+.ball.b4 { background: radial-gradient(circle at 35% 30%, #d4d4d8, #7c7c84 70%); }
+.ball.b5 { background: radial-gradient(circle at 35% 30%, #a9e3a0, #3ea34a 70%); }
+.ball.is-fixed { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+.ball.is-lucky { outline: 2px dashed var(--gold-bright); outline-offset: 2px; }
+
+@keyframes pop {
+    from { opacity: 0; transform: translateY(-14px) scale(.6); }
+    to { opacity: 1; transform: none; }
+}
+
+.history { margin-top: 30px; }
+.link-btn {
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font-size: .82rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.history-list { list-style: none; display: grid; gap: 8px; margin-bottom: 8px; }
+.history-list li {
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.02);
+}
+.history-meta { font-size: .8rem; color: var(--text-2); margin-bottom: 8px; }
+.history-games { display: grid; gap: 5px; }
+.mini-balls { display: flex; gap: 4px; }
+.ball.mini {
+    width: 24px; height: 24px;
+    font-size: .68rem;
+    animation: none;
+    box-shadow: none;
+}
+
+.caution {
+    margin-top: 30px;
+    padding: 18px 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: rgba(224, 138, 122, 0.05);
+}
+.caution h2 { font-family: var(--serif); font-size: 1rem; margin-bottom: 8px; }
+.caution ul { padding-left: 1.1em; display: grid; gap: 6px; }
+.caution li { font-size: .88rem; color: var(--text-2); line-height: 1.7; }
+.caution b { color: var(--text); font-weight: 600; }
+.caution a { color: var(--gold); }
+
+/* ═════════════ 더 둘러보기 ═════════════ */
+
+.more { margin-top: 36px; }
+.more-grid { display: grid; gap: 10px; }
+@media (min-width: 720px) { .more-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; } }
+.more-tile {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 14px;
+    align-items: center;
+    padding: 16px 18px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-decoration: none;
+    transition: border-color .25s, transform .25s var(--ease);
+}
+.more-tile:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+.more-icon {
+    grid-row: span 2;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    color: var(--gold);
+    font-size: 1.15rem;
+}
+.more-tile strong { font-family: var(--serif); font-size: 1.02rem; }
+.more-tile small { color: var(--text-2); font-size: .84rem; }
