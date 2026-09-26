@@ -13,27 +13,36 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 | `config.js` | 스프레드시트 ID, 카카오 키, 띠·카테고리 정의 |
 | `common.js` | 공통 — 한국시간 날짜, 데이터 로딩, 별점, 공유 |
 | `styles.css` | 전체 디자인 |
-| `generate_fortune.py` | Claude API로 운세 생성 → 시트 기록 |
+| `data/*.json` | 날짜별 운세 데이터 (12띠 × 5카테고리 + 별점) |
+| `tools/build_fortunes.py` | 문장 풀 조합으로 데이터 생성 (API 비용 없음) |
+| `generate_fortune.py` | (선택) Claude API로 특정 날짜를 AI 문장으로 생성 |
 | `.github/workflows/daily-fortune.yml` | 운세 생성 (수동 실행, 예약 실행은 꺼져 있음) |
 
 ## 데이터 흐름
 
-1. 시트 `fortune_data` 에 `date | zodiac | category | content` 형식으로 저장
-2. 페이지는 **오늘 날짜 60행만** 구글 시각화 쿼리(gviz)로 조회 → 세션 동안 캐시
-3. 오늘 데이터가 없으면 **같은 월·일의 가장 최근 데이터**로 대신 표시 (연말 공백 대비)
+1. **1순위: `data/YYYY-MM-DD.json`** — 사이트와 함께 배포되는 날짜별 파일 (현재 2026-01-01 ~ 2027-12-31)
+2. 오늘 파일이 없으면 최근 3년 안의 **같은 월·일** 파일로 대신 표시
+3. 그래도 없으면 **구글 시트**(`fortune_data`)에서 해당 날짜 행만 조회 (예전 방식, 백업용)
 
-시트는 "링크가 있는 모든 사용자 · 뷰어"로 공유되어 있어야 합니다.
-형식은 [SPREADSHEET_GUIDE.md](SPREADSHEET_GUIDE.md) 참고.
+한 번 받은 데이터는 세션 동안 캐시됩니다.
 
-## 운세 생성 (선택)
+### 데이터 다시 만들기 (API 비용 없음)
 
-API 비용 때문에 **매일 자동 실행은 꺼 두었습니다.** 시트에 미리 채워둔 데이터로 운영하고, 필요할 때만 수동으로 생성하세요.
+`tools/fortune_phrases.py`의 문장 풀을 조합해 만듭니다.
+같은 날 띠끼리 같은 문장을 쓰지 않고, 같은 띠는 400일 안에 같은 운세가 반복되지 않습니다.
 
-GitHub 저장소 Settings → Secrets 에 아래 값이 필요합니다.
+```bash
+python3 tools/build_fortunes.py --start 2028-01-01 --end 2028-12-31
+```
 
-- `ANTHROPIC_API_KEY` — Claude API 키
-- `SPREADSHEET_ID` — 시트 ID
-- `GOOGLE_CREDENTIALS` — 서비스 계정 JSON 전체 (시트에 편집자로 공유)
+문장을 추가·수정한 뒤 다시 돌리면 됩니다. 시드가 고정이라 결과는 항상 같습니다.
+
+## AI로 생성하기 (선택)
+
+API 비용 때문에 **매일 자동 실행은 꺼 두었습니다.** 기본은 위의 무료 생성기로 운영하고, 필요할 때만 수동으로 실행하세요.
+
+GitHub 저장소 Settings → Secrets 에 `ANTHROPIC_API_KEY`가 필요합니다.
+결과는 `data/` 폴더에 커밋됩니다. (시트에도 쓰려면 로컬에서 `--sheet` 옵션 + 서비스 계정 필요)
 
 모델은 기본 `claude-haiku-4-5-20251001`이며, Settings → Variables 에 `FORTUNE_MODEL`을 넣으면 바꿀 수 있습니다.
 

@@ -1,8 +1,12 @@
 """
-띠별 운세 자동 생성 스크립트
+띠별 운세 생성 스크립트 (Claude API 사용, 선택 사항)
+
+기본 데이터는 tools/build_fortunes.py(API 비용 없음)로 만든 data/*.json 입니다.
+AI 문장으로 특정 날짜를 덮어쓰고 싶을 때만 이 스크립트를 쓰세요.
 
 - 띠마다 한 번의 API 호출로 5개 카테고리를 함께 생성 (하루 12회 호출)
-- 대상 날짜의 행만 교체하고 나머지 데이터는 그대로 둔다
+- 결과는 data/YYYY-MM-DD.json 으로 저장 (사이트가 바로 읽음)
+- --sheet 옵션을 주면 구글 시트(fortune_data)에도 함께 기록
 - 사용법
     python generate_fortune.py                 # 내일(한국시간) 1일치
     python generate_fortune.py --date 2027-01-01 --days 31   # 특정 기간 일괄 생성
@@ -17,8 +21,7 @@ import time
 from datetime import date, datetime, timedelta, timezone
 
 import anthropic
-import gspread
-from google.oauth2.service_account import Credentials
+from pathlib import Path
 
 KST = timezone(timedelta(hours=9))
 SHEET_NAME = 'fortune_data'
@@ -86,7 +89,24 @@ def generate_for_zodiac(client, target: date, zodiac: str) -> dict:
     return {cat: FALLBACK_TEXT for cat in CATEGORY_NAMES}
 
 
+DATA_DIR = Path(__file__).resolve().parent / 'data'
+
+
+def write_json(new_rows_by_date: dict):
+    DATA_DIR.mkdir(exist_ok=True)
+    for d, rows in new_rows_by_date.items():
+        fortunes = {}
+        for _, zodiac, cat, text in rows:
+            fortunes.setdefault(zodiac, {})[cat] = text
+        path = DATA_DIR / f'{d}.json'
+        path.write_text(json.dumps({'date': d, 'fortunes': fortunes}, ensure_ascii=False, separators=(',', ':')),
+                        encoding='utf-8')
+    print(f'✅ {len(new_rows_by_date)}일치 JSON 저장 → {DATA_DIR}')
+
+
 def open_sheet():
+    import gspread
+    from google.oauth2.service_account import Credentials
     creds = Credentials.from_service_account_file(
         'credentials.json',
         scopes=['https://www.googleapis.com/auth/spreadsheets'],
@@ -113,6 +133,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--date', help='시작 날짜 YYYY-MM-DD (기본: 내일, 한국시간)')
     parser.add_argument('--days', type=int, default=1, help='생성할 일수 (기본 1)')
+    parser.add_argument('--sheet', action='store_true', help='구글 시트에도 기록')
     args = parser.parse_args()
 
     start = (datetime.strptime(args.date, '%Y-%m-%d').date() if args.date
@@ -131,12 +152,15 @@ def main():
         new_rows_by_date[d.isoformat()] = rows
         print(f'   ✓ {d} 완료')
 
-    print('\n📊 스프레드시트 업데이트 중...')
-    try:
-        write_rows(open_sheet(), new_rows_by_date)
-    except Exception as e:  # noqa: BLE001
-        print(f'❌ 스프레드시트 업데이트 실패: {e}')
-        sys.exit(1)
+    write_json(new_rows_by_date)
+
+    if args.sheet:
+        print('\n📊 스프레드시트 업데이트 중...')
+        try:
+            write_rows(open_sheet(), new_rows_by_date)
+        except Exception as e:  # noqa: BLE001
+            print(f'❌ 스프레드시트 업데이트 실패: {e}')
+            sys.exit(1)
 
 
 if __name__ == '__main__':

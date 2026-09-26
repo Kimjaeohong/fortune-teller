@@ -89,7 +89,7 @@ function renderFortune(key, result) {
         return;
     }
 
-    document.getElementById('hero-score').innerHTML = starsHtml(scoreZodiac(map));
+    document.getElementById('hero-score').innerHTML = starsHtml(categoryScore(result, key, 'overall') ?? scoreZodiac(map));
 
     const items = Object.entries(FORTUNE_CATEGORIES)
         .filter(([cat]) => cat !== 'overall')
@@ -100,7 +100,7 @@ function renderFortune(key, result) {
                 <article class="fortune-item" style="animation-delay:${i * 60}ms">
                     <header>
                         <h2><span class="cat-dot" style="color:${CATEGORY_COLORS[cat]};background:${CATEGORY_COLORS[cat]}"></span>${meta.title}</h2>
-                        ${starsHtml(scoreText(text), { label: false })}
+                        ${starsHtml(categoryScore(result, key, cat), { label: false })}
                     </header>
                     <p>${escapeHtml(text)}</p>
                 </article>`;

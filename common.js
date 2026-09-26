@@ -113,39 +113,85 @@ function writeCache(key, value) {
     try { sessionStorage.setItem(key, JSON.stringify(value)); } catch { /* 무시 */ }
 }
 
-/**
- * 오늘(한국시간) 운세 60건을 가져온다.
- * - 시트 전체가 아니라 해당 날짜 행만 조회 (gviz 쿼리)
- * - 오늘 데이터가 없으면 같은 월·일의 가장 최근 데이터로 대체 (연말 데이터 공백 대비)
- * 반환: { date, requestedDate, isFallback, data: { zodiac: { category: text } } }
- */
-async function loadTodayFortunes() {
-    const today = kstDateString();
-    const cacheKey = `fortune:v2:${today}`;
-    const cached = readCache(cacheKey);
-    if (cached) return cached;
+async function fetchJson(url) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), CONFIG.FETCH_TIMEOUT_MS);
+    try {
+        const res = await fetch(url, { signal: controller.signal });
+        if (res.status === 404) return null;
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } finally {
+        clearTimeout(timer);
+    }
+}
 
+/** 1순위: 사이트에 함께 배포된 data/YYYY-MM-DD.json (없으면 최근 몇 해 같은 월·일) */
+async function loadFromJson(today) {
+    const [y, m, d] = today.split('-').map(Number);
+    const candidates = [today];
+    for (let back = 1; back <= 3; back++) {
+        const day = (m === 2 && d === 29) ? 28 : d;
+        candidates.push(`${y - back}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+    }
+    for (const date of candidates) {
+        const json = await fetchJson(`data/${date}.json`);
+        if (json && json.fortunes) return { date, data: json.fortunes, scores: json.scores || null };
+    }
+    return null;
+}
+
+/** 2순위: 구글 시트 (해당 날짜 행만 gviz 쿼리) */
+async function loadFromSheet(today) {
     let rows = await queryRows(`select A, B, C, D where A = '${today}'`);
-    let sourceDate = today;
-
+    let date = today;
     if (!rows.length) {
-        const monthDay = today.slice(4); // "-MM-DD"
-        const past = await queryRows(`select A, B, C, D where A ends with '${monthDay}' order by A desc`);
+        const past = await queryRows(`select A, B, C, D where A ends with '${today.slice(4)}' order by A desc`);
         if (past.length) {
-            sourceDate = past[0].date;
-            rows = past.filter(r => r.date === sourceDate);
+            date = past[0].date;
+            rows = past.filter(r => r.date === date);
         }
     }
-
+    if (!rows.length) return null;
     const data = {};
     rows.forEach(r => {
         if (!ZODIAC_INFO[r.zodiac] || !FORTUNE_CATEGORIES[r.category]) return;
         (data[r.zodiac] ||= {})[r.category] = r.content;
     });
+    return { date, data, scores: null };
+}
 
-    const result = { date: sourceDate, requestedDate: today, isFallback: sourceDate !== today, data };
-    if (rows.length) writeCache(cacheKey, result);
+/**
+ * 오늘(한국시간) 운세를 가져온다.
+ * 반환: { date, requestedDate, isFallback, data: {zodiac:{category:text}}, scores: {zodiac:{category:1~5}} | null }
+ */
+async function loadTodayFortunes() {
+    const today = kstDateString();
+    const cacheKey = `fortune:v3:${today}`;
+    const cached = readCache(cacheKey);
+    if (cached) return cached;
+
+    let found = null;
+    try {
+        found = await loadFromJson(today);
+    } catch (e) {
+        console.warn('JSON 데이터 로딩 실패, 시트로 대체:', e);
+    }
+    if (!found) found = await loadFromSheet(today);
+
+    const result = found
+        ? { ...found, requestedDate: today, isFallback: found.date !== today }
+        : { date: today, requestedDate: today, isFallback: false, data: {}, scores: null };
+    if (found) writeCache(cacheKey, result);
     return result;
+}
+
+/** 카테고리 별점: 데이터에 점수가 있으면 그대로, 없으면 문장 톤으로 계산 */
+function categoryScore(result, zodiac, category) {
+    const s = result.scores && result.scores[zodiac] && result.scores[zodiac][category];
+    if (s) return s;
+    const text = result.data[zodiac] && result.data[zodiac][category];
+    return text ? scoreText(text) : null;
 }
 
 /* ---------- 행운 지수 ---------- */

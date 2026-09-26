@@ -45,7 +45,7 @@ function fillCards(result) {
         }
         // "오늘은 쥐띠에게 …" 같은 반복되는 머리말은 카드에서 생략
         line.textContent = firstSentence(map.overall).replace(/^오늘은\s*\S+띠(?:에게|는|의)\s*/, '');
-        foot.innerHTML = starsHtml(scoreZodiac(map));
+        foot.innerHTML = starsHtml(categoryScore(result, key, 'overall'));
     });
 }
 
