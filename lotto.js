@@ -297,6 +297,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 동행복권으로 이동할 때 번호도 함께 복사 (링크 이동은 막지 않음)
+    document.getElementById('dh-link').addEventListener('click', () => {
+        if (!state.games.length || !navigator.clipboard) return;
+        navigator.clipboard.writeText(`홍스팟 운세 행운 번호 (${todayInfo.short})\n${gamesText()}`)
+            .then(() => showToast('번호를 복사했어요'))
+            .catch(() => {});
+    });
+
     document.getElementById('share-kakao').addEventListener('click', () => shareKakao({
         title: `🍀 ${document.getElementById('results-title').textContent}`,
         description: gamesText(),
