@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>이름 궁합 보기 | 홍스팟 운세</title>
+    <meta name="description" content="어릴 때 공책에 하던 그 이름 궁합! 두 이름을 번갈아 쓰고 획수를 더해 궁합 %를 계산해요. 숫자 피라미드와 양방향 결과까지.">
+    <meta name="keywords" content="이름 궁합, 이름궁합 테스트, 이름 궁합 보기, 획수 궁합, 커플 궁합">
+    <meta name="theme-color" content="#0c0f1d">
+    <link rel="canonical" href="https://fortune.hongspot.com/name.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="홍스팟 운세">
+    <meta property="og:title" content="이름 궁합 보기">
+    <meta property="og:description" content="어릴 때 공책에 하던 그 이름 궁합, 우리는 몇 %?">
+    <meta property="og:url" content="https://fortune.hongspot.com/name.html">
+    <meta property="og:image" content="https://fortune.hongspot.com/fortune-image.png">
+    <meta name="twitter:card" content="summary">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%230c0f1d%22/><text x=%2250%22 y=%2268%22 font-size=%2252%22 text-anchor=%22middle%22 fill=%22%23d9b673%22>福</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Google AdSense 자동 광고 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534" crossorigin="anonymous"></script>
+    <!-- 카카오톡 공유 SDK -->
+    <script defer src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="page page--narrow">
+        <header class="topbar">
+            <a href="./" class="brand"><span class="brand-mark">福</span><span class="brand-text">홍스팟 운세</span></a>
+            <nav class="nav" aria-label="주요 메뉴">
+                <a href="./">띠별 운세</a>
+                <a href="star.html">별자리</a>
+                <a href="name.html" aria-current="page">궁합</a>
+                <a href="tarot.html">타로</a>
+                <a href="lotto.html">로또</a>
+            </nav>
+        </header>
+
+        <section class="hero" style="padding-bottom:20px">
+            <div class="eyebrow">NAME MATCH</div>
+            <h1>공책에 적던 그 시절<br><em>이름 궁합</em></h1>
+            <p class="lead">두 이름을 번갈아 쓰고, 획수를 더하고 또 더해서</p>
+        </section>
+
+        <form class="name-form" id="name-form" autocomplete="off">
+            <div class="name-inputs">
+                <label class="name-field">
+                    <span>내 이름</span>
+                    <input id="name-a" type="text" inputmode="text" maxlength="5" placeholder="예: 김철수" required>
+                </label>
+                <button type="button" class="swap-btn" id="swap" aria-label="두 이름 바꾸기">⇄</button>
+                <label class="name-field">
+                    <span>상대 이름</span>
+                    <input id="name-b" type="text" inputmode="text" maxlength="5" placeholder="예: 이영희" required>
+                </label>
+            </div>
+            <button type="submit" class="btn btn-gold btn-block">궁합 보기 ♥</button>
+            <p class="panel-hint" style="text-align:center">입력한 이름은 어디에도 저장되거나 전송되지 않아요</p>
+        </form>
+
+        <section class="name-result" id="result" hidden aria-live="polite">
+            <div class="seg dir-seg" role="tablist" aria-label="계산 순서">
+                <button type="button" role="tab" class="seg-btn dir-btn" data-dir="ab" id="dir-ab" aria-selected="true"></button>
+                <button type="button" role="tab" class="seg-btn dir-btn" data-dir="ba" id="dir-ba" aria-selected="false"></button>
+            </div>
+
+            <div class="notebook">
+                <div class="pyramid" id="pyramid"></div>
+            </div>
+
+            <div class="score-card" id="score"></div>
+
+            <div class="share-row">
+                <button type="button" class="btn btn-kakao" id="share-kakao">카카오톡 공유</button>
+                <button type="button" class="btn btn-ghost" id="share-link">링크 복사</button>
+                <button type="button" class="btn btn-ghost" id="retry">다른 이름으로</button>
+            </div>
+        </section>
+
+        <details class="howto">
+            <summary>어떻게 계산하나요?</summary>
+            <ol>
+                <li>두 이름을 한 글자씩 번갈아 적어요. <b>김철수 + 이영희 → 김 이 철 영 수 희</b></li>
+                <li>글자마다 자음·모음 획수를 모두 더해요. (예: 김 = ㄱ2 + ㅣ1 + ㅁ4 = 7)</li>
+                <li>옆에 있는 숫자끼리 더해서 <b>일의 자리만</b> 아래에 적어요.</li>
+                <li>숫자가 두 개 남을 때까지 반복하면, 그 두 자리가 궁합 %예요. (00은 100%!)</li>
+            </ol>
+            <p class="panel-hint">누구 이름을 먼저 쓰느냐에 따라 결과가 달라져요. 획수를 세는 방식은 곳마다 조금씩 달라서 다른 사이트와 결과가 다를 수 있어요.</p>
+        </details>
+
+        <a class="promo" href="star.html">
+            <div>
+                <h3>별자리로도 확인해 볼까요?</h3>
+                <p>오늘의 별자리 운세와 인연운, 12별자리 순위까지.</p>
+            </div>
+            <span class="arrow" aria-hidden="true">→</span>
+        </a>
+    </div>
+
+    <footer class="footer">
+        <p>궁합은 재미로만 봐 주세요</p>
+        <p><a href="privacy.html">개인정보처리방침</a></p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="common.js"></script>
+    <script src="name.js"></script>
+</body>
+</html>

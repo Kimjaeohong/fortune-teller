@@ -111,7 +111,8 @@ function cleanFortuneText(text) {
 
 function firstSentence(text) {
     const t = cleanFortuneText(text);
-    const m = t.match(/^.*?[.!?요다](?=\s|$)/);
+    // 문장 끝은 마침표·물음표·느낌표로만 판단 ("일마다", "하다가" 같은 곳에서 잘리지 않게)
+    const m = t.match(/^.*?[.!?](?=\s|$)/);
     return m ? m[0] : t;
 }
 
