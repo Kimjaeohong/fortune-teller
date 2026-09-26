@@ -1,6 +1,10 @@
 // ─────────────────────────────────────────────
-//  상세 페이지: 띠 하나의 오늘 운세
+//  상세 페이지 (띠 / 별자리 공용)
+//  HTML에서 window.FORTUNE_KIND = 'zodiac' | 'star' 로 종류를 정한다
 // ─────────────────────────────────────────────
+
+const KIND_ID = window.FORTUNE_KIND || 'zodiac';
+const KIND = FORTUNE_KINDS[KIND_ID];
 
 const todayStr = kstDateString();
 const todayInfo = formatKoreanDate(todayStr);
@@ -12,49 +16,49 @@ const CATEGORY_COLORS = {
     relationship: '#e08a7a'
 };
 
-function getZodiacFromURL() {
-    const key = new URLSearchParams(location.search).get('zodiac');
-    return key && ZODIAC_INFO[key] ? key : null;
+const detailUrl = key => `${KIND.detailPage}?${KIND.param}=${key}`;
+
+function getKeyFromURL() {
+    const key = new URLSearchParams(location.search).get(KIND.param);
+    return key && KIND.order.includes(key) ? key : null;
 }
 
 function renderInvalid() {
     document.getElementById('detail-hero').innerHTML = '';
     document.getElementById('fortune-content').innerHTML = `
         <div class="state">
-            <h3>어떤 띠인지 찾지 못했어요</h3>
-            <p>메인에서 띠를 다시 골라 주세요.</p>
-            <a class="btn btn-gold" href="./">12띠 보러 가기</a>
+            <h3>어떤 ${KIND.label}인지 찾지 못했어요</h3>
+            <p>목록에서 ${KIND.label}를 다시 골라 주세요.</p>
+            <a class="btn btn-gold" href="${KIND.listPage}">12${KIND.label} 보러 가기</a>
         </div>`;
 }
 
 function renderSiblings(key) {
-    const i = ZODIAC_ORDER.indexOf(key);
-    const prev = ZODIAC_ORDER[(i + 11) % 12];
-    const next = ZODIAC_ORDER[(i + 1) % 12];
+    const order = KIND.order;
+    const i = order.indexOf(key);
+    const prev = order[(i + 11) % 12];
+    const next = order[(i + 1) % 12];
     document.getElementById('sibs').innerHTML = `
-        <a href="detail.html?zodiac=${prev}" aria-label="이전 띠: ${ZODIAC_INFO[prev].name}">‹ ${ZODIAC_INFO[prev].name}</a>
-        <a href="detail.html?zodiac=${next}" aria-label="다음 띠: ${ZODIAC_INFO[next].name}">${ZODIAC_INFO[next].name} ›</a>`;
+        <a href="${detailUrl(prev)}" aria-label="이전: ${KIND.name(prev)}">‹ ${KIND.name(prev)}</a>
+        <a href="${detailUrl(next)}" aria-label="다음: ${KIND.name(next)}">${KIND.name(next)} ›</a>`;
 }
 
-function renderHero(key, score) {
-    const info = ZODIAC_INFO[key];
-    const years = yearsForZodiac(key, todayInfo.year).join(' · ');
-    const isMine = getMyZodiac() === key;
+function renderHero(key) {
+    const isMine = getMyKey(KIND_ID) === key;
+    const meta = KIND.meta(key);
     document.getElementById('detail-hero').innerHTML = `
-        <div class="hanja-lg" aria-hidden="true">${info.hanja}</div>
-        <h1>${info.name} 오늘의 운세</h1>
+        <div class="hanja-lg${KIND_ID === 'star' ? ' glyph-star' : ''}" aria-hidden="true">${KIND.glyph(key)}</div>
+        <h1>${KIND.headline(key)}</h1>
         <p class="meta">${todayInfo.full}</p>
-        <p class="years">${years}년생</p>
-        <div class="score" id="hero-score">
-            ${score == null ? '<span class="skeleton skeleton-line" style="width:120px"></span>' : starsHtml(score)}
-        </div>
-        ${isMine ? '' : `<div style="margin-top:14px"><button type="button" class="btn btn-ghost" id="set-mine" style="padding:7px 14px;font-size:.85rem">내 띠로 설정</button></div>`}`;
+        <p class="years">${KIND.sub(key, todayInfo.year)}${meta ? ` · ${meta}` : ''}</p>
+        <div class="score" id="hero-score"><span class="skeleton skeleton-line" style="width:120px"></span></div>
+        ${isMine ? '' : `<div style="margin-top:14px"><button type="button" class="btn btn-ghost" id="set-mine" style="padding:7px 14px;font-size:.85rem">내 ${KIND.label}로 설정</button></div>`}`;
 
     const btn = document.getElementById('set-mine');
     if (btn) btn.addEventListener('click', () => {
-        setMyZodiac(key);
+        setMyKey(KIND_ID, key);
         btn.parentElement.remove();
-        showToast(`${info.name}를 내 띠로 저장했어요`);
+        showToast(`${KIND.name(key)}를 내 ${KIND.label}로 저장했어요`);
     });
 }
 
@@ -78,6 +82,7 @@ function renderSkeleton() {
 function renderFortune(key, result) {
     const map = result.data[key] || {};
     const content = document.getElementById('fortune-content');
+    const heroScore = document.getElementById('hero-score');
 
     if (!Object.keys(map).length) {
         content.innerHTML = `
@@ -85,11 +90,16 @@ function renderFortune(key, result) {
                 <h3>오늘의 운세를 준비 중이에요</h3>
                 <p>잠시 후 다시 확인해 주세요.</p>
             </div>`;
-        document.getElementById('hero-score').innerHTML = '';
+        heroScore.innerHTML = '';
         return;
     }
 
-    document.getElementById('hero-score').innerHTML = starsHtml(categoryScore(result, key, 'overall') ?? scoreZodiac(map));
+    let scoreHtml = starsHtml(categoryScore(result, key, 'overall') ?? scoreZodiac(map));
+    if (KIND_ID === 'star') {
+        const rank = rankKeys(result, KIND.order).indexOf(key) + 1;
+        if (rank > 0) scoreHtml += `<span class="rank-pill">오늘 ${rank}위</span>`;
+    }
+    heroScore.innerHTML = scoreHtml;
 
     const items = Object.entries(FORTUNE_CATEGORIES)
         .filter(([cat]) => cat !== 'overall')
@@ -106,7 +116,7 @@ function renderFortune(key, result) {
                 </article>`;
         }).join('');
 
-    const lucky = luckyItems(result.date, key);
+    const lucky = luckyItems(result.date, KIND_ID === 'zodiac' ? key : `${KIND_ID}:${key}`);
     const fallbackNote = result.isFallback
         ? `<div class="notice" style="margin:0 0 14px">오늘 데이터 준비 중이라 ${formatKoreanDate(result.date).short} 운세를 대신 보여드려요.</div>`
         : '';
@@ -140,20 +150,19 @@ function renderError(key) {
 }
 
 function renderOthers(key) {
-    document.getElementById('other-zodiacs').innerHTML = ZODIAC_ORDER.map(k => `
-        <a class="chip" href="detail.html?zodiac=${k}"${k === key ? ' aria-current="page"' : ''}>
-            <span class="hanja" aria-hidden="true">${ZODIAC_INFO[k].hanja}</span>${ZODIAC_INFO[k].name}
+    const row = document.getElementById('other-keys');
+    row.innerHTML = KIND.order.map(k => `
+        <a class="chip" href="${detailUrl(k)}"${k === key ? ' aria-current="page"' : ''}>
+            <span class="hanja${KIND_ID === 'star' ? ' glyph-star' : ''}" aria-hidden="true">${KIND.glyph(k)}</span>${KIND.name(k)}
         </a>`).join('');
-    const row = document.getElementById('other-zodiacs');
     const current = row.querySelector('.chip[aria-current="page"]');
     if (current) row.scrollLeft = current.offsetLeft - (row.clientWidth - current.offsetWidth) / 2;
 }
 
 function setupShare(key, map) {
-    const info = ZODIAC_INFO[key];
-    const url = `${CONFIG.SITE_URL}/detail.html?zodiac=${key}`;
+    const url = KIND.shareUrl(key);
     const summary = map.overall ? firstSentence(map.overall) : '오늘의 운세를 확인해 보세요!';
-    const title = `${info.emoji} ${info.name} 오늘의 운세 · ${todayInfo.short}`;
+    const title = `${KIND.emoji(key)} ${KIND.headline(key)} · ${todayInfo.short}`;
 
     document.getElementById('share-row').hidden = false;
     document.getElementById('share-kakao').onclick = () => shareKakao({ title, description: summary, url });
@@ -163,7 +172,7 @@ function setupShare(key, map) {
 async function load(key) {
     renderSkeleton();
     try {
-        const result = await loadTodayFortunes();
+        const result = await loadTodayFortunes(KIND_ID);
         renderFortune(key, result);
     } catch (err) {
         console.error('운세 데이터 로딩 실패:', err);
@@ -172,17 +181,16 @@ async function load(key) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const key = getZodiacFromURL();
+    const key = getKeyFromURL();
     if (!key) {
         renderInvalid();
         renderOthers(null);
         return;
     }
-    const info = ZODIAC_INFO[key];
-    document.title = `${info.name} 오늘의 운세 (${todayInfo.short}) | 홍스팟 운세`;
+    document.title = `${KIND.headline(key)} (${todayInfo.short}) | 홍스팟 운세`;
 
     renderSiblings(key);
-    renderHero(key, null);
+    renderHero(key);
     renderOthers(key);
     load(key);
 });

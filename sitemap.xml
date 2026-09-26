@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://fortune.hongspot.com/</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://fortune.hongspot.com/star.html</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://fortune.hongspot.com/tarot.html</loc><lastmod>2026-09-26</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=rat</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=ox</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=tiger</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=rabbit</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=dragon</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=snake</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=horse</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=sheep</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=monkey</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=rooster</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=dog</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
-  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=pig</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=rat</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=ox</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=tiger</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=rabbit</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=dragon</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=snake</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=horse</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=sheep</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=monkey</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=rooster</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=dog</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/detail.html?zodiac=pig</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=aries</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=taurus</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=gemini</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=cancer</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=leo</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=virgo</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=libra</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=scorpio</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=sagittarius</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=capricorn</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=aquarius</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://fortune.hongspot.com/star-detail.html?sign=pisces</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://fortune.hongspot.com/privacy.html</loc><lastmod>2026-09-26</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
 </urlset>

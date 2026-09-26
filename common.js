@@ -33,6 +33,67 @@ function yearsForZodiac(key, uptoYear) {
     return years;
 }
 
+/* ---------- 별자리 계산 ---------- */
+
+function starFromDate(month, day) {
+    const md = month * 100 + day;
+    return STAR_ORDER.find(key => {
+        const { from, to } = STAR_INFO[key];
+        const a = from[0] * 100 + from[1];
+        const b = to[0] * 100 + to[1];
+        return a <= b ? (md >= a && md <= b) : (md >= a || md <= b);   // 염소자리는 해를 넘김
+    });
+}
+
+function starDateRange(key) {
+    const { from, to } = STAR_INFO[key];
+    return `${from[0]}.${from[1]} ~ ${to[0]}.${to[1]}`;
+}
+
+/* ---------- 운세 종류별 설정 (띠 / 별자리) ---------- */
+
+const FORTUNE_KINDS = {
+    zodiac: {
+        label: '띠', param: 'zodiac', order: ZODIAC_ORDER,
+        listPage: './', detailPage: 'detail.html', storageKey: 'fortune:my-zodiac',
+        name: k => ZODIAC_INFO[k].name,
+        glyph: k => ZODIAC_INFO[k].hanja,
+        emoji: k => ZODIAC_INFO[k].emoji,
+        sub: (k, year) => `${yearsForZodiac(k, year).join(' · ')}년생`,
+        meta: () => '',
+        headline: k => `${ZODIAC_INFO[k].name} 오늘의 운세`,
+        shareUrl: k => `${CONFIG.SITE_URL}/detail.html?zodiac=${k}`
+    },
+    star: {
+        label: '별자리', param: 'sign', order: STAR_ORDER,
+        listPage: 'star.html', detailPage: 'star-detail.html', storageKey: 'fortune:my-star',
+        name: k => STAR_INFO[k].name,
+        glyph: k => STAR_INFO[k].symbol,
+        emoji: () => '✨',
+        sub: k => starDateRange(k),
+        meta: k => `${STAR_INFO[k].element}의 별자리 · 수호성 ${STAR_INFO[k].planet}`,
+        headline: k => `${STAR_INFO[k].name} 오늘의 운세`,
+        shareUrl: k => `${CONFIG.SITE_URL}/star-detail.html?sign=${k}`
+    }
+};
+
+function getMyKey(kind) {
+    try { return localStorage.getItem(FORTUNE_KINDS[kind].storageKey); } catch { return null; }
+}
+function setMyKey(kind, key) {
+    try { localStorage.setItem(FORTUNE_KINDS[kind].storageKey, key); } catch { /* 무시 */ }
+}
+
+/** 오늘의 순위: 종합운 점수 → 나머지 카테고리 합 → 날짜 기반 고정값 순 */
+function rankKeys(result, order) {
+    const total = k => Object.keys(FORTUNE_CATEGORIES).reduce((s, c) => s + (categoryScore(result, k, c) || 0), 0);
+    return order
+        .filter(k => result.data[k])
+        .map(k => ({ k, o: categoryScore(result, k, 'overall') || 0, t: total(k), h: hashString(result.date + k) }))
+        .sort((a, b) => b.o - a.o || b.t - a.t || a.h - b.h)
+        .map(x => x.k);
+}
+
 /* ---------- 문자열 ---------- */
 
 function escapeHtml(str) {
@@ -126,8 +187,8 @@ async function fetchJson(url) {
     }
 }
 
-/** 1순위: 사이트에 함께 배포된 data/YYYY-MM-DD.json (없으면 최근 몇 해 같은 월·일) */
-async function loadFromJson(today) {
+/** 1순위: 사이트에 함께 배포된 {base}YYYY-MM-DD.json (없으면 최근 몇 해 같은 월·일) */
+async function loadFromJson(today, base = 'data/') {
     const [y, m, d] = today.split('-').map(Number);
     const candidates = [today];
     for (let back = 1; back <= 3; back++) {
@@ -135,7 +196,7 @@ async function loadFromJson(today) {
         candidates.push(`${y - back}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
     }
     for (const date of candidates) {
-        const json = await fetchJson(`data/${date}.json`);
+        const json = await fetchJson(`${base}${date}.json`);
         if (json && json.fortunes) return { date, data: json.fortunes, scores: json.scores || null };
     }
     return null;
@@ -165,19 +226,21 @@ async function loadFromSheet(today) {
  * 오늘(한국시간) 운세를 가져온다.
  * 반환: { date, requestedDate, isFallback, data: {zodiac:{category:text}}, scores: {zodiac:{category:1~5}} | null }
  */
-async function loadTodayFortunes() {
+async function loadTodayFortunes(kind = 'zodiac') {
     const today = kstDateString();
-    const cacheKey = `fortune:v3:${today}`;
+    const cacheKey = `fortune:v3:${kind}:${today}`;
     const cached = readCache(cacheKey);
     if (cached) return cached;
 
+    const base = kind === 'star' ? 'data/star/' : 'data/';
     let found = null;
     try {
-        found = await loadFromJson(today);
+        found = await loadFromJson(today, base);
     } catch (e) {
+        if (kind !== 'zodiac') throw e;
         console.warn('JSON 데이터 로딩 실패, 시트로 대체:', e);
     }
-    if (!found) found = await loadFromSheet(today);
+    if (!found && kind === 'zodiac') found = await loadFromSheet(today);
 
     const result = found
         ? { ...found, requestedDate: today, isFallback: found.date !== today }
@@ -273,12 +336,8 @@ function luckyItems(dateStr, zodiac) {
 
 /* ---------- 내 띠 기억 ---------- */
 
-function getMyZodiac() {
-    try { return localStorage.getItem('fortune:my-zodiac'); } catch { return null; }
-}
-function setMyZodiac(key) {
-    try { localStorage.setItem('fortune:my-zodiac', key); } catch { /* 무시 */ }
-}
+function getMyZodiac() { return getMyKey('zodiac'); }
+function setMyZodiac(key) { setMyKey('zodiac', key); }
 
 /* ---------- 공유 ---------- */
 

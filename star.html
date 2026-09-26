@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>오늘의 별자리 운세 | 홍스팟 운세</title>
+    <meta name="description" content="매일 자정(한국시간) 바뀌는 12별자리 오늘의 운세와 별자리 순위. 생일만 넣으면 내 별자리를 바로 찾아드려요.">
+    <meta name="keywords" content="오늘의 별자리 운세, 별자리 운세, 별자리 순위, 12별자리, 무료 운세">
+    <meta name="theme-color" content="#0c0f1d">
+    <link rel="canonical" href="https://fortune.hongspot.com/star.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="홍스팟 운세">
+    <meta property="og:title" content="오늘의 별자리 운세">
+    <meta property="og:description" content="12별자리 오늘의 운세와 순위">
+    <meta property="og:url" content="https://fortune.hongspot.com/star.html">
+    <meta property="og:image" content="https://fortune.hongspot.com/fortune-image.png">
+    <meta name="twitter:card" content="summary">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%230c0f1d%22/><text x=%2250%22 y=%2268%22 font-size=%2252%22 text-anchor=%22middle%22 fill=%22%23d9b673%22>福</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+Symbols&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Google AdSense 자동 광고 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534" crossorigin="anonymous"></script>
+    <!-- 카카오톡 공유 SDK -->
+    <script defer src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <a href="./" class="brand"><span class="brand-mark">福</span><span class="brand-text">홍스팟 운세</span></a>
+            <nav class="nav" aria-label="주요 메뉴">
+                <a href="./">띠별 운세</a>
+                <a href="star.html" aria-current="page">별자리</a>
+                <a href="tarot.html">타로</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div class="eyebrow" id="today-date">오늘의 별자리 운세</div>
+            <h1>오늘 밤, <em>나의 별</em>이<br>들려주는 이야기</h1>
+            <p class="lead">12별자리 오늘의 운세 · 매일 자정 업데이트</p>
+
+            <form class="finder finder--date" id="finder" autocomplete="off">
+                <label for="birth-month" class="sr-only">태어난 달</label>
+                <select id="birth-month" required>
+                    <option value="">생일 월</option>
+                </select>
+                <label for="birth-day" class="sr-only">태어난 날</label>
+                <select id="birth-day" required>
+                    <option value="">일</option>
+                </select>
+                <button type="submit" class="btn btn-gold">내 별자리 보기</button>
+            </form>
+            <p class="finder-hint">별자리 경계일에 태어났다면 해마다 하루 정도 다를 수 있어요</p>
+
+            <div id="data-notice"></div>
+        </section>
+
+        <section class="top3-wrap" aria-labelledby="top3-title">
+            <div class="section-head">
+                <h2 id="top3-title">오늘의 별자리 순위</h2>
+                <span>종합운 기준</span>
+            </div>
+            <ol class="top3" id="top3"></ol>
+        </section>
+
+        <div class="section-head">
+            <h2>12별자리 오늘의 운세</h2>
+            <span>카드를 눌러 자세히 보기</span>
+        </div>
+
+        <div class="zodiac-grid" id="star-grid" aria-live="polite"></div>
+
+        <a class="promo" href="./">
+            <div>
+                <h3>띠별 운세도 함께 확인해 보세요</h3>
+                <p>12띠 오늘의 운세와 행운 아이템까지.</p>
+            </div>
+            <span class="arrow" aria-hidden="true">→</span>
+        </a>
+
+        <div class="share-row">
+            <button type="button" class="btn btn-kakao" id="share-kakao">카카오톡 공유</button>
+            <button type="button" class="btn btn-ghost" id="share-link">링크 복사</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>운세는 재미로만 봐 주세요</p>
+        <p>매일 자정(한국시간) 새로운 운세로 바뀝니다</p>
+        <p><a href="privacy.html">개인정보처리방침</a></p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="common.js"></script>
+    <script src="star.js"></script>
+</body>
+</html>

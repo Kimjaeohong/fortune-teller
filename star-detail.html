@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>별자리 운세 상세 | 홍스팟 운세</title>
+    <meta name="description" content="오늘의 별자리 운세 — 종합운, 재물운, 일·학업운, 건강운, 인연·관계운과 오늘의 순위, 행운 아이템.">
+    <meta name="theme-color" content="#0c0f1d">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="홍스팟 운세">
+    <meta property="og:title" content="오늘의 별자리 운세">
+    <meta property="og:description" content="종합운·재물운·일·건강·인연운과 오늘의 행운 아이템">
+    <meta property="og:image" content="https://fortune.hongspot.com/fortune-image.png">
+    <meta name="twitter:card" content="summary">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%230c0f1d%22/><text x=%2250%22 y=%2268%22 font-size=%2252%22 text-anchor=%22middle%22 fill=%22%23d9b673%22>福</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://docs.google.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+Symbols&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Google AdSense 자동 광고 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534" crossorigin="anonymous"></script>
+    <!-- 카카오톡 공유 SDK -->
+    <script defer src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="page page--narrow">
+        <header class="topbar">
+            <a href="./" class="brand"><span class="brand-mark">福</span><span class="brand-text">홍스팟 운세</span></a>
+            <nav class="nav" aria-label="주요 메뉴">
+                <a href="./">띠별 운세</a>
+                <a href="star.html" aria-current="page">별자리</a>
+                <a href="tarot.html">타로</a>
+            </nav>
+        </header>
+
+        <div class="crumbs">
+            <a href="star.html">← 전체 별자리</a>
+            <div class="sibs" id="sibs"></div>
+        </div>
+
+        <main id="detail">
+            <section class="detail-hero" id="detail-hero"></section>
+            <div id="fortune-content"></div>
+        </main>
+
+        <div class="share-row" id="share-row" hidden>
+            <button type="button" class="btn btn-kakao" id="share-kakao">카카오톡 공유</button>
+            <button type="button" class="btn btn-ghost" id="share-link">링크 복사</button>
+        </div>
+
+        <section class="others">
+            <div class="section-head"><h2>다른 별자리 운세</h2></div>
+            <nav class="chip-row" id="other-keys" aria-label="다른 별자리"></nav>
+        </section>
+
+        <a class="promo" href="tarot.html">
+            <div>
+                <h3>타로로 한 번 더 물어볼까요?</h3>
+                <p>연애·재물·양자택일 스프레드로 오늘의 고민을 비춰보세요.</p>
+            </div>
+            <span class="arrow" aria-hidden="true">→</span>
+        </a>
+    </div>
+
+    <footer class="footer">
+        <p>운세는 재미로만 봐 주세요</p>
+        <p>매일 자정(한국시간) 새로운 운세로 바뀝니다</p>
+        <p><a href="privacy.html">개인정보처리방침</a></p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="common.js"></script>
+    <script>window.FORTUNE_KIND = 'star';</script>
+    <script src="detail.js"></script>
+</body>
+</html>
