@@ -45,6 +45,16 @@ TONE_OF = {t: tone for pool in S1_POOLS.values() for tone, lines in pool.items()
 TONE_OF.update({t: tone for lines in P.SEASONAL_S1.values() for tone, t in lines})
 
 
+def conflicts(s1, s2):
+    """두 문장을 이어 붙였을 때 앞뒤가 안 맞으면 True"""
+    for a_words, b_words in P.CONFLICT_RULES:
+        if any(a in s1 for a in a_words) and any(b in s2 for b in b_words):
+            return True
+    if TONE_OF.get(s1) == 'c' and any(m in s2 for m in P.UPBEAT_MARKERS):
+        return True
+    return False
+
+
 def season_of(month):
     return {12: 'winter', 1: 'winter', 2: 'winter', 3: 'spring', 4: 'spring', 5: 'spring',
             6: 'summer', 7: 'summer', 8: 'summer'}.get(month, 'autumn')
@@ -107,18 +117,19 @@ class Builder:
                         allp = [t for pool in S1_POOLS[cat].values() for t in pool]
                         s1 = self._pick(allp, z, cat, 1, day, used_s1, S1_RECENCY_DAYS)
 
-                    # ── 2문장 ──
+                    # ── 2문장 (1문장과 어울리는 것만) ──
+                    ok = lambda pool: [t for t in pool if not conflicts(s1, t)]
                     s2 = None
                     r = self.rng.random()
                     if cat == 'overall':
                         if r < 0.15 and weekday in P.WEEKDAY_S2:
-                            s2 = self._pick(P.WEEKDAY_S2[weekday], z, cat, 2, day, used_s2, 21)
+                            s2 = self._pick(ok(P.WEEKDAY_S2[weekday]), z, cat, 2, day, used_s2, 21)
                         elif r < 0.33:
-                            s2 = self._pick(P.ZODIAC_TRAITS[z], z, cat, 2, day, used_s2, 12)
+                            s2 = self._pick(ok(P.ZODIAC_TRAITS[z]), z, cat, 2, day, used_s2, 12)
                     elif cat == 'health' and r < 0.18:
-                        s2 = self._pick(P.SEASON_HEALTH_S2[season], z, cat, 2, day, used_s2, 14)
+                        s2 = self._pick(ok(P.SEASON_HEALTH_S2[season]), z, cat, 2, day, used_s2, 14)
                     if s2 is None:
-                        s2 = self._pick(S2_POOLS[cat], z, cat, 2, day, used_s2, S2_RECENCY_DAYS)
+                        s2 = self._pick(ok(S2_POOLS[cat]), z, cat, 2, day, used_s2, S2_RECENCY_DAYS)
 
                     combo = (z, cat, 'combo', s1 + '|' + s2)
                     if not self._recent(combo, day, COMBO_RECENCY_DAYS):

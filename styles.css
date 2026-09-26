@@ -833,3 +833,46 @@ img { max-width: 100%; display: block; }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ═════════════ 문서 페이지 (개인정보처리방침 등) ═════════════ */
+
+.doc {
+    margin: 20px 0 8px;
+    padding: 28px 24px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+}
+.doc h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 4.5vw, 1.9rem);
+    letter-spacing: -0.02em;
+}
+.doc .doc-meta { color: var(--muted); font-size: .85rem; margin: 6px 0 22px; }
+.doc h2 {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    color: var(--gold-bright);
+    margin: 26px 0 8px;
+}
+.doc p, .doc li { color: var(--text-2); font-size: .95rem; line-height: 1.85; }
+.doc p + p { margin-top: 8px; }
+.doc ul { padding-left: 1.2em; margin-top: 6px; }
+.doc li + li { margin-top: 4px; }
+.doc a { color: var(--gold); text-underline-offset: 3px; }
+
+/* ═════════════ 404 ═════════════ */
+
+.notfound { padding: 56px 0 40px; }
+.notfound-mark {
+    width: 96px; height: 96px;
+    margin: 0 auto 20px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    font-family: var(--serif);
+    font-size: 3rem;
+    color: var(--gold);
+    background: radial-gradient(circle at 50% 35%, rgba(217, 182, 115, 0.18), transparent 70%);
+}
+.notfound .share-row { margin-top: 28px; }

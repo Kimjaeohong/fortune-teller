@@ -13,6 +13,9 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 | `config.js` | 스프레드시트 ID, 카카오 키, 띠·카테고리 정의 |
 | `common.js` | 공통 — 한국시간 날짜, 데이터 로딩, 별점, 공유 |
 | `styles.css` | 전체 디자인 |
+| `privacy.html` | 개인정보처리방침 (애드센스 안내 포함) |
+| `404.html` | 없는 주소로 들어왔을 때 안내 페이지 |
+| `robots.txt` / `sitemap.xml` | 검색엔진 등록용 |
 | `data/*.json` | 날짜별 운세 데이터 (12띠 × 5카테고리 + 별점) |
 | `tools/build_fortunes.py` | 문장 풀 조합으로 데이터 생성 (API 비용 없음) |
 | `generate_fortune.py` | (선택) Claude API로 특정 날짜를 AI 문장으로 생성 |
