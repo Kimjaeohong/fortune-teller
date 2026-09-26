@@ -1,223 +1,188 @@
-// URL에서 띠 정보 가져오기
+// ─────────────────────────────────────────────
+//  상세 페이지: 띠 하나의 오늘 운세
+// ─────────────────────────────────────────────
+
+const todayStr = kstDateString();
+const todayInfo = formatKoreanDate(todayStr);
+
+const CATEGORY_COLORS = {
+    money: '#e3c26b',
+    work: '#8fa8e0',
+    health: '#86c2a8',
+    relationship: '#e08a7a'
+};
+
 function getZodiacFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return params.get('zodiac');
+    const key = new URLSearchParams(location.search).get('zodiac');
+    return key && ZODIAC_INFO[key] ? key : null;
 }
 
-// 구글 스프레드시트에서 데이터 가져오기 (CSV 방식)
-async function fetchFortuneData(zodiac) {
-    try {
-        const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${CONFIG.SHEET_NAME}`;
-        const response = await fetch(url);
-        const text = await response.text();
-        
-        return parseCSVFortuneData(text, zodiac);
-    } catch (error) {
-        console.error('운세 데이터 로딩 실패:', error);
-        return null;
-    }
+function renderInvalid() {
+    document.getElementById('detail-hero').innerHTML = '';
+    document.getElementById('fortune-content').innerHTML = `
+        <div class="state">
+            <h3>어떤 띠인지 찾지 못했어요</h3>
+            <p>메인에서 띠를 다시 골라 주세요.</p>
+            <a class="btn btn-gold" href="./">12띠 보러 가기</a>
+        </div>`;
 }
 
-// CSV 데이터 파싱
-function parseCSVFortuneData(csvText, zodiac) {
-    const lines = csvText.split('\n');
-    
-    // 오늘 날짜 (YYYY-MM-DD 포맷, 0 패딩)
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const todayStr = `${year}-${month}-${day}`;
-    
-    const fortuneData = {};
-    
-    for (let i = 1; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line) continue;
-        
-        const cells = parseCSVLine(line);
-        if (cells.length < 4) continue;
-        
-        const date = cells[0];
-        const rowZodiac = cells[1];
-        const category = cells[2];
-        const content = cells[3];
-        
-        // 오늘 날짜 & 해당 띠의 데이터만 사용
-        if (date === todayStr && rowZodiac === zodiac) {
-            fortuneData[category] = content;
-        }
-    }
-    
-    return fortuneData;
+function renderSiblings(key) {
+    const i = ZODIAC_ORDER.indexOf(key);
+    const prev = ZODIAC_ORDER[(i + 11) % 12];
+    const next = ZODIAC_ORDER[(i + 1) % 12];
+    document.getElementById('sibs').innerHTML = `
+        <a href="detail.html?zodiac=${prev}" aria-label="이전 띠: ${ZODIAC_INFO[prev].name}">‹ ${ZODIAC_INFO[prev].name}</a>
+        <a href="detail.html?zodiac=${next}" aria-label="다음 띠: ${ZODIAC_INFO[next].name}">${ZODIAC_INFO[next].name} ›</a>`;
 }
 
-// CSV 라인 파싱
-function parseCSVLine(line) {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
-    
-    for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-        
-        if (char === '"') {
-            if (inQuotes && line[i + 1] === '"') {
-                current += '"';
-                i++;
-            } else {
-                inQuotes = !inQuotes;
-            }
-        } else if (char === ',' && !inQuotes) {
-            result.push(current);
-            current = '';
-        } else {
-            current += char;
-        }
-    }
-    
-    result.push(current);
-    return result;
-}
+function renderHero(key, score) {
+    const info = ZODIAC_INFO[key];
+    const years = yearsForZodiac(key, todayInfo.year).join(' · ');
+    const isMine = getMyZodiac() === key;
+    document.getElementById('detail-hero').innerHTML = `
+        <div class="hanja-lg" aria-hidden="true">${info.hanja}</div>
+        <h1>${info.name} 오늘의 운세</h1>
+        <p class="meta">${todayInfo.full}</p>
+        <p class="years">${years}년생</p>
+        <div class="score" id="hero-score">
+            ${score == null ? '<span class="skeleton skeleton-line" style="width:120px"></span>' : starsHtml(score)}
+        </div>
+        ${isMine ? '' : `<div style="margin-top:14px"><button type="button" class="btn btn-ghost" id="set-mine" style="padding:7px 14px;font-size:.85rem">내 띠로 설정</button></div>`}`;
 
-// 날짜 표시
-function getDateString() {
-    const today = new Date();
-    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-    return today.toLocaleDateString('ko-KR', options);
-}
-
-// 헤더 렌더링
-function renderHeader(zodiac) {
-    const info = ZODIAC_INFO[zodiac];
-    const header = document.getElementById('detail-header');
-    
-    header.innerHTML = `
-        <div class="detail-emoji">${info.emoji}</div>
-        <h1 class="detail-title">${info.name} 운세</h1>
-        <p class="date">${getDateString()}</p>
-        <p class="zodiac-years">${info.years}</p>
-    `;
-}
-
-// 운세 내용 렌더링
-function renderFortune(fortuneData) {
-    const content = document.getElementById('fortune-content');
-    
-    if (!fortuneData || Object.keys(fortuneData).length === 0) {
-        content.innerHTML = `
-            <div class="error">
-                <h3>😅 운세를 불러올 수 없습니다</h3>
-                <p>잠시 후 다시 시도해주세요</p>
-            </div>
-        `;
-        return;
-    }
-    
-    let html = '';
-    
-    for (const [categoryKey, categoryInfo] of Object.entries(FORTUNE_CATEGORIES)) {
-        let fortuneText = fortuneData[categoryKey] || '오늘은 평온한 하루가 될 것입니다.';
-        
-        // 마크다운 제거 및 텍스트 정리
-        fortuneText = fortuneText
-            .replace(/\*\*/g, '')           // ** 제거
-            .replace(/\n+/g, ' ')           // 줄바꿈을 공백으로
-            .replace(/\s+/g, ' ')           // 여러 공백을 하나로
-            .trim();                        // 앞뒤 공백 제거
-        
-        html += `
-            <div class="fortune-section">
-                <h2 class="section-title">
-                    <span class="section-icon">${categoryInfo.icon}</span>
-                    ${categoryInfo.title}
-                </h2>
-                <p class="section-content">${fortuneText}</p>
-            </div>
-        `;
-    }
-    
-    content.innerHTML = html;
-}
-
-// 페이지 로드 시 실행
-document.addEventListener('DOMContentLoaded', async () => {
-    const zodiac = getZodiacFromURL();
-    
-    if (!zodiac || !ZODIAC_INFO[zodiac]) {
-        document.getElementById('fortune-content').innerHTML = `
-            <div class="error">
-                <h3>잘못된 접근입니다</h3>
-                <p><a href="index.html">메인으로 돌아가기</a></p>
-            </div>
-        `;
-        return;
-    }
-    
-    renderHeader(zodiac);
-    
-    const fortuneData = await fetchFortuneData(zodiac);
-    renderFortune(fortuneData);
-    
-    // 카카오톡 공유 버튼 설정
-    setupKakaoShare(zodiac, fortuneData);
-});
-
-// 카카오톡 공유 설정
-function setupKakaoShare(zodiac, fortuneData) {
-    const shareBtn = document.getElementById('kakao-share-btn');
-    if (!shareBtn) {
-        console.error('카카오톡 공유 버튼을 찾을 수 없습니다');
-        return;
-    }
-    
-    shareBtn.addEventListener('click', () => {
-        if (!Kakao.isInitialized()) {
-            alert('카카오톡 SDK 초기화 실패');
-            return;
-        }
-        
-        const info = ZODIAC_INFO[zodiac];
-        const shareUrl = `https://fortune.hongspot.com/detail.html?zodiac=${zodiac}`;
-        
-        // 운세 요약 생성 (50자 이내)
-        let summary = '';
-        if (fortuneData && fortuneData.overall) {
-            summary = fortuneData.overall
-                .replace(/\*\*/g, '') // 마크다운 제거
-                .substring(0, 50)
-                .replace(/\s+/g, ' ') // 공백 정리
-                .trim();
-            if (fortuneData.overall.length > 50) summary += '...';
-        } else {
-            summary = '오늘의 운세를 확인해보세요!';
-        }
-        
-        try {
-            Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: `${info.emoji} ${info.name} 오늘의 운세`,
-                    description: summary,
-                    imageUrl: 'https://raw.githubusercontent.com/Kimjaeohong/fortune-teller/main/fortune-image.png?v=' + Date.now(),
-                    link: {
-                        mobileWebUrl: shareUrl,
-                        webUrl: shareUrl,
-                    },
-                },
-                buttons: [
-                    {
-                        title: '운세 보러가기',
-                        link: {
-                            mobileWebUrl: shareUrl,
-                            webUrl: shareUrl,
-                        },
-                    },
-                ],
-            });
-        } catch (error) {
-            console.error('카카오톡 공유 오류:', error);
-            alert('카카오톡 공유 중 오류가 발생했습니다: ' + error.message);
-        }
+    const btn = document.getElementById('set-mine');
+    if (btn) btn.addEventListener('click', () => {
+        setMyZodiac(key);
+        btn.parentElement.remove();
+        showToast(`${info.name}를 내 띠로 저장했어요`);
     });
 }
+
+function renderSkeleton() {
+    const blocks = Object.keys(FORTUNE_CATEGORIES).slice(1).map(() => `
+        <article class="fortune-item">
+            <span class="skeleton skeleton-line" style="width:40%;height:1.1em;margin-bottom:14px"></span>
+            <span class="skeleton skeleton-line"></span>
+            <span class="skeleton skeleton-line short"></span>
+        </article>`).join('');
+    document.getElementById('fortune-content').innerHTML = `
+        <div class="summary">
+            <div class="label">오늘의 한마디</div>
+            <span class="skeleton skeleton-line"></span>
+            <span class="skeleton skeleton-line"></span>
+            <span class="skeleton skeleton-line short"></span>
+        </div>
+        <div class="fortune-list">${blocks}</div>`;
+}
+
+function renderFortune(key, result) {
+    const map = result.data[key] || {};
+    const content = document.getElementById('fortune-content');
+
+    if (!Object.keys(map).length) {
+        content.innerHTML = `
+            <div class="state">
+                <h3>오늘의 운세를 준비 중이에요</h3>
+                <p>잠시 후 다시 확인해 주세요.</p>
+            </div>`;
+        document.getElementById('hero-score').innerHTML = '';
+        return;
+    }
+
+    document.getElementById('hero-score').innerHTML = starsHtml(scoreZodiac(map));
+
+    const items = Object.entries(FORTUNE_CATEGORIES)
+        .filter(([cat]) => cat !== 'overall')
+        .map(([cat, meta], i) => {
+            const text = map[cat];
+            if (!text) return '';
+            return `
+                <article class="fortune-item" style="animation-delay:${i * 60}ms">
+                    <header>
+                        <h2><span class="cat-dot" style="color:${CATEGORY_COLORS[cat]};background:${CATEGORY_COLORS[cat]}"></span>${meta.title}</h2>
+                        ${starsHtml(scoreText(text), { label: false })}
+                    </header>
+                    <p>${escapeHtml(text)}</p>
+                </article>`;
+        }).join('');
+
+    const lucky = luckyItems(result.date, key);
+    const fallbackNote = result.isFallback
+        ? `<div class="notice" style="margin:0 0 14px">오늘 데이터 준비 중이라 ${formatKoreanDate(result.date).short} 운세를 대신 보여드려요.</div>`
+        : '';
+
+    content.innerHTML = `
+        ${fallbackNote}
+        <div class="summary">
+            <div class="label">오늘의 한마디 · 종합운</div>
+            <p>${escapeHtml(map.overall || '오늘은 평온한 하루가 될 거예요.')}</p>
+        </div>
+        <div class="fortune-list">${items}</div>
+        <div class="lucky" aria-label="오늘의 행운 아이템">
+            <div class="lucky-item"><div class="k">행운의 색</div><div class="v"><span class="swatch" style="background:${lucky.color.hex}"></span>${lucky.color.name}</div></div>
+            <div class="lucky-item"><div class="k">행운의 숫자</div><div class="v">${lucky.number}</div></div>
+            <div class="lucky-item"><div class="k">행운의 방향</div><div class="v">${lucky.direction}</div></div>
+            <div class="lucky-item"><div class="k">좋은 시간대</div><div class="v">${lucky.time}</div></div>
+        </div>`;
+
+    setupShare(key, map);
+}
+
+function renderError(key) {
+    document.getElementById('hero-score').innerHTML = '';
+    document.getElementById('fortune-content').innerHTML = `
+        <div class="state">
+            <h3>운세를 불러오지 못했어요</h3>
+            <p>네트워크 상태를 확인하고 다시 시도해 주세요.</p>
+            <button type="button" class="btn btn-gold" id="retry">다시 시도</button>
+        </div>`;
+    document.getElementById('retry').addEventListener('click', () => load(key));
+}
+
+function renderOthers(key) {
+    document.getElementById('other-zodiacs').innerHTML = ZODIAC_ORDER.map(k => `
+        <a class="chip" href="detail.html?zodiac=${k}"${k === key ? ' aria-current="page"' : ''}>
+            <span class="hanja" aria-hidden="true">${ZODIAC_INFO[k].hanja}</span>${ZODIAC_INFO[k].name}
+        </a>`).join('');
+    const row = document.getElementById('other-zodiacs');
+    const current = row.querySelector('.chip[aria-current="page"]');
+    if (current) row.scrollLeft = current.offsetLeft - (row.clientWidth - current.offsetWidth) / 2;
+}
+
+function setupShare(key, map) {
+    const info = ZODIAC_INFO[key];
+    const url = `${CONFIG.SITE_URL}/detail.html?zodiac=${key}`;
+    const summary = map.overall ? firstSentence(map.overall) : '오늘의 운세를 확인해 보세요!';
+    const title = `${info.emoji} ${info.name} 오늘의 운세 · ${todayInfo.short}`;
+
+    document.getElementById('share-row').hidden = false;
+    document.getElementById('share-kakao').onclick = () => shareKakao({ title, description: summary, url });
+    document.getElementById('share-link').onclick = () => shareLink({ title, text: summary, url });
+}
+
+async function load(key) {
+    renderSkeleton();
+    try {
+        const result = await loadTodayFortunes();
+        renderFortune(key, result);
+    } catch (err) {
+        console.error('운세 데이터 로딩 실패:', err);
+        renderError(key);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const key = getZodiacFromURL();
+    if (!key) {
+        renderInvalid();
+        renderOthers(null);
+        return;
+    }
+    const info = ZODIAC_INFO[key];
+    document.title = `${info.name} 오늘의 운세 (${todayInfo.short}) | 홍스팟 운세`;
+
+    renderSiblings(key);
+    renderHero(key, null);
+    renderOthers(key);
+    load(key);
+});

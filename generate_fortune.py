@@ -1,167 +1,143 @@
 """
 띠별 운세 자동 생성 스크립트
-매일 자정에 실행되어 새로운 운세를 생성하고 구글 스프레드시트에 저장
+
+- 띠마다 한 번의 API 호출로 5개 카테고리를 함께 생성 (하루 12회 호출)
+- 대상 날짜의 행만 교체하고 나머지 데이터는 그대로 둔다
+- 사용법
+    python generate_fortune.py                 # 내일(한국시간) 1일치
+    python generate_fortune.py --date 2027-01-01 --days 31   # 특정 기간 일괄 생성
 """
 
+import argparse
+import json
 import os
+import re
+import sys
+import time
+from datetime import date, datetime, timedelta, timezone
+
 import anthropic
-from datetime import datetime, timedelta, timezone
 import gspread
 from google.oauth2.service_account import Credentials
 
-# 12띠 목록
-ZODIACS = ['rat', 'ox', 'tiger', 'rabbit', 'dragon', 'snake', 
-           'horse', 'sheep', 'monkey', 'rooster', 'dog', 'pig']
+KST = timezone(timedelta(hours=9))
+SHEET_NAME = 'fortune_data'
+MODEL = os.environ.get('FORTUNE_MODEL', 'claude-haiku-4-5-20251001')
 
 ZODIAC_NAMES = {
-    'rat': '쥐띠',
-    'ox': '소띠',
-    'tiger': '호랑이띠',
-    'rabbit': '토끼띠',
-    'dragon': '용띠',
-    'snake': '뱀띠',
-    'horse': '말띠',
-    'sheep': '양띠',
-    'monkey': '원숭이띠',
-    'rooster': '닭띠',
-    'dog': '개띠',
-    'pig': '돼지띠'
+    'rat': '쥐띠', 'ox': '소띠', 'tiger': '호랑이띠', 'rabbit': '토끼띠',
+    'dragon': '용띠', 'snake': '뱀띠', 'horse': '말띠', 'sheep': '양띠',
+    'monkey': '원숭이띠', 'rooster': '닭띠', 'dog': '개띠', 'pig': '돼지띠',
 }
 
-# 운세 카테고리
-CATEGORIES = ['overall', 'money', 'work', 'health', 'relationship']
-
+# 웹사이트(config.js)의 FORTUNE_CATEGORIES와 같은 키
 CATEGORY_NAMES = {
     'overall': '종합운',
     'money': '재물운',
-    'work': '직장/사업운',
-    'health': '가정/건강운',
-    'relationship': '이성/대인관계'
+    'work': '일·학업운',
+    'health': '건강운',
+    'relationship': '인연·관계운',
 }
 
-def generate_fortune(zodiac, category):
-    """Claude API를 사용하여 운세 생성"""
-    
-    client = anthropic.Anthropic(
-        api_key=os.environ.get("ANTHROPIC_API_KEY")
+FALLBACK_TEXT = '오늘은 평온한 하루가 될 거예요. 작은 여유를 챙겨보세요.'
+
+PROMPT = """{date_kr} {zodiac_name}의 오늘의 운세를 카테고리별로 써 주세요.
+
+규칙
+- 친근하고 가벼운 톤, 재미로 보는 운세 느낌
+- 카테고리마다 2문장, 한 문장은 60자 이내
+- 구체적인 행동 팁을 하나씩 포함 (예: 산책, 메모, 먼저 연락하기)
+- 너무 무겁거나 불안을 주는 표현, 의학·투자 단정 표현은 피하기
+- 모든 카테고리가 똑같이 좋기만 하지 않도록, 하루 안에서도 강약을 주기
+- 다른 띠와 겹치지 않도록 {zodiac_name}만의 개성 있는 표현 사용
+- 마크다운 금지, 순수 텍스트
+
+카테고리: 종합운(overall), 재물운(money), 일·학업운(work), 건강운(health), 인연·관계운(relationship)
+
+아래 JSON 한 개만 출력하세요. 다른 말은 쓰지 마세요.
+{{"overall": "...", "money": "...", "work": "...", "health": "...", "relationship": "..."}}"""
+
+
+def generate_for_zodiac(client, target: date, zodiac: str) -> dict:
+    """한 띠의 5개 카테고리 운세를 생성. 실패 시 최대 3회 재시도."""
+    prompt = PROMPT.format(
+        date_kr=f'{target.month}월 {target.day}일',
+        zodiac_name=ZODIAC_NAMES[zodiac],
     )
-    
-    zodiac_name = ZODIAC_NAMES[zodiac]
-    category_name = CATEGORY_NAMES[category]
-    
-    prompt = f"""오늘의 {zodiac_name} {category_name}를 생성해주세요.
+    last_error = None
+    for attempt in range(3):
+        try:
+            message = client.messages.create(
+                model=MODEL,
+                max_tokens=1200,
+                messages=[{'role': 'user', 'content': prompt}],
+            )
+            text = message.content[0].text.strip()
+            match = re.search(r'\{.*\}', text, re.S)
+            data = json.loads(match.group(0) if match else text)
+            return {
+                cat: re.sub(r'\s+', ' ', str(data.get(cat, '')).replace('**', '')).strip() or FALLBACK_TEXT
+                for cat in CATEGORY_NAMES
+            }
+        except Exception as e:  # noqa: BLE001
+            last_error = e
+            time.sleep(2 * (attempt + 1))
+    print(f'   ✗ {ZODIAC_NAMES[zodiac]} 생성 실패: {last_error}')
+    return {cat: FALLBACK_TEXT for cat in CATEGORY_NAMES}
 
-요구사항:
-- 친근하고 가벼운 톤으로 작성
-- 재미로 보는 운세라는 느낌
-- 2-3문장으로 간결하게
-- 구체적이면서도 긍정적인 내용
-- 과도하게 무겁거나 진지하지 않게
-- 운세 내용만 작성 (인사말이나 부가 설명 없이)
-- 마크다운 문법 사용 금지 (**, ##, -, * 등 사용 안 함)
-- 일반 텍스트로만 작성
 
-카테고리별 가이드:
-- 종합운: 오늘 하루 전반적인 운세
-- 재물운: 금전, 재테크, 수입 관련
-- 직장/사업운: 업무, 사업, 커리어 관련
-- 가정/건강운: 가족, 건강, 집안일 관련
-- 이성/대인관계: 연애, 인간관계, 소통 관련
-
-예시 스타일:
-"오늘은 예상치 못한 곳에서 기쁜 소식이 들려올 수 있어요. 주변 사람들의 말에 귀 기울이면 좋은 기회를 발견할 거예요. 긍정적인 마인드를 유지하세요!"
-"""
-    
-    message = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=1000,
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
-    )
-    
-    return message.content[0].text.strip()
-
-def update_google_sheet(fortune_data):
-    """구글 스프레드시트에 운세 데이터 업데이트 (Batch 방식)"""
-    
-    # 서비스 계정 인증
-    scope = ['https://spreadsheets.google.com/feeds',
-             'https://www.googleapis.com/auth/drive']
-    
+def open_sheet():
     creds = Credentials.from_service_account_file(
         'credentials.json',
-        scopes=scope
+        scopes=['https://www.googleapis.com/auth/spreadsheets'],
     )
-    
     client = gspread.authorize(creds)
-    
-    # 스프레드시트 열기
-    spreadsheet_id = os.environ.get("SPREADSHEET_ID")
-    sheet = client.open_by_key(spreadsheet_id).worksheet('fortune_data')
-    
-    # 한국 시간대 (UTC+9)
-    kst = timezone(timedelta(hours=9))
-    
-    # 내일 날짜 (한국 시간 기준)
-    now_kst = datetime.now(kst)
-    tomorrow = (now_kst + timedelta(days=1)).strftime('%Y-%m-%d')
-    
-    print(f"📅 현재 한국 시간: {now_kst.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"📅 생성할 날짜: {tomorrow}")
-    
-    # 모든 데이터 가져오기
+    return client.open_by_key(os.environ['SPREADSHEET_ID']).worksheet(SHEET_NAME)
+
+
+def write_rows(sheet, new_rows_by_date: dict):
+    """대상 날짜의 기존 행을 지우고 새 행으로 교체 (한 번에 기록)."""
     all_values = sheet.get_all_values()
-    
-    # 내일 날짜가 아닌 데이터만 유지 (헤더 포함)
-    filtered_data = [all_values[0]]  # 헤더
-    for row in all_values[1:]:  # 데이터 행
-        if row[0] != tomorrow:  # 내일 날짜가 아닌 것만
-            filtered_data.append(row)
-    
-    # 새 데이터 추가
-    new_rows = []
-    for zodiac, categories in fortune_data.items():
-        for category, content in categories.items():
-            new_rows.append([tomorrow, zodiac, category, content])
-    
-    # 기존 데이터 + 새 데이터 합치기
-    all_new_data = filtered_data + new_rows
-    
-    # 한 번에 업데이트 (단 1회의 API 호출!)
-    sheet.clear()  # 시트 전체 클리어
-    sheet.update(all_new_data, value_input_option='RAW')  # 모든 데이터 한 번에 입력
-    
-    print(f"✅ {len(new_rows)}개의 운세가 성공적으로 업데이트되었습니다!")
+    header, body = all_values[0], all_values[1:]
+    targets = set(new_rows_by_date)
+    kept = [row for row in body if row and row[0] not in targets]
+    added = [row for d in sorted(new_rows_by_date) for row in new_rows_by_date[d]]
+    merged = sorted(kept + added, key=lambda r: r[0])
+
+    sheet.clear()
+    sheet.update([header] + merged, value_input_option='RAW')
+    print(f'✅ {len(added)}행 기록 완료 (전체 {len(merged)}행)')
+
 
 def main():
-    """메인 실행 함수"""
-    print("🔮 운세 생성을 시작합니다...")
-    
-    fortune_data = {}
-    
-    # 모든 띠와 카테고리에 대해 운세 생성
-    for zodiac in ZODIACS:
-        print(f"\n📝 {ZODIAC_NAMES[zodiac]} 운세 생성 중...")
-        fortune_data[zodiac] = {}
-        
-        for category in CATEGORIES:
-            try:
-                fortune = generate_fortune(zodiac, category)
-                fortune_data[zodiac][category] = fortune
-                print(f"   ✓ {CATEGORY_NAMES[category]}: {fortune[:30]}...")
-            except Exception as e:
-                print(f"   ✗ {CATEGORY_NAMES[category]} 생성 실패: {e}")
-                fortune_data[zodiac][category] = "오늘은 평온한 하루가 될 것입니다."
-    
-    # 구글 스프레드시트에 업데이트
-    print("\n📊 구글 스프레드시트 업데이트 중...")
-    try:
-        update_google_sheet(fortune_data)
-        print("\n🎉 모든 작업이 완료되었습니다!")
-    except Exception as e:
-        print(f"\n❌ 스프레드시트 업데이트 실패: {e}")
-        print("운세 데이터는 생성되었지만 스프레드시트에 저장하지 못했습니다.")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--date', help='시작 날짜 YYYY-MM-DD (기본: 내일, 한국시간)')
+    parser.add_argument('--days', type=int, default=1, help='생성할 일수 (기본 1)')
+    args = parser.parse_args()
 
-if __name__ == "__main__":
+    start = (datetime.strptime(args.date, '%Y-%m-%d').date() if args.date
+             else (datetime.now(KST) + timedelta(days=1)).date())
+    dates = [start + timedelta(days=i) for i in range(args.days)]
+
+    print(f'🔮 {dates[0]} ~ {dates[-1]} ({len(dates)}일) 운세 생성 · 모델 {MODEL}')
+    client = anthropic.Anthropic(api_key=os.environ.get('ANTHROPIC_API_KEY'))
+
+    new_rows_by_date = {}
+    for d in dates:
+        rows = []
+        for zodiac in ZODIAC_NAMES:
+            fortunes = generate_for_zodiac(client, d, zodiac)
+            rows += [[d.isoformat(), zodiac, cat, fortunes[cat]] for cat in CATEGORY_NAMES]
+        new_rows_by_date[d.isoformat()] = rows
+        print(f'   ✓ {d} 완료')
+
+    print('\n📊 스프레드시트 업데이트 중...')
+    try:
+        write_rows(open_sheet(), new_rows_by_date)
+    except Exception as e:  # noqa: BLE001
+        print(f'❌ 스프레드시트 업데이트 실패: {e}')
+        sys.exit(1)
+
+
+if __name__ == '__main__':
     main()

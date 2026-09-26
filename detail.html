@@ -2,79 +2,78 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>띠별 운세 상세</title>
-    <meta name="description" content="띠별 상세 운세를 확인하세요. 종합운, 재물운, 직장운, 건강운, 대인관계운.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>띠별 운세 상세 | 홍스팟 운세</title>
+    <meta name="description" content="오늘의 띠별 상세 운세 — 종합운, 재물운, 일·학업운, 건강운, 인연·관계운과 행운 아이템.">
+    <meta name="theme-color" content="#0c0f1d">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="홍스팟 운세">
+    <meta property="og:title" content="오늘의 띠별 운세">
+    <meta property="og:description" content="종합운·재물운·일·건강·인연운과 오늘의 행운 아이템">
+    <meta property="og:image" content="https://fortune.hongspot.com/fortune-image.png">
+    <meta name="twitter:card" content="summary">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%230c0f1d%22/><text x=%2250%22 y=%2268%22 font-size=%2252%22 text-anchor=%22middle%22 fill=%22%23d9b673%22>福</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://docs.google.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    
+
     <!-- Google AdSense 자동 광고 -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534"
-         crossorigin="anonymous"></script>
-    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534" crossorigin="anonymous"></script>
     <!-- 카카오톡 공유 SDK -->
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
-    <script>
-        Kakao.init('27e9da30e66de45bc054ba884c3bd150');
-    </script>
-    
-    <!-- 무효 트래픽 방지 -->
-    <script>
-        // 페이지 로드 시간 기록
-        window.pageLoadTime = new Date().getTime();
-        
-        // 의심스러운 클릭 패턴 감지
-        let clickCount = 0;
-        let lastClickTime = 0;
-        
-        document.addEventListener('click', function(e) {
-            const currentTime = new Date().getTime();
-            const timeDiff = currentTime - lastClickTime;
-            
-            // 너무 빠른 연속 클릭 감지 (1초 이내)
-            if (timeDiff < 1000) {
-                clickCount++;
-                if (clickCount > 3) {
-                    console.warn('Suspicious click pattern detected');
-                }
-            } else {
-                clickCount = 0;
-            }
-            
-            lastClickTime = currentTime;
-        });
-        
-        // 페이지 체류 시간 추적
-        window.addEventListener('beforeunload', function() {
-            const stayTime = new Date().getTime() - window.pageLoadTime;
-            // 체류 시간이 너무 짧으면 로그 (3초 미만)
-            if (stayTime < 3000) {
-                console.warn('Very short stay time: ' + stayTime + 'ms');
-            }
-        });
-    </script>
+    <script defer src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="detail-container">
-        <a href="index.html" class="back-button">← 돌아가기</a>
-        
-        <div class="detail-header" id="detail-header">
-            <!-- JavaScript로 생성됩니다 -->
-        </div>
-        
-        <!-- 카카오톡 공유 버튼 -->
-        <div style="text-align: center; margin-bottom: 20px;">
-            <button id="kakao-share-btn" style="background: #FEE500; border: none; border-radius: 8px; padding: 12px 24px; cursor: pointer; font-size: 1em; font-weight: 600; color: #3C1E1E; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                <img src="https://developers.kakao.com/assets/img/about/logos/kakaolink/kakaolink_btn_small.png" style="width: 20px; vertical-align: middle; margin-right: 8px;" />
-                카카오톡 공유하기
-            </button>
+    <div class="page page--narrow">
+        <header class="topbar">
+            <a href="./" class="brand"><span class="brand-mark">福</span>홍스팟 운세</a>
+            <nav class="nav" aria-label="주요 메뉴">
+                <a href="./" aria-current="page">띠별 운세</a>
+                <a href="tarot.html">타로</a>
+            </nav>
+        </header>
+
+        <div class="crumbs">
+            <a href="./">← 전체 띠</a>
+            <div class="sibs" id="sibs"></div>
         </div>
 
-        <div id="fortune-content">
-            <div class="loading">운세를 불러오는 중...</div>
+        <main id="detail">
+            <section class="detail-hero" id="detail-hero"></section>
+            <div id="fortune-content"></div>
+        </main>
+
+        <div class="share-row" id="share-row" hidden>
+            <button type="button" class="btn btn-kakao" id="share-kakao">카카오톡 공유</button>
+            <button type="button" class="btn btn-ghost" id="share-link">링크 복사</button>
         </div>
+
+        <section class="others">
+            <div class="section-head"><h2>다른 띠 운세</h2></div>
+            <nav class="chip-row" id="other-zodiacs" aria-label="다른 띠"></nav>
+        </section>
+
+        <a class="promo" href="tarot.html">
+            <div>
+                <h3>타로로 한 번 더 물어볼까요?</h3>
+                <p>연애·재물·양자택일 스프레드로 오늘의 고민을 비춰보세요.</p>
+            </div>
+            <span class="arrow" aria-hidden="true">→</span>
+        </a>
     </div>
 
+    <footer class="footer">
+        <p>운세는 재미로만 봐 주세요</p>
+        <p>매일 자정(한국시간) 새로운 운세로 바뀝니다</p>
+    </footer>
+
     <script src="config.js"></script>
+    <script src="common.js"></script>
     <script src="detail.js"></script>
 </body>
 </html>

@@ -1,159 +1,112 @@
-// 오늘 날짜 표시
-function updateDate() {
-    const today = new Date();
-    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-    const dateString = today.toLocaleDateString('ko-KR', options);
-    document.getElementById('today-date').textContent = dateString;
+// ─────────────────────────────────────────────
+//  메인 페이지: 12띠 카드
+// ─────────────────────────────────────────────
+
+const todayStr = kstDateString();
+const todayInfo = formatKoreanDate(todayStr);
+
+function renderDate() {
+    document.getElementById('today-date').textContent = todayInfo.full;
 }
 
-// 구글 스프레드시트에서 데이터 가져오기 (CSV 방식 - AdBlocker 우회)
-async function fetchFortuneData() {
-    try {
-        // CSV export URL 사용 (AdBlocker가 차단하지 않음)
-        const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${CONFIG.SHEET_NAME}`;
-        const response = await fetch(url);
-        const text = await response.text();
-        
-        return parseCSVFortuneData(text);
-    } catch (error) {
-        console.error('운세 데이터 로딩 실패:', error);
-        return null;
-    }
-}
-
-// CSV 데이터 파싱
-function parseCSVFortuneData(csvText) {
-    const lines = csvText.split('\n');
-    
-    // 오늘 날짜 (YYYY-MM-DD 포맷, 0 패딩)
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const todayStr = `${year}-${month}-${day}`;
-    
-    const fortuneData = {};
-    
-    // 첫 번째 줄은 헤더이므로 건너뜀
-    for (let i = 1; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line) continue;
-        
-        // CSV 파싱 (따옴표 처리 포함)
-        const cells = parseCSVLine(line);
-        if (cells.length < 4) continue;
-        
-        const date = cells[0];
-        const zodiac = cells[1];
-        const category = cells[2];
-        const content = cells[3];
-        
-        // 오늘 날짜의 데이터만 사용
-        if (date === todayStr) {
-            if (!fortuneData[zodiac]) {
-                fortuneData[zodiac] = {};
-            }
-            fortuneData[zodiac][category] = content;
-        }
-    }
-    
-    return fortuneData;
-}
-
-// CSV 라인 파싱 (따옴표 처리)
-function parseCSVLine(line) {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
-    
-    for (let i = 0; i < line.length; i++) {
-        const char = line[i];
-        
-        if (char === '"') {
-            if (inQuotes && line[i + 1] === '"') {
-                // 이스케이프된 따옴표
-                current += '"';
-                i++;
-            } else {
-                // 따옴표 토글
-                inQuotes = !inQuotes;
-            }
-        } else if (char === ',' && !inQuotes) {
-            // 셀 구분
-            result.push(current);
-            current = '';
-        } else {
-            current += char;
-        }
-    }
-    
-    result.push(current);
-    return result;
-}
-
-// 행운 지수 계산 (간단한 알고리즘)
-function calculateLuckScore(fortuneText) {
-    if (!fortuneText) return 3;
-    
-    // 텍스트 정리 (마크다운, 줄바꿈 제거)
-    const cleanText = fortuneText
-        .replace(/\*\*/g, '')
-        .replace(/\n+/g, ' ')
-        .replace(/\s+/g, ' ')
-        .trim();
-    
-    const positiveWords = ['좋', '행운', '기회', '성공', '발전', '상승', '길', '만남', '이익'];
-    const negativeWords = ['주의', '조심', '어려움', '갈등', '손실', '하락'];
-    
-    let score = 3;
-    positiveWords.forEach(word => {
-        if (cleanText.includes(word)) score += 0.5;
-    });
-    negativeWords.forEach(word => {
-        if (cleanText.includes(word)) score -= 0.5;
-    });
-    
-    return Math.max(1, Math.min(5, Math.round(score)));
-}
-
-// 별점 표시
-function getStars(score) {
-    return '⭐'.repeat(score);
-}
-
-// 띠 카드 렌더링
-async function renderZodiacCards() {
+function renderCards() {
     const grid = document.getElementById('zodiac-grid');
-    const fortuneData = await fetchFortuneData();
-    
-    for (const [key, info] of Object.entries(ZODIAC_INFO)) {
-        const card = document.createElement('div');
-        card.className = 'zodiac-card';
-        card.onclick = () => location.href = `detail.html?zodiac=${key}`;
-        
-        let luckIndicator = '';
-        if (fortuneData && fortuneData[key] && fortuneData[key].overall) {
-            const score = calculateLuckScore(fortuneData[key].overall);
-            luckIndicator = `
-                <div class="luck-indicator">
-                    <div class="luck-stars">${getStars(score)}</div>
+    const mine = getMyZodiac();
+
+    grid.innerHTML = ZODIAC_ORDER.map((key, i) => {
+        const info = ZODIAC_INFO[key];
+        const years = yearsForZodiac(key, todayInfo.year).slice(-6).map(y => String(y).slice(2)).join(' · ');
+        const isMine = key === mine;
+        return `
+            <a class="zodiac-card${isMine ? ' is-mine' : ''}" href="detail.html?zodiac=${key}"
+               data-zodiac="${key}" style="animation-delay:${i * 35}ms">
+                ${isMine ? '<span class="mine-badge">내 띠</span>' : ''}
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">${info.hanja}</span>
+                    <div class="zc-name">${info.name}<span class="zc-emoji" aria-hidden="true">${info.emoji}</span></div>
                 </div>
-            `;
+                <div class="zc-years">${years}년생</div>
+                <p class="zc-line"><span class="skeleton skeleton-line"></span><span class="skeleton skeleton-line short"></span></p>
+                <div class="zc-foot"><span class="skeleton skeleton-line" style="width:90px"></span></div>
+            </a>`;
+    }).join('');
+}
+
+function fillCards(result) {
+    ZODIAC_ORDER.forEach(key => {
+        const card = document.querySelector(`.zodiac-card[data-zodiac="${key}"]`);
+        const map = result.data[key];
+        const line = card.querySelector('.zc-line');
+        const foot = card.querySelector('.zc-foot');
+        if (!map || !map.overall) {
+            line.textContent = '오늘의 운세를 준비 중이에요.';
+            foot.innerHTML = '';
+            return;
         }
-        
-        card.innerHTML = `
-            <span class="zodiac-emoji">${info.emoji}</span>
-            <h2 class="zodiac-name">${info.name}</h2>
-            <p class="zodiac-years">${info.years}</p>
-            ${luckIndicator}
-        `;
-        
-        grid.appendChild(card);
+        // "오늘은 쥐띠에게 …" 같은 반복되는 머리말은 카드에서 생략
+        line.textContent = firstSentence(map.overall).replace(/^오늘은\s*\S+띠(?:에게|는|의)\s*/, '');
+        foot.innerHTML = starsHtml(scoreZodiac(map));
+    });
+}
+
+function showNotice(html) {
+    document.getElementById('data-notice').innerHTML = html ? `<div class="notice">${html}</div>` : '';
+}
+
+async function loadData() {
+    try {
+        const result = await loadTodayFortunes();
+        if (!Object.keys(result.data).length) {
+            fillCards(result);
+            showNotice('오늘의 운세가 아직 준비되지 않았어요. 잠시 후 다시 확인해 주세요.');
+            return;
+        }
+        fillCards(result);
+        showNotice(result.isFallback
+            ? `오늘 데이터 준비 중이라 ${formatKoreanDate(result.date).short} 운세를 대신 보여드려요.`
+            : '');
+    } catch (err) {
+        console.error('운세 데이터 로딩 실패:', err);
+        document.querySelectorAll('.zc-line').forEach(el => { el.textContent = '운세를 불러오지 못했어요.'; });
+        document.querySelectorAll('.zc-foot').forEach(el => { el.innerHTML = ''; });
+        showNotice('네트워크가 불안정해요. <button type="button" class="btn btn-ghost" id="retry" style="margin-left:6px;padding:4px 12px">다시 시도</button>');
+        document.getElementById('retry').addEventListener('click', () => { renderCards(); loadData(); });
     }
 }
 
-// 페이지 로드 시 실행
+function setupFinder() {
+    const form = document.getElementById('finder');
+    const input = document.getElementById('birth-year');
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        const year = parseInt(input.value, 10);
+        if (!year || year < 1900 || year > todayInfo.year) {
+            showToast('태어난 해를 4자리로 입력해 주세요');
+            input.focus();
+            return;
+        }
+        const key = zodiacFromYear(year);
+        setMyZodiac(key);
+        location.href = `detail.html?zodiac=${key}`;
+    });
+}
+
+function setupShare() {
+    const url = CONFIG.SITE_URL + '/';
+    document.getElementById('share-kakao').addEventListener('click', () => shareKakao({
+        title: `오늘의 띠별 운세 · ${todayInfo.short}`,
+        description: '12띠 오늘의 운세를 확인해 보세요',
+        url
+    }));
+    document.getElementById('share-link').addEventListener('click', () => shareLink({
+        title: '오늘의 띠별 운세', text: '12띠 오늘의 운세를 확인해 보세요', url
+    }));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    updateDate();
-    renderZodiacCards();
+    renderDate();
+    renderCards();
+    setupFinder();
+    setupShare();
+    loadData();
 });

@@ -1,124 +1,55 @@
-# 🔮 띠별 운세 자동화 시스템
+# 🔮 홍스팟 운세 (fortune.hongspot.com)
 
-매일 자정 자동으로 12띠 운세를 생성하는 웹사이트입니다.
+매일 자정(한국시간) 바뀌는 12띠 운세 + 타로 사이트입니다.
+GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트에서 읽어옵니다.
 
-## ✨ 기능
+## 구성
 
-- 12띠 카드형 메인 페이지
-- 띠별 상세 운세 (종합운, 재물운, 직장/사업운, 가정/건강운, 이성/대인관계)
-- Claude AI 자동 운세 생성
-- 구글 스프레드시트 데이터 저장
-- 매일 자정 자동 업데이트
+| 파일 | 역할 |
+|------|------|
+| `index.html` / `script.js` | 메인 — 12띠 카드, 내 띠 찾기 |
+| `detail.html` / `detail.js` | 띠별 상세 — 5개 카테고리, 행운 아이템 |
+| `tarot.html` / `tarot.js` / `tarot-data.js` | 타로 (78장, 8가지 스프레드) |
+| `config.js` | 스프레드시트 ID, 카카오 키, 띠·카테고리 정의 |
+| `common.js` | 공통 — 한국시간 날짜, 데이터 로딩, 별점, 공유 |
+| `styles.css` | 전체 디자인 |
+| `generate_fortune.py` | Claude API로 운세 생성 → 시트 기록 |
+| `.github/workflows/daily-fortune.yml` | 운세 생성 (수동 실행, 예약 실행은 꺼져 있음) |
 
-## 🚀 설정 방법
+## 데이터 흐름
 
-### 1. 구글 스프레드시트 준비
+1. 시트 `fortune_data` 에 `date | zodiac | category | content` 형식으로 저장
+2. 페이지는 **오늘 날짜 60행만** 구글 시각화 쿼리(gviz)로 조회 → 세션 동안 캐시
+3. 오늘 데이터가 없으면 **같은 월·일의 가장 최근 데이터**로 대신 표시 (연말 공백 대비)
 
-1. 새 구글 스프레드시트 생성
-2. 시트 이름을 `fortune_data`로 변경
-3. 첫 번째 행에 헤더 추가:
-   ```
-   date | zodiac | category | content
-   ```
-4. 스프레드시트 ID 복사 (URL에서 확인)
-   - URL: `https://docs.google.com/spreadsheets/d/[여기가_ID]/edit`
+시트는 "링크가 있는 모든 사용자 · 뷰어"로 공유되어 있어야 합니다.
+형식은 [SPREADSHEET_GUIDE.md](SPREADSHEET_GUIDE.md) 참고.
 
-### 2. Google Cloud 서비스 계정 생성
+## 운세 생성 (선택)
 
-1. [Google Cloud Console](https://console.cloud.google.com/) 접속
-2. 새 프로젝트 생성
-3. API 및 서비스 > 사용자 인증 정보
-4. 서비스 계정 만들기
-5. JSON 키 다운로드 (`credentials.json`)
-6. Google Sheets API와 Google Drive API 활성화
-7. 스프레드시트에 서비스 계정 이메일을 편집자로 공유
+API 비용 때문에 **매일 자동 실행은 꺼 두었습니다.** 시트에 미리 채워둔 데이터로 운영하고, 필요할 때만 수동으로 생성하세요.
 
-### 3. GitHub 저장소 설정
+GitHub 저장소 Settings → Secrets 에 아래 값이 필요합니다.
 
-1. GitHub에 새 저장소 생성
-2. 이 프로젝트 파일들 업로드
-3. Settings > Secrets and variables > Actions
-4. 다음 시크릿 추가:
-   - `ANTHROPIC_API_KEY`: Claude API 키
-   - `SPREADSHEET_ID`: 구글 스프레드시트 ID
-   - `GOOGLE_CREDENTIALS`: credentials.json 파일 내용 전체
+- `ANTHROPIC_API_KEY` — Claude API 키
+- `SPREADSHEET_ID` — 시트 ID
+- `GOOGLE_CREDENTIALS` — 서비스 계정 JSON 전체 (시트에 편집자로 공유)
 
-### 4. 웹사이트 설정
+모델은 기본 `claude-haiku-4-5-20251001`이며, Settings → Variables 에 `FORTUNE_MODEL`을 넣으면 바꿀 수 있습니다.
 
-1. `config.js` 파일 열기
-2. `SPREADSHEET_ID` 값을 실제 스프레드시트 ID로 변경
-3. 스프레드시트를 "링크가 있는 모든 사용자" 보기 권한으로 공유
+한꺼번에 채우고 싶을 때는 Actions → Daily Fortune Generator → Run workflow 에서
+시작 날짜와 일수를 입력하세요. (예: `2027-01-01`, `31`)
 
-### 5. GitHub Pages 활성화
+로컬 실행:
 
-1. 저장소 Settings > Pages
-2. Source: Deploy from a branch
-3. Branch: main, 폴더: / (root)
-4. Save
-
-### 6. 첫 운세 생성 (수동)
-
-1. Actions 탭으로 이동
-2. "Daily Fortune Generator" 워크플로우 선택
-3. "Run workflow" 클릭
-4. 몇 분 후 스프레드시트에 운세 데이터 확인
-
-## 📁 파일 구조
-
-```
-fortune-project/
-├── index.html              # 메인 페이지
-├── detail.html             # 상세 페이지
-├── styles.css              # 스타일시트
-├── config.js               # 설정 파일
-├── script.js               # 메인 스크립트
-├── detail.js               # 상세 페이지 스크립트
-├── generate_fortune.py     # 운세 생성 스크립트
-├── requirements.txt        # Python 패키지
-├── .github/
-│   └── workflows/
-│       └── daily-fortune.yml  # GitHub Actions 워크플로우
-└── README.md
+```bash
+pip install -r requirements.txt
+python generate_fortune.py --date 2027-01-01 --days 7
 ```
 
-## 🔧 트러블슈팅
+## 로컬 미리보기
 
-### 스프레드시트 데이터가 안 보여요
-- 스프레드시트가 "링크가 있는 모든 사용자" 보기 권한으로 공유되었는지 확인
-- config.js의 SPREADSHEET_ID가 올바른지 확인
-- 브라우저 콘솔(F12)에서 에러 메시지 확인
-
-### GitHub Actions가 실행 안 돼요
-- Actions 탭에서 워크플로우가 활성화되었는지 확인
-- Secrets가 모두 정확히 설정되었는지 확인
-- 워크플로우 실행 로그에서 에러 확인
-
-### 운세 생성이 실패해요
-- Claude API 키가 유효한지 확인
-- API 크레딧이 남아있는지 확인
-- 서비스 계정이 스프레드시트 편집 권한을 가지고 있는지 확인
-
-## 💰 예상 비용
-
-- GitHub Actions: 무료 (공개 저장소)
-- GitHub Pages: 무료
-- Google Sheets API: 무료
-- Claude API (Sonnet 4.5):
-  - 하루: 약 50-100원
-  - 월: 약 1,500-3,000원
-
-## 🎨 커스터마이징
-
-### 운세 생성 스타일 변경
-`generate_fortune.py`의 프롬프트 수정
-
-### 디자인 변경
-`styles.css` 파일 수정
-
-### 업데이트 시간 변경
-`.github/workflows/daily-fortune.yml`의 cron 시간 수정
-- 현재: `0 15 * * *` (UTC 15:00 = 한국시간 00:00)
-
-## 📝 라이선스
-
-자유롭게 사용하세요!
+```bash
+python3 -m http.server 8000
+# http://localhost:8000
+```
