@@ -68,7 +68,11 @@ const GZ = (() => {
         return null;
     }
 
-    return { STEMS, BRANCHES, ELEMENTS, dayIndex, pillar, pillarOfDate, addDays, sipsin, branchRelation };
+    const BRANCH_KEY = ['ja', 'chuk', 'in', 'myo', 'jin', 'sa', 'o', 'mi', 'sin', 'yu', 'sul', 'hae'];
+    /** 일주 페이지 주소 이름 — 예: 병오 → byeong-o */
+    function iljuSlug(p) { return `${STEMS[p.stem].key}-${BRANCH_KEY[p.branch]}`; }
+
+    return { STEMS, BRANCHES, ELEMENTS, dayIndex, pillar, pillarOfDate, addDays, sipsin, branchRelation, iljuSlug };
 })();
 
 const ILGAN_SCORE = {
@@ -157,7 +161,7 @@ function weekHtml(me, startDate) {
         const info = formatKoreanDate(date);
         return `
             <li class="week-day${i === 0 ? ' is-today' : ''}">
-                <span class="wd-date">${i === 0 ? '오늘' : info.short.replace(/^\d+월 /, '') + ' ' + info.weekday.slice(0, 1)}</span>
+                <span class="wd-date">${i === 0 ? '오늘' : info.short.replace(/^\d+월 /, '')}<small>${info.weekday.slice(0, 1)}</small></span>
                 <span class="wd-bar"><i style="height:${f.score * 20}%"></i></span>
                 <span class="wd-score">${f.score}</span>
                 <span class="wd-rel">${f.S.name}</span>
@@ -204,7 +208,7 @@ function renderMine(b) {
                 <div class="ilju-label">${b.y}년 ${b.m}월 ${b.d}일생${b.late ? ' · 밤 11시 이후' : ''}</div>
                 <h2>${p.name}일주 <small>${p.hanja}</small></h2>
                 <p>일간 <b>${prof.name}(${prof.hanja}${GZ.ELEMENTS[p.st.e].h})</b> · ${escapeHtml(prof.image)}</p>
-                <a class="ilju-more" href="ilgan/${prof.key}.html">${prof.name} 일간 성격 보기 →</a>
+                <span class="ilju-links"><a class="ilju-more" href="ilju/${GZ.iljuSlug(p)}.html">${p.name}일주 특징 보기 →</a><a class="ilju-more" href="ilgan/${prof.key}.html">${prof.name} 일간 →</a></span>
             </div>
             <button type="button" class="link-btn ilju-reset" id="birth-reset">다시 입력</button>
         </div>
@@ -352,7 +356,38 @@ function renderStemToday() {
         <a class="btn btn-gold" href="/ilgan.html">내 일주로 자세히 보기 →</a>`;
 }
 
+/* ═════════════ ilju/<slug>.html — 일주 페이지의 오늘 운세 (일지 합·충까지) ═════════════ */
+
+function renderIljuToday() {
+    const box = document.getElementById('ilju-today');
+    if (!box) return;
+    const stem = Number(box.dataset.stem), branch = Number(box.dataset.branch), name = box.dataset.name;
+    const today = kstDateString();
+    const me = { stem, branch, label: name };
+    const f = ilganFortune(me, today);
+    const info = formatKoreanDate(today);
+    box.innerHTML = `
+        <div class="ilgan-today-head">
+            <div>
+                <div class="eyebrow-sm">${info.full} · 오늘은 ${f.day.name}(${f.day.hanja})일</div>
+                <h2>오늘 ${josa(name + '일주', '은', '는')} ${relPill(f)}의 날 <span class="tagline">${escapeHtml(f.S.tagline)}</span></h2>
+            </div>
+            <div class="ilgan-score">${starsHtml(f.score)}</div>
+        </div>
+        <div class="summary">
+            <div class="label">${name}일주 오늘의 운세</div>
+            <p>${escapeHtml(f.headline)}</p>
+            ${f.branchNote ? `<p class="branch-note"><span class="branch-tag branch-tag--${f.branchRel}">${GZ.BRANCHES[branch].s}·${f.day.br.s} ${BRANCH_REL_LABEL[f.branchRel]}</span>${escapeHtml(f.branchNote)}</p>` : ''}
+        </div>
+        <div class="fortune-list">${catsHtml(f)}</div>
+        <div class="ilgan-week">
+            <div class="section-head"><h2>7일 운세 흐름</h2><span>${name}일주 기준</span></div>
+            <ol class="week-chart">${weekHtml(me, today)}</ol>
+        </div>`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    renderIljuToday();
     const today = kstDateString();
     const dateEl = document.getElementById('today-date');
     if (dateEl) {

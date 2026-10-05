@@ -1988,3 +1988,25 @@ img { max-width: 100%; display: block; }
 
 @media (min-width: 960px) { .more-grid--6 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .more-grid--6 .more-tile--new { grid-column: 1 / -1; }
+
+/* ═════════════ 일주 60가지 ═════════════ */
+.ilju-glyph--lg { width: fit-content; margin: 0 auto 12px; font-size: 2.2rem; padding: 10px 16px; }
+.ilju-keywords { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 14px; }
+.ilju-keywords span { font-size: .8rem; color: var(--gold-bright); padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line-strong); }
+.ilju-meta { margin-top: 12px; font-size: .82rem; color: var(--muted); }
+.ilju-meta a { color: var(--gold); text-decoration: none; }
+.ilju-links { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; }
+.ilju-links .ilju-more { margin-top: 0; }
+.stem-list h2 a { color: inherit; text-underline-offset: 3px; }
+.ilju-item h3 a { color: var(--text); text-decoration: none; }
+.ilju-item h3 a:hover { color: var(--gold-bright); }
+.dream-case .ilju-more { font-size: .85rem; white-space: nowrap; }
+.dream-subhead-link { font-size: .85rem; color: var(--muted); text-decoration: none; }
+.dream-subhead-link:hover { color: var(--gold); }
+.ilju-hanja { font-family: var(--serif); color: var(--gold); font-size: .9rem; flex: none; }
+.stem-today .ilgan-week { margin-top: 20px; }
+@media (max-width: 480px) {
+    .ilju-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .ilju-grid .dream-card small { display: none; }
+}
+.wd-date small { display: block; font-size: .68rem; color: var(--muted); }

@@ -9,6 +9,7 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 |------|------|
 | `index.html` / `script.js` | 메인 — 12띠 카드, 내 띠 찾기 |
 | `ilgan.html` / `ilgan.js` | 사주 일진 — 생년월일 → 일주 계산, 오늘 일진과의 십신·합충으로 하루 운세, 7일 흐름, 일간 10가지 오늘 순위 (데이터 파일 없이 날짜로 계산, 기한 없음) |
+| `ilju/index.html` · `ilju/<slug>.html` | 일주 60가지 — 60갑자 목록 + 일주별 성격·연애·궁합 페이지와 오늘의 운세 (생성기가 만듦, 직접 고치지 말 것) |
 | `ilgan/<key>.html` · `ilgan-data.js` | 일간 10가지 소개 페이지와 문장 데이터 (생성기가 만듦, 직접 고치지 말 것) |
 | `invest.html` / `invest.js` | 오늘의 투자운 — 12띠 카드, 순위, 띠별 상세(매매 분위기·행운의 섹터·시간대·팁·주의) |
 | `star.html` / `star.js` | 별자리 목록 — 오늘의 순위, 생일로 내 별자리 찾기 |
@@ -29,6 +30,7 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 | `data/invest/*.json` | 날짜별 투자운 데이터 (12띠 × 매매 분위기·문장·팁·주의·섹터·시간대·키워드, 휴장일 표시) |
 | `tools/build_fortunes.py` | 문장 풀 조합으로 띠·별자리 데이터 생성 (API 비용 없음) |
 | `tools/build_ilgan.py` · `tools/ilgan/*.json` | 사주 일진 문장 데이터·일간 페이지 생성기 |
+| `tools/build_ilju.py` · `tools/ilju/` | 일주 60가지 페이지 생성기, 목록(합·충 짝 포함)·본문·검사기 |
 | `tools/build_dreams.py` | 꿈해몽 페이지 생성기 — `tools/dreams/` 의 글로 `dream/*.html` 과 사이트맵 꿈 구간을 다시 만듦 |
 | `tools/dreams/catalog.json` · `data/*.json` · `validate.py` | 꿈 목록(분류·작성 메모), 꿈별 본문, 형식 검사기 |
 | `tools/build_invest.py` / `tools/invest_phrases.py` | 투자운 데이터 생성 (띠 데이터의 재물운 점수와 연동, 휴장일 달력 포함) |
@@ -76,6 +78,12 @@ python3 tools/build_invest.py --start 2026-01-01 --end 2028-12-31
 - 고친 뒤 `python3 tools/build_ilgan.py` → `ilgan-data.js`, `ilgan/*.html`, 사이트맵 일간 구간이 다시 만들어져요
 - 일주 계산은 율리우스 적일 기준 (JDN + 49) mod 60 (0 = 갑자). 1949-10-01 갑자일, 2026-05-01 을해일로 검증했어요
 - 점수·카테고리 기울기는 `ilgan.js` 의 `ILGAN_SCORE` 에서 조정
+
+### 일주 60가지 고치기
+
+- 본문: `tools/ilju/data/*.json` (형식은 `tools/ilju/validate.py` 맨 위), 60갑자 순서·별칭·합충 짝: `tools/ilju/catalog.json`
+- `python3 tools/ilju/validate.py && python3 tools/build_ilju.py` → `ilju/*.html`, 사이트맵 일주 구간이 다시 만들어져요
+- 합 짝 = 천간합 + 지지 육합, 충 짝 = 천간충(갑경·을신·병임·정계, 무기는 같은 천간) + 지지충
 
 ### 꿈해몽 고치기·추가하기
 

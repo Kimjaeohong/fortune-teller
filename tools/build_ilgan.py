@@ -28,6 +28,7 @@ SIPSIN = ['bigyeon', 'geopjae', 'siksin', 'sanggwan', 'pyeonjae', 'jeongjae',
           'pyeongwan', 'jeonggwan', 'pyeonin', 'jeongin']
 ELEM_HANJA = {'목': '木', '화': '火', '토': '土', '금': '金', '수': '水'}
 BRANCH_HANJA = dict(zip('자축인묘진사오미신유술해', '子丑寅卯辰巳午未申酉戌亥'))
+BRANCH_KEY = dict(zip('자축인묘진사오미신유술해', ['ja', 'chuk', 'in', 'myo', 'jin', 'sa', 'o', 'mi', 'sin', 'yu', 'sul', 'hae']))
 
 NAV_ITEMS = [('/', '띠별 운세'), ('/ilgan.html', '사주'), ('/invest.html', '투자운'), ('/star.html', '별자리'),
              ('/dream/', '꿈해몽'), ('/name.html', '궁합'), ('/tarot.html', '타로'), ('/lotto.html', '로또')]
@@ -96,8 +97,8 @@ def page(p, profiles, idx, today):
 
     ilju = ''.join(f'''
                 <article class="dream-case ilju-item" id="ilju-{name}">
-                    <header><h3>{name}일주 <small>{p['hanja']}{BRANCH_HANJA[name[1]]}</small></h3></header>
-                    <p>{e(text)}</p>
+                    <header><h3><a href="/ilju/{p['key']}-{BRANCH_KEY[name[1]]}.html">{name}일주</a> <small>{p['hanja']}{BRANCH_HANJA[name[1]]}</small></h3></header>
+                    <p>{e(text)} <a class="ilju-more" href="/ilju/{p['key']}-{BRANCH_KEY[name[1]]}.html">자세히 →</a></p>
                 </article>''' for name, text in p['ilju'].items())
 
     others = ''.join(
