@@ -257,6 +257,21 @@ function setMode(mode) {
         : '누를 때마다 완전히 새로운 번호 5게임을 뽑아요.';
 }
 
+// 꿈해몽 페이지 등에서 lotto.html#inc=3,17,25&from=돼지꿈 으로 들어오면 포함 번호를 미리 골라 둔다
+function applyIncludeFromHash() {
+    const params = new URLSearchParams(location.hash.slice(1));
+    const nums = [...new Set((params.get('inc') || '').split(',').map(n => parseInt(n, 10)))]
+        .filter(n => n >= 1 && n <= 45)
+        .slice(0, MAX_INCLUDE);
+    if (!nums.length) return;
+    state.include = new Set(nums);
+    state.exclude.clear();
+    renderGrid();
+    document.getElementById('picker').open = true;
+    const from = (params.get('from') || '').slice(0, 20);
+    showToast(`${from ? from + ' ' : ''}번호 ${nums.length}개를 포함했어요`);
+}
+
 function setupDrawInfo() {
     const d = nextDraw();
     document.getElementById('draw-info').textContent = `제${d.round}회 · ${d.month}월 ${d.day}일(토) 추첨`;
@@ -268,6 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setMode('fortune');
     renderGrid();
     renderHistory();
+    applyIncludeFromHash();
 
     document.querySelectorAll('.seg-btn').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
 

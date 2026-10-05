@@ -1383,7 +1383,7 @@ img { max-width: 100%; display: block; }
 .howto b { color: var(--text); font-weight: 600; }
 
 /* ═════════════ 상단 메뉴: 좁은 화면에서는 두 줄 + 가로 스크롤 ═════════════ */
-@media (max-width: 560px) {
+@media (max-width: 680px) {
     .topbar { flex-wrap: wrap; row-gap: 8px; padding-bottom: 6px; }
     .brand-text { display: inline !important; }
     .nav {
@@ -1571,4 +1571,217 @@ img { max-width: 100%; display: block; }
     letter-spacing: .06em;
     color: #231b0c;
     background: var(--gold);
+}
+
+/* ═════════════ 꿈해몽 ═════════════ */
+
+.verdict {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 11px;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 700;
+    border: 1px solid currentColor;
+    white-space: nowrap;
+    line-height: 1.5;
+}
+.verdict--good { color: var(--jade); background: rgba(134, 194, 168, 0.08); }
+.verdict--mixed { color: var(--gold); background: rgba(217, 182, 115, 0.08); }
+.verdict--caution { color: var(--rose); background: rgba(224, 138, 122, 0.08); }
+.verdict--sm { font-size: .7rem; padding: 1px 8px; flex: none; }
+
+.vdot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex: none;
+    vertical-align: 1px;
+}
+.vdot--good { background: var(--jade); }
+.vdot--mixed { background: var(--gold); }
+.vdot--caution { background: var(--rose); }
+.section-head span .vdot { margin: 0 3px 0 8px; }
+
+/* 검색창 */
+.dream-search {
+    display: flex;
+    gap: 8px;
+    max-width: 520px;
+    margin: 22px auto 0;
+    padding: 6px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: rgba(0, 0, 0, 0.25);
+}
+.dream-search input {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--text);
+    background: none;
+    border: 0;
+    outline: none;
+    padding: 8px 14px;
+}
+.dream-search input::placeholder { color: var(--muted); }
+.dream-search input::-webkit-search-cancel-button { filter: invert(.6); }
+.dream-search .btn { flex: none; padding: 10px 20px; }
+.page > .dream-search, .page--narrow > .dream-search { margin: 34px auto 0; }
+
+/* 개별 꿈 페이지 */
+.dream-crumbs .dream-path a { font-size: .85rem; }
+.dream-hero { text-align: center; padding: 18px 0 8px; }
+.dream-hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.7rem, 6vw, 2.4rem);
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    margin-top: 6px;
+}
+.dream-verdict-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+}
+.dream-count { font-size: .82rem; color: var(--muted); }
+.dream-summary {
+    max-width: 600px;
+    margin: 16px auto 0;
+    color: var(--text-2);
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.dream-toc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin: 22px 0 8px;
+}
+.dream-toc a {
+    font-size: .8rem;
+    text-decoration: none;
+    color: var(--text-2);
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+}
+.dream-toc a:hover { color: var(--gold-bright); border-color: var(--line-strong); }
+
+.dream-section { margin-top: 28px; scroll-margin-top: 16px; }
+.dream-section h2, .dream-lucky h2, .dream-related h2 {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+.dream-section > p {
+    color: var(--text-2);
+    font-size: 1rem;
+    line-height: 1.9;
+}
+.dream-cases h2 { margin-bottom: 14px; }
+.dream-case {
+    padding: 16px 18px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    scroll-margin-top: 16px;
+}
+.dream-case + .dream-case { margin-top: 10px; }
+.dream-case:target { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+.dream-case header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.dream-case h3 { font-size: 1rem; font-weight: 700; line-height: 1.45; }
+.dream-case p { color: var(--text-2); font-size: .95rem; line-height: 1.8; }
+
+.dream-advice { margin-top: 28px; }
+.dream-advice p { font-size: 1.05rem; }
+
+.dream-lucky {
+    margin-top: 14px;
+    padding: 18px 18px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    display: grid;
+    gap: 14px;
+    justify-items: start;
+    scroll-margin-top: 16px;
+}
+.dream-lucky-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.dream-lucky-head h2 { margin: 0; font-size: 1.05rem; }
+.dream-lucky-head span { font-size: .78rem; color: var(--muted); }
+.dream-lucky .balls { flex-wrap: wrap; }
+@media (max-width: 380px) { .dream-lucky .ball { width: 36px; height: 36px; } }
+
+.dream-related { margin-top: 34px; }
+.dream-subhead { margin-top: 22px; }
+.dream-subhead a { font-size: .85rem; color: var(--muted); text-decoration: none; }
+.dream-subhead a:hover { color: var(--gold); }
+.dream-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.dream-chip { padding: 7px 13px; }
+
+/* 꿈해몽 메인 */
+.dream-index-hero { padding-bottom: 26px; }
+.dream-results, .dream-popular { margin-bottom: 30px; scroll-margin-top: 16px; }
+.dream-cat-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.dream-cat-tabs .chip small { color: var(--muted); font-size: .74rem; }
+.dream-cat { margin-top: 30px; scroll-margin-top: 16px; }
+.dream-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+@media (max-width: 420px) { .dream-grid { grid-template-columns: 1fr; } }
+.dream-card {
+    display: grid;
+    gap: 4px;
+    height: 100%;
+    padding: 13px 15px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-decoration: none;
+    transition: border-color .2s, transform .2s;
+}
+.dream-card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+.dream-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.dream-card-top strong { font-family: var(--serif); font-size: .98rem; }
+.dream-card small {
+    color: var(--text-2);
+    font-size: .8rem;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.dream-card small.dream-card-case { color: var(--gold); }
+.dream-empty {
+    grid-column: 1 / -1;
+    padding: 20px;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--line-strong);
+    color: var(--text-2);
+    text-align: center;
+}
+.dream-empty b { color: var(--text); }
+.dream-lucky .ball.is-fixed { outline-offset: 2px; }
+@media (max-width: 480px) {
+    /* 메인의 분류별 목록은 휴대폰에서 두 칸으로 촘촘하게 (설명은 검색 결과·데스크톱에서만) */
+    .dream-cat .dream-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .dream-cat .dream-card { padding: 11px 12px; }
+    .dream-cat .dream-card small { display: none; }
+    .dream-cat .dream-card-top { flex-wrap: wrap; gap: 4px 6px; }
+    .dream-cat .dream-card-top strong { font-size: .92rem; }
 }

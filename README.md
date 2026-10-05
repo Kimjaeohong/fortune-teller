@@ -1,6 +1,6 @@
 # 🔮 홍스팟 운세 (fortune.hongspot.com)
 
-매일 자정(한국시간) 바뀌는 12띠 운세 · 띠별 투자운 · 별자리 운세 + 이름 궁합 · 타로 · 행운의 로또 번호 사이트입니다.
+매일 자정(한국시간) 바뀌는 12띠 운세 · 띠별 투자운 · 별자리 운세 + 꿈해몽 사전 · 이름 궁합 · 타로 · 행운의 로또 번호 사이트입니다.
 GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트에서 읽어옵니다.
 
 ## 구성
@@ -11,6 +11,8 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 | `invest.html` / `invest.js` | 오늘의 투자운 — 12띠 카드, 순위, 띠별 상세(매매 분위기·행운의 섹터·시간대·팁·주의) |
 | `star.html` / `star.js` | 별자리 목록 — 오늘의 순위, 생일로 내 별자리 찾기 |
 | `detail.html` / `star-detail.html` / `detail.js` | 띠·별자리 상세 (공용 스크립트) — 5개 카테고리, 행운 아이템 |
+| `dream/index.html` · `dream/<slug>.html` | 꿈해몽 사전 — 메인(검색·분류별 목록) + 꿈 하나당 정적 페이지 189개 (생성기가 만듦, 직접 고치지 말 것) |
+| `dream/dream.js` | 꿈해몽 검색·공유 스크립트 |
 | `tarot.html` / `tarot.js` / `tarot-data.js` | 타로 (78장, 8가지 스프레드) |
 | `name.html` / `name.js` | 이름 궁합 — 번갈아 쓰기·획수·숫자 피라미드, 양방향 결과 |
 | `lotto.html` / `lotto.js` | 행운의 로또 번호 — 운세 기준(하루 고정)·무작위, 포함·제외 번호, 기록 |
@@ -24,6 +26,8 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 | `data/star/*.json` | 날짜별 별자리 운세 데이터 |
 | `data/invest/*.json` | 날짜별 투자운 데이터 (12띠 × 매매 분위기·문장·팁·주의·섹터·시간대·키워드, 휴장일 표시) |
 | `tools/build_fortunes.py` | 문장 풀 조합으로 띠·별자리 데이터 생성 (API 비용 없음) |
+| `tools/build_dreams.py` | 꿈해몽 페이지 생성기 — `tools/dreams/` 의 글로 `dream/*.html` 과 사이트맵 꿈 구간을 다시 만듦 |
+| `tools/dreams/catalog.json` · `data/*.json` · `validate.py` | 꿈 목록(분류·작성 메모), 꿈별 본문, 형식 검사기 |
 | `tools/build_invest.py` / `tools/invest_phrases.py` | 투자운 데이터 생성 (띠 데이터의 재물운 점수와 연동, 휴장일 달력 포함) |
 | `generate_fortune.py` | (선택) Claude API로 특정 날짜를 AI 문장으로 생성 |
 | `.github/workflows/daily-fortune.yml` | 운세 생성 (수동 실행, 예약 실행은 꺼져 있음) |
@@ -62,6 +66,20 @@ python3 tools/build_invest.py --start 2026-01-01 --end 2028-12-31
 새 해를 추가할 때는 그 해의 음력 공휴일(설·추석·부처님오신날)과 선거일을 `LUNAR_HOLIDAYS`, `ELECTION_DAYS`에 넣어 주세요.
 
 문장을 추가·수정한 뒤 다시 돌리면 됩니다. 문장 하나를 자리에서 고치기만 하면 그 문장만 바뀝니다.
+
+### 꿈해몽 고치기·추가하기
+
+1. 글 고치기: `tools/dreams/data/*.json` 에서 해당 꿈을 고친다
+2. 꿈 추가: `tools/dreams/catalog.json` 에 slug·제목·분류를 넣고, `data/` 아래 아무 파일에 같은 형식으로 본문을 넣는다 (형식은 `validate.py` 맨 위 설명 참고)
+3. 검사 후 페이지 다시 만들기:
+
+```bash
+python3 tools/dreams/validate.py
+python3 tools/build_dreams.py
+```
+
+`dream/*.html` 과 `sitemap.xml` 의 꿈 구간(`<!-- dream:start -->` ~ `<!-- dream:end -->`)은 생성기가 덮어쓰니 직접 고치지 마세요.
+꿈마다 나오는 행운 번호는 slug로 정해지는 고정값이고, '로또 번호 뽑기' 버튼은 `lotto.html#inc=…&from=…` 로 앞 3개 번호를 포함 번호로 넘깁니다.
 
 ## AI로 생성하기 (선택)
 
