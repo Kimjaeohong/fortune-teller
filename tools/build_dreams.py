@@ -80,7 +80,7 @@ def verdict_badge(v, small=False):
     return f'<span class="verdict verdict--{info["cls"]}{" verdict--sm" if small else ""}">{info["short" if small else "label"]}</span>'
 
 
-NAV_ITEMS = [('/', '띠별 운세'), ('/invest.html', '투자운'), ('/star.html', '별자리'),
+NAV_ITEMS = [('/', '띠별 운세'), ('/ilgan.html', '사주'), ('/invest.html', '투자운'), ('/star.html', '별자리'),
              ('/dream/', '꿈해몽'), ('/name.html', '궁합'), ('/tarot.html', '타로'), ('/lotto.html', '로또')]
 
 
