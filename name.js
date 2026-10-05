@@ -77,6 +77,12 @@ function validName(v) {
     return /^[가-힣]{1,5}$/.test(v);
 }
 
+function topicParticle(word) {
+    const code = word.charCodeAt(word.length - 1) - 0xAC00;
+    const hasFinal = code >= 0 && code <= 11171 && code % 28 !== 0;
+    return hasFinal ? '은' : '는';
+}
+
 /* ---------- 화면 ---------- */
 
 const state = { a: '', b: '', dir: 'ab' };
@@ -121,7 +127,7 @@ function render() {
         <div class="score-num"><span id="score-count">0</span><small>%</small></div>
         <div class="score-title">${msg.title}</div>
         <p class="score-text">${msg.text}</p>
-        <p class="score-other">반대로 <b>${escapeHtml(second)} → ${escapeHtml(first)}</b>는 <b>${other.score}%</b>예요</p>`;
+        <p class="score-other">반대로 <b>${escapeHtml(second)} → ${escapeHtml(first)}</b>${topicParticle(first)} <b>${other.score}%</b>예요</p>`;
 
     // 숫자 올라가는 연출
     const target = result.score;
