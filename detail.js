@@ -120,6 +120,15 @@ function renderFortune(key, result) {
     const fallbackNote = result.isFallback
         ? `<div class="notice" style="margin:0 0 14px">오늘 데이터 준비 중이라 ${formatKoreanDate(result.date).short} 운세를 대신 보여드려요.</div>`
         : '';
+    const investLink = KIND_ID === 'zodiac'
+        ? `<a class="promo promo--tight" href="invest.html?zodiac=${key}">
+                <div>
+                    <h3>${KIND.name(key)} 오늘의 투자운 <span class="new-tag">NEW</span></h3>
+                    <p>매매 분위기 · 행운의 섹터 · 좋은 시간대 · 오늘의 팁과 주의 포인트</p>
+                </div>
+                <span class="arrow" aria-hidden="true">→</span>
+            </a>`
+        : '';
 
     content.innerHTML = `
         ${fallbackNote}
@@ -133,7 +142,8 @@ function renderFortune(key, result) {
             <div class="lucky-item"><div class="k">행운의 숫자</div><div class="v">${lucky.number}</div></div>
             <div class="lucky-item"><div class="k">행운의 방향</div><div class="v">${lucky.direction}</div></div>
             <div class="lucky-item"><div class="k">좋은 시간대</div><div class="v">${lucky.time}</div></div>
-        </div>`;
+        </div>
+        ${investLink}`;
 
     setupShare(key, map);
 }

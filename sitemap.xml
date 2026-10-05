@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://fortune.hongspot.com/</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=rat</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=ox</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=tiger</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=rabbit</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=dragon</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=snake</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=horse</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=sheep</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=monkey</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=rooster</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=dog</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://fortune.hongspot.com/invest.html?zodiac=pig</loc><lastmod>2026-10-05</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
   <url><loc>https://fortune.hongspot.com/star.html</loc><lastmod>2026-09-26</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://fortune.hongspot.com/name.html</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://fortune.hongspot.com/lotto.html</loc><lastmod>2026-09-26</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>

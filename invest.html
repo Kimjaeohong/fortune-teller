@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>오늘의 투자운 — 띠별 주식 운세 | 홍스팟 운세</title>
+    <meta name="description" content="12띠 오늘의 투자운. 매매 분위기(흐름 타기·나눠 담기·챙기기·지켜보기·쉬어가기), 행운의 섹터, 좋은 시간대, 오늘의 팁과 주의 포인트를 매일 자정 업데이트. 재미로 보는 주식 운세.">
+    <meta name="keywords" content="오늘의 투자운, 띠별 투자운, 주식 운세, 오늘의 주식운, 재물운, 띠별 운세, 행운의 섹터">
+    <meta name="theme-color" content="#0c0f1d">
+    <link rel="canonical" href="https://fortune.hongspot.com/invest.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="홍스팟 운세">
+    <meta property="og:title" content="오늘의 투자운 — 띠별 주식 운세">
+    <meta property="og:description" content="오늘 내 띠의 매매 분위기와 행운의 섹터는?">
+    <meta property="og:url" content="https://fortune.hongspot.com/invest.html">
+    <meta property="og:image" content="https://fortune.hongspot.com/fortune-image.png">
+    <meta name="twitter:card" content="summary">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2248%22 fill=%22%230c0f1d%22/><text x=%2250%22 y=%2268%22 font-size=%2252%22 text-anchor=%22middle%22 fill=%22%23d9b673%22>福</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Google AdSense 자동 광고 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534" crossorigin="anonymous"></script>
+    <!-- 카카오톡 공유 SDK -->
+    <script defer src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="page">
+        <header class="topbar">
+            <a href="./" class="brand"><span class="brand-mark">福</span><span class="brand-text">홍스팟 운세</span></a>
+            <nav class="nav" aria-label="주요 메뉴">
+                <a href="./">띠별 운세</a>
+                <a href="invest.html" aria-current="page">투자운</a>
+                <a href="star.html">별자리</a>
+                <a href="name.html">궁합</a>
+                <a href="tarot.html">타로</a>
+                <a href="lotto.html">로또</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div class="eyebrow" id="today-date">오늘의 투자운</div>
+            <h1>오늘, 내 띠의<br><em>투자 감</em>은 어떨까</h1>
+            <p class="lead">재미로 보는 띠별 주식 운세 · 매일 자정 업데이트</p>
+
+            <form class="finder" id="finder" autocomplete="off">
+                <label for="birth-year" class="sr-only">태어난 해</label>
+                <input id="birth-year" type="number" inputmode="numeric" min="1920" max="2100"
+                       placeholder="태어난 해 (예: 1990)" required>
+                <button type="submit" class="btn btn-gold">내 투자운 보기</button>
+            </form>
+            <p class="finder-hint">매매 분위기 · 행운의 섹터 · 좋은 시간대 · 오늘의 팁과 주의 포인트</p>
+
+            <div class="market-pill" id="market-pill" hidden><span class="dot" aria-hidden="true"></span><span id="market-text"></span></div>
+            <div id="data-notice"></div>
+        </section>
+
+        <section class="invest-focus" id="focus" hidden aria-live="polite"></section>
+
+        <section class="top3-wrap" aria-labelledby="top3-title">
+            <div class="section-head">
+                <h2 id="top3-title">오늘의 투자운 순위</h2>
+                <span>투자운 별점 기준</span>
+            </div>
+            <ol class="top3" id="top3"></ol>
+        </section>
+
+        <div class="section-head">
+            <h2>12띠 오늘의 투자운</h2>
+            <span>카드를 눌러 자세히 보기</span>
+        </div>
+
+        <div class="zodiac-grid" id="invest-grid"></div>
+
+        <aside class="caution" aria-label="이용 안내">
+            <h2>꼭 알아 두세요</h2>
+            <ul>
+                <li>투자운은 <b>재미로 보는 운세</b>예요. 특정 종목이나 매매를 권하는 게 아니에요.</li>
+                <li>행운의 섹터와 시간대는 날짜와 띠로 정해지는 재미 요소예요. 투자 판단과 결과는 언제나 본인의 몫이에요.</li>
+                <li>장이 쉬는 날(주말·공휴일·연말 휴장)에는 복기와 계획 위주의 운세가 나와요.</li>
+            </ul>
+        </aside>
+
+        <section class="more" aria-labelledby="tools-title">
+            <div class="section-head"><h2 id="tools-title">홍스팟 투자 도구</h2><span>운세 말고 숫자로 보기</span></div>
+            <div class="more-grid more-grid--3">
+                <a class="more-tile" href="https://stock.hongspot.com/" target="_blank" rel="noopener">
+                    <span class="more-icon" aria-hidden="true">▤</span>
+                    <strong>홍스팟 주식 이야기</strong>
+                    <small>미국 주식 실적 분석 · ETF 전략</small>
+                </a>
+                <a class="more-tile" href="https://dividend.hongspot.com/" target="_blank" rel="noopener">
+                    <span class="more-icon" aria-hidden="true">◷</span>
+                    <strong>홍스팟 배당 검색기</strong>
+                    <small>국내 배당 조회 · 미국 배당 캘린더</small>
+                </a>
+                <a class="more-tile" href="https://calculating.hongspot.com/" target="_blank" rel="noopener">
+                    <span class="more-icon" aria-hidden="true">≡</span>
+                    <strong>홍스팟 계산기</strong>
+                    <small>복리 · 배당 목표 · 본전 회복률 계산기</small>
+                </a>
+            </div>
+        </section>
+
+        <a class="promo" href="./">
+            <div>
+                <h3>오늘의 종합 운세도 함께 보세요</h3>
+                <p>종합운·재물운·일·건강·인연운과 행운 아이템까지.</p>
+            </div>
+            <span class="arrow" aria-hidden="true">→</span>
+        </a>
+    </div>
+
+    <footer class="footer">
+        <p>운세는 재미로만 봐 주세요 · 투자 판단은 본인의 책임이에요</p>
+        <p>매일 자정(한국시간) 새로운 운세로 바뀝니다</p>
+        <p><a href="privacy.html">개인정보처리방침</a></p>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="common.js"></script>
+    <script src="invest.js"></script>
+</body>
+</html>

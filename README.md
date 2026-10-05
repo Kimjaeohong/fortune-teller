@@ -1,6 +1,6 @@
 # 🔮 홍스팟 운세 (fortune.hongspot.com)
 
-매일 자정(한국시간) 바뀌는 12띠 운세 · 별자리 운세 + 이름 궁합 · 타로 · 행운의 로또 번호 사이트입니다.
+매일 자정(한국시간) 바뀌는 12띠 운세 · 띠별 투자운 · 별자리 운세 + 이름 궁합 · 타로 · 행운의 로또 번호 사이트입니다.
 GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트에서 읽어옵니다.
 
 ## 구성
@@ -8,6 +8,7 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 | 파일 | 역할 |
 |------|------|
 | `index.html` / `script.js` | 메인 — 12띠 카드, 내 띠 찾기 |
+| `invest.html` / `invest.js` | 오늘의 투자운 — 12띠 카드, 순위, 띠별 상세(매매 분위기·행운의 섹터·시간대·팁·주의) |
 | `star.html` / `star.js` | 별자리 목록 — 오늘의 순위, 생일로 내 별자리 찾기 |
 | `detail.html` / `star-detail.html` / `detail.js` | 띠·별자리 상세 (공용 스크립트) — 5개 카테고리, 행운 아이템 |
 | `tarot.html` / `tarot.js` / `tarot-data.js` | 타로 (78장, 8가지 스프레드) |
@@ -21,7 +22,9 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 | `robots.txt` / `sitemap.xml` | 검색엔진 등록용 |
 | `data/*.json` | 날짜별 띠 운세 데이터 (12띠 × 5카테고리 + 별점) |
 | `data/star/*.json` | 날짜별 별자리 운세 데이터 |
-| `tools/build_fortunes.py` | 문장 풀 조합으로 데이터 생성 (API 비용 없음) |
+| `data/invest/*.json` | 날짜별 투자운 데이터 (12띠 × 매매 분위기·문장·팁·주의·섹터·시간대·키워드, 휴장일 표시) |
+| `tools/build_fortunes.py` | 문장 풀 조합으로 띠·별자리 데이터 생성 (API 비용 없음) |
+| `tools/build_invest.py` / `tools/invest_phrases.py` | 투자운 데이터 생성 (띠 데이터의 재물운 점수와 연동, 휴장일 달력 포함) |
 | `generate_fortune.py` | (선택) Claude API로 특정 날짜를 AI 문장으로 생성 |
 | `.github/workflows/daily-fortune.yml` | 운세 생성 (수동 실행, 예약 실행은 꺼져 있음) |
 
@@ -39,13 +42,26 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 같은 날 띠끼리 같은 문장을 쓰지 않고, 같은 띠는 400일 안에 같은 운세가 반복되지 않습니다.
 
 ```bash
-python3 tools/build_fortunes.py --start 2028-01-01 --end 2028-12-31              # 띠
-python3 tools/build_fortunes.py --kind star --start 2028-01-01 --end 2028-12-31  # 별자리 (띠 먼저)
+python3 tools/build_fortunes.py --start 2026-01-01 --end 2029-12-31              # 띠
+python3 tools/build_fortunes.py --kind star --start 2026-01-01 --end 2029-12-31  # 별자리 (띠 먼저)
 ```
 
 별자리는 같은 날 띠 운세에 쓰인 문장을 피해서 고르므로, 띠 데이터를 먼저 만든 뒤 돌리세요.
 
-문장을 추가·수정한 뒤 다시 돌리면 됩니다. 시드가 고정이라 결과는 항상 같습니다.
+기간을 늘릴 때는 **항상 2026-01-01부터** 새 종료일까지 한 번에 돌리세요.
+시드가 고정이라 앞쪽 날짜는 그대로 유지되고 뒤에 새 날짜만 붙습니다.
+(새 해만 따로 돌리면 "400일 안에 반복 금지" 규칙이 연도 경계에서 끊깁니다.)
+
+투자운은 같은 날 띠 운세의 **재물운 별점**을 읽어 매매 분위기를 정하므로, 역시 띠 데이터 다음에 돌리세요.
+
+```bash
+python3 tools/build_invest.py --start 2026-01-01 --end 2028-12-31
+```
+
+휴장일(주말·공휴일·대체공휴일·설/추석 연휴·근로자의 날·선거일·연말 휴장)은 `tools/build_invest.py` 안의 달력으로 판단합니다.
+새 해를 추가할 때는 그 해의 음력 공휴일(설·추석·부처님오신날)과 선거일을 `LUNAR_HOLIDAYS`, `ELECTION_DAYS`에 넣어 주세요.
+
+문장을 추가·수정한 뒤 다시 돌리면 됩니다. 문장 하나를 자리에서 고치기만 하면 그 문장만 바뀝니다.
 
 ## AI로 생성하기 (선택)
 
