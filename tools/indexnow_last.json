@@ -1,8 +1,8 @@
 {
- "at": "2026-11-02 14:34",
- "count": 325,
+ "at": "2026-11-03 08:06",
+ "count": 43,
  "status": {
   "https://searchadvisor.naver.com/indexnow": 200,
-  "https://api.indexnow.org/indexnow": 403
+  "https://api.indexnow.org/indexnow": 202
  }
 }
