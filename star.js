@@ -14,11 +14,21 @@ function renderCards() {
     const grid = document.getElementById('star-grid');
     const mine = getMyKey('star');
 
+    // 생성기가 미리 넣어 둔 카드가 있으면 그대로 쓰고 '내 별자리' 표시만 더한다
+    if (grid.children.length) {
+        const card = mine && grid.querySelector(`.zodiac-card[data-key="${mine}"]`);
+        if (card && !card.classList.contains('is-mine')) {
+            card.classList.add('is-mine');
+            card.insertAdjacentHTML('afterbegin', '<span class="mine-badge">내 별자리</span>');
+        }
+        return;
+    }
+
     grid.innerHTML = STAR_ORDER.map((key, i) => {
         const info = STAR_INFO[key];
         const isMine = key === mine;
         return `
-            <a class="zodiac-card${isMine ? ' is-mine' : ''}" href="star-detail.html?sign=${key}"
+            <a class="zodiac-card${isMine ? ' is-mine' : ''}" href="/star/${key}.html"
                data-key="${key}" style="animation-delay:${i * 35}ms">
                 ${isMine ? '<span class="mine-badge">내 별자리</span>' : ''}
                 <div class="zc-top">
@@ -56,7 +66,7 @@ function fillCards(result) {
 
     document.getElementById('top3').innerHTML = ranking.slice(0, 3).map((key, i) => `
         <li class="top3-item rank-${i + 1}">
-            <a href="star-detail.html?sign=${key}">
+            <a href="/star/${key}.html">
                 <span class="top3-rank">${i + 1}</span>
                 <span class="hanja glyph-star" aria-hidden="true">${STAR_INFO[key].symbol}</span>
                 <span class="top3-body">
@@ -88,7 +98,7 @@ async function loadData() {
         document.querySelectorAll('.zc-foot').forEach(el => { el.innerHTML = ''; });
         document.getElementById('top3').innerHTML = '';
         showNotice('네트워크가 불안정해요. <button type="button" class="btn btn-ghost" id="retry" style="margin-left:6px;padding:4px 12px">다시 시도</button>');
-        document.getElementById('retry').addEventListener('click', () => { renderCards(); loadData(); });
+        document.getElementById('retry').addEventListener('click', () => { document.getElementById('star-grid').innerHTML = ''; renderCards(); loadData(); });
     }
 }
 
@@ -118,7 +128,7 @@ function setupFinder() {
         }
         const key = starFromDate(m, d);
         setMyKey('star', key);
-        location.href = `star-detail.html?sign=${key}`;
+        location.href = `/star/${key}.html`;
     });
 }
 

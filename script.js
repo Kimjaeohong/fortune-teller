@@ -13,12 +13,22 @@ function renderCards() {
     const grid = document.getElementById('zodiac-grid');
     const mine = getMyZodiac();
 
+    // 생성기가 미리 넣어 둔 카드가 있으면 그대로 쓰고 '내 띠' 표시만 더한다
+    if (grid.children.length) {
+        const card = mine && grid.querySelector(`.zodiac-card[data-zodiac="${mine}"]`);
+        if (card && !card.classList.contains('is-mine')) {
+            card.classList.add('is-mine');
+            card.insertAdjacentHTML('afterbegin', '<span class="mine-badge">내 띠</span>');
+        }
+        return;
+    }
+
     grid.innerHTML = ZODIAC_ORDER.map((key, i) => {
         const info = ZODIAC_INFO[key];
         const years = yearsForZodiac(key, todayInfo.year).slice(-6).map(y => String(y).slice(2)).join(' · ');
         const isMine = key === mine;
         return `
-            <a class="zodiac-card${isMine ? ' is-mine' : ''}" href="detail.html?zodiac=${key}"
+            <a class="zodiac-card${isMine ? ' is-mine' : ''}" href="/zodiac/${key}.html"
                data-zodiac="${key}" style="animation-delay:${i * 35}ms">
                 ${isMine ? '<span class="mine-badge">내 띠</span>' : ''}
                 <div class="zc-top">
@@ -70,7 +80,7 @@ async function loadData() {
         document.querySelectorAll('.zc-line').forEach(el => { el.textContent = '운세를 불러오지 못했어요.'; });
         document.querySelectorAll('.zc-foot').forEach(el => { el.innerHTML = ''; });
         showNotice('네트워크가 불안정해요. <button type="button" class="btn btn-ghost" id="retry" style="margin-left:6px;padding:4px 12px">다시 시도</button>');
-        document.getElementById('retry').addEventListener('click', () => { renderCards(); loadData(); });
+        document.getElementById('retry').addEventListener('click', () => { document.getElementById('zodiac-grid').innerHTML = ''; renderCards(); loadData(); });
     }
 }
 
@@ -87,7 +97,7 @@ function setupFinder() {
         }
         const key = zodiacFromYear(year);
         setMyZodiac(key);
-        location.href = `detail.html?zodiac=${key}`;
+        location.href = `/zodiac/${key}.html`;
     });
 }
 

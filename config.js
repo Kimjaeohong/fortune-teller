@@ -8,6 +8,8 @@ const CONFIG = {
     SITE_URL: 'https://fortune.hongspot.com',
     SHARE_IMAGE: 'https://fortune.hongspot.com/fortune-image.png',
     KAKAO_KEY: '27e9da30e66de45bc054ba884c3bd150',
+    // 구글 애널리틱스 측정 ID (예: 'G-XXXXXXXXXX'). 비워 두면 통계를 수집하지 않음
+    GA_ID: '',
     TIMEZONE: 'Asia/Seoul',
     FETCH_TIMEOUT_MS: 8000
 };

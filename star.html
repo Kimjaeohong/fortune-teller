@@ -23,7 +23,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+Symbols&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles.css">
 
     <!-- Google AdSense 자동 광고 -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534" crossorigin="anonymous"></script>
@@ -33,21 +33,21 @@
 <body>
     <div class="page">
         <header class="topbar">
-            <a href="./" class="brand"><span class="brand-mark">福</span><span class="brand-text">홍스팟 운세</span></a>
+            <a href="/" class="brand"><span class="brand-mark">福</span><span class="brand-text">홍스팟 운세</span></a>
             <nav class="nav" aria-label="주요 메뉴">
-                <a href="./">띠별 운세</a>
-                <a href="ilgan.html">사주</a>
-                <a href="invest.html">투자운</a>
-                <a href="star.html" aria-current="page">별자리</a>
-                <a href="dream/">꿈해몽</a>
-                <a href="name.html">궁합</a>
-                <a href="tarot.html">타로</a>
-                <a href="lotto.html">로또</a>
+                <a href="/">띠별 운세</a>
+                <a href="/ilgan.html">사주</a>
+                <a href="/invest.html">투자운</a>
+                <a href="/star.html" aria-current="page">별자리</a>
+                <a href="/dream/">꿈해몽</a>
+                <a href="/name.html">궁합</a>
+                <a href="/tarot.html">타로</a>
+                <a href="/lotto.html">로또</a>
             </nav>
         </header>
 
         <section class="hero">
-            <div class="eyebrow" id="today-date">오늘의 별자리 운세</div>
+            <div class="eyebrow" id="today-date">2026년 11월 2일 월요일</div>
             <h1>오늘 밤, <em>나의 별</em>이<br>들려주는 이야기</h1>
             <p class="lead">12별자리 오늘의 운세 · 매일 자정 업데이트</p>
 
@@ -72,7 +72,37 @@
                 <h2 id="top3-title">오늘의 별자리 순위</h2>
                 <span>종합운 기준</span>
             </div>
-            <ol class="top3" id="top3"></ol>
+            <ol class="top3" id="top3"><!--pre:start-->
+        <li class="top3-item rank-1">
+            <a href="/star/taurus.html">
+                <span class="top3-rank">1</span>
+                <span class="hanja glyph-star" aria-hidden="true">♉︎</span>
+                <span class="top3-body">
+                    <strong>황소자리</strong>
+                    <small>묵묵히 해온 일이 인정받는 날이에요.</small>
+                </span>
+            </a>
+        </li>
+        <li class="top3-item rank-2">
+            <a href="/star/libra.html">
+                <span class="top3-rank">2</span>
+                <span class="hanja glyph-star" aria-hidden="true">♎︎</span>
+                <span class="top3-body">
+                    <strong>천칭자리</strong>
+                    <small>기다리던 흐름이 드디어 순조롭게 움직이기 시작해요.</small>
+                </span>
+            </a>
+        </li>
+        <li class="top3-item rank-3">
+            <a href="/star/capricorn.html">
+                <span class="top3-rank">3</span>
+                <span class="hanja glyph-star" aria-hidden="true">♑︎</span>
+                <span class="top3-body">
+                    <strong>염소자리</strong>
+                    <small>하늘의 배치가 새로운 시작을 응원하는 하루예요.</small>
+                </span>
+            </a>
+        </li><!--pre:end--></ol>
         </section>
 
         <div class="section-head">
@@ -80,9 +110,117 @@
             <span>카드를 눌러 자세히 보기</span>
         </div>
 
-        <div class="zodiac-grid" id="star-grid" aria-live="polite"></div>
+        <div class="zodiac-grid" id="star-grid" aria-live="polite"><!--pre:start-->
+            <a class="zodiac-card" href="/star/aries.html" data-key="aries" style="animation-delay:0ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♈︎</span>
+                    <div class="zc-name">양자리</div>
+                </div>
+                <div class="zc-years">3.21 ~ 4.19 · 불</div>
+                <p class="zc-line">작은 별빛 같은 소소한 기쁨이 있는 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="rank-badge">9위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/taurus.html" data-key="taurus" style="animation-delay:35ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♉︎</span>
+                    <div class="zc-name">황소자리</div>
+                </div>
+                <div class="zc-years">4.20 ~ 5.20 · 흙</div>
+                <p class="zc-line">묵묵히 해온 일이 인정받는 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i></span><span class="sr-only">행운 지수 5점 중 5점</span><span class="rank-badge top">1위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/gemini.html" data-key="gemini" style="animation-delay:70ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♊︎</span>
+                    <div class="zc-name">쌍둥이자리</div>
+                </div>
+                <div class="zc-years">5.21 ~ 6.21 · 공기</div>
+                <p class="zc-line">밤하늘처럼 머릿속이 맑고 선명해지는 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 4점</span><span class="rank-badge">6위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/cancer.html" data-key="cancer" style="animation-delay:105ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♋︎</span>
+                    <div class="zc-name">게자리</div>
+                </div>
+                <div class="zc-years">6.22 ~ 7.22 · 물</div>
+                <p class="zc-line">행운의 별이 가까이 다가와 있는 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 4점</span><span class="rank-badge">7위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/leo.html" data-key="leo" style="animation-delay:140ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♌︎</span>
+                    <div class="zc-name">사자자리</div>
+                </div>
+                <div class="zc-years">7.23 ~ 8.22 · 불</div>
+                <p class="zc-line">화성의 기운이 강해 감정이 앞서기 쉬운 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="">★</i><i class="">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 1점</span><span class="rank-badge">12위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/virgo.html" data-key="virgo" style="animation-delay:175ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♍︎</span>
+                    <div class="zc-name">처녀자리</div>
+                </div>
+                <div class="zc-years">8.23 ~ 9.23 · 흙</div>
+                <p class="zc-line">하늘의 흐름이 잔잔해서 무난하게 지나가는 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="rank-badge">11위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/libra.html" data-key="libra" style="animation-delay:210ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♎︎</span>
+                    <div class="zc-name">천칭자리</div>
+                </div>
+                <div class="zc-years">9.24 ~ 10.22 · 공기</div>
+                <p class="zc-line">기다리던 흐름이 드디어 순조롭게 움직이기 시작해요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i></span><span class="sr-only">행운 지수 5점 중 5점</span><span class="rank-badge top">2위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/scorpio.html" data-key="scorpio" style="animation-delay:245ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♏︎</span>
+                    <div class="zc-name">전갈자리</div>
+                </div>
+                <div class="zc-years">10.23 ~ 11.22 · 물</div>
+                <p class="zc-line">빛나는 순간이 한 번쯤 꼭 찾아오는 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 4점</span><span class="rank-badge">5위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/sagittarius.html" data-key="sagittarius" style="animation-delay:280ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♐︎</span>
+                    <div class="zc-name">사수자리</div>
+                </div>
+                <div class="zc-years">11.23 ~ 12.24 · 불</div>
+                <p class="zc-line">우주의 흐름이 당신 쪽으로 기울어 있는 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i></span><span class="sr-only">행운 지수 5점 중 5점</span><span class="rank-badge">4위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/capricorn.html" data-key="capricorn" style="animation-delay:315ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♑︎</span>
+                    <div class="zc-name">염소자리</div>
+                </div>
+                <div class="zc-years">12.25 ~ 1.19 · 흙</div>
+                <p class="zc-line">하늘의 배치가 새로운 시작을 응원하는 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i></span><span class="sr-only">행운 지수 5점 중 5점</span><span class="rank-badge top">3위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/aquarius.html" data-key="aquarius" style="animation-delay:350ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♒︎</span>
+                    <div class="zc-name">물병자리</div>
+                </div>
+                <div class="zc-years">1.20 ~ 2.18 · 공기</div>
+                <p class="zc-line">익숙한 자리에서 편안함을 느끼는 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="rank-badge">8위</span></div>
+            </a>
+            <a class="zodiac-card" href="/star/pisces.html" data-key="pisces" style="animation-delay:385ms">
+                <div class="zc-top">
+                    <span class="hanja glyph-star" aria-hidden="true">♓︎</span>
+                    <div class="zc-name">물고기자리</div>
+                </div>
+                <div class="zc-years">2.19 ~ 3.20 · 물</div>
+                <p class="zc-line">보이지 않는 곳에서 조용히 운이 쌓이는 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="rank-badge">10위</span></div>
+            </a><!--pre:end--></div>
 
-        <a class="promo" href="./">
+        <a class="promo" href="/">
             <div>
                 <h3>띠별 운세도 함께 확인해 보세요</h3>
                 <p>12띠 오늘의 운세와 행운 아이템까지.</p>
@@ -99,11 +237,11 @@
     <footer class="footer">
         <p>운세는 재미로만 봐 주세요</p>
         <p>매일 자정(한국시간) 새로운 운세로 바뀝니다</p>
-        <p><a href="privacy.html">개인정보처리방침</a></p>
+        <p><a href="/about.html">사이트 소개</a> · <a href="/privacy.html">개인정보처리방침</a></p>
     </footer>
 
-    <script src="config.js"></script>
-    <script src="common.js"></script>
-    <script src="star.js"></script>
+    <script src="/config.js"></script>
+    <script src="/common.js"></script>
+    <script src="/star.js"></script>
 </body>
 </html>

@@ -143,7 +143,7 @@ FOOT = '''
     <footer class="footer">
         <p>꿈 해몽은 전해 내려오는 풀이를 재미로 정리한 거예요</p>
         <p>건강·돈·관계의 중요한 결정은 꿈보다 현실의 정보로 내려 주세요</p>
-        <p><a href="/privacy.html">개인정보처리방침</a></p>
+        <p><a href="/about.html">사이트 소개</a> · <a href="/privacy.html">개인정보처리방침</a></p>
     </footer>
 
     <script src="/config.js"></script>
@@ -197,8 +197,8 @@ def dream_page(slug, categories, order, meta, entries, today):
                 'inLanguage': 'ko-KR',
                 'mainEntityOfPage': url,
                 'image': f'{SITE}/fortune-image.png',
-                'datePublished': today,
-                'dateModified': today,
+                'datePublished': meta[slug].get('published', today),
+                'dateModified': meta[slug].get('published', today),
                 'author': {'@type': 'Organization', 'name': '홍스팟 운세', 'url': SITE + '/'},
                 'publisher': {'@type': 'Organization', 'name': '홍스팟 운세', 'url': SITE + '/'},
             },
@@ -217,7 +217,7 @@ def dream_page(slug, categories, order, meta, entries, today):
     toc = [('meaning', '전통 해몽'), ('psychology', '심리로 보면'), ('cases', '상황별 해몽')]
     if d.get('taemong'):
         toc.append(('taemong', '태몽으로 보면'))
-    toc.append(('lucky', '행운 번호'))
+    toc.append(('lucky', '로또 번호'))
 
     cases_html = ''.join(f'''
                 <article class="dream-case" id="case-{i + 1}">
@@ -278,8 +278,8 @@ def dream_page(slug, categories, order, meta, entries, today):
 
             <section class="dream-lucky" id="lucky" aria-labelledby="h-lucky">
                 <div class="dream-lucky-head">
-                    <h2 id="h-lucky">{e(d['title'])} 행운 번호</h2>
-                    <span>꿈마다 정해진 재미용 번호</span>
+                    <h2 id="h-lucky">{e(d['title'])} 로또 번호</h2>
+                    <span>꿈마다 정해진 재미용 행운 번호</span>
                 </div>
                 <div class="balls">{''.join(f'<span class="ball {ball_class(n)}{" is-fixed" if i < 3 else ""}">{n}</span>' for i, n in enumerate(nums))}</div>
                 <a class="btn btn-ghost btn-sm" href="{lotto_href}">테두리 친 3개를 넣고 로또 번호 뽑기 →</a>

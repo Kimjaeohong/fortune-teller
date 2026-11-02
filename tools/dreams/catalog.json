@@ -112,6 +112,8 @@
     {"slug": "late", "title": "늦는 꿈", "category": "action", "group": "g4", "note": "지각하는 꿈, 약속에 늦는 꿈"},
     {"slug": "lost", "title": "길 잃는 꿈", "category": "action", "group": "g4", "note": ""},
     {"slug": "fight", "title": "싸우는 꿈", "category": "action", "group": "g4", "note": "말다툼·몸싸움"},
+    {"slug": "running", "title": "뛰는 꿈", "category": "action", "group": "g9", "note": "달리기·뛰어가는 꿈. 뛰려는데 안 뛰어지는 꿈은 cant-run", "published": "2026-11-02"},
+    {"slug": "quarrel", "title": "말다툼하는 꿈", "category": "action", "group": "g9", "note": "말로 다투는 꿈. 몸싸움은 fight", "published": "2026-11-02"},
     {"slug": "crying", "title": "우는 꿈", "category": "action", "group": "g4", "note": "펑펑 우는 꿈"},
     {"slug": "laughing", "title": "웃는 꿈", "category": "action", "group": "g4", "note": ""},
     {"slug": "moving", "title": "이사하는 꿈", "category": "action", "group": "g4", "note": ""},

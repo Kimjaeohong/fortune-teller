@@ -3,6 +3,11 @@
 //  data/invest/YYYY-MM-DD.json → 12띠 카드 + 순위 + 선택한 띠의 상세
 // ─────────────────────────────────────────────
 
+(function redirectOldUrl() {
+    const key = new URLSearchParams(location.search).get('zodiac');
+    if (key && ZODIAC_ORDER.includes(key)) location.replace(`/invest/${key}.html`);
+})();
+
 const todayStr = kstDateString();
 const todayInfo = formatKoreanDate(todayStr);
 
@@ -31,7 +36,7 @@ async function loadInvest() {
         candidates.push(`${y - back}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
     }
     for (const date of candidates) {
-        const json = await fetchJson(`data/invest/${date}.json`);
+        const json = await fetchJson(`/data/invest/${date}.json`);
         if (json && json.fortunes) {
             const result = {
                 date, requestedDate: todayStr, isFallback: date !== todayStr,
@@ -88,11 +93,22 @@ function showNotice(html) {
 function renderCards() {
     const grid = document.getElementById('invest-grid');
     const mine = getMyZodiac();
+
+    // 생성기가 미리 넣어 둔 카드가 있으면 그대로 쓰고 '내 띠' 표시만 더한다
+    if (grid.children.length) {
+        const card = mine && grid.querySelector(`.zodiac-card[data-zodiac="${mine}"]`);
+        if (card && !card.classList.contains('is-mine')) {
+            card.classList.add('is-mine');
+            card.insertAdjacentHTML('afterbegin', '<span class="mine-badge">내 띠</span>');
+        }
+        return;
+    }
+
     grid.innerHTML = ZODIAC_ORDER.map((key, i) => {
         const info = ZODIAC_INFO[key];
         const isMine = key === mine;
         return `
-            <a class="zodiac-card${isMine ? ' is-mine' : ''}" href="invest.html?zodiac=${key}"
+            <a class="zodiac-card${isMine ? ' is-mine' : ''}" href="/invest/${key}.html"
                data-zodiac="${key}" style="animation-delay:${i * 35}ms">
                 ${isMine ? '<span class="mine-badge">내 띠</span>' : ''}
                 <div class="zc-top">
@@ -132,7 +148,7 @@ function fillCards(result) {
 
     document.getElementById('top3').innerHTML = ranking.slice(0, 3).map((key, i) => `
         <li class="top3-item rank-${i + 1}">
-            <a href="invest.html?zodiac=${key}" data-zodiac="${key}">
+            <a href="/invest/${key}.html">
                 <span class="top3-rank">${i + 1}</span>
                 <span class="hanja" aria-hidden="true">${ZODIAC_INFO[key].hanja}</span>
                 <span class="top3-body">
@@ -203,7 +219,7 @@ function renderFocus(key) {
         <div class="share-row">
             <button type="button" class="btn btn-kakao" id="share-kakao">카카오톡 공유</button>
             <button type="button" class="btn btn-ghost" id="share-link">링크 복사</button>
-            <a class="btn btn-ghost" href="detail.html?zodiac=${key}">${info.name} 종합 운세 →</a>
+            <a class="btn btn-ghost" href="/zodiac/${key}.html">${info.name} 종합 운세 →</a>
         </div>`;
 
     const setMine = document.getElementById('set-mine');
@@ -213,7 +229,7 @@ function renderFocus(key) {
         renderCards(); fillCards(result); renderFocus(key); markActive(key);
     });
 
-    const url = `${CONFIG.SITE_URL}/invest.html?zodiac=${key}`;
+    const url = `${CONFIG.SITE_URL}/invest/${key}.html`;
     const summary = firstSentence(f.text);
     const title = `${info.emoji} ${info.name} 오늘의 투자운 · ${todayInfo.short}`;
     document.getElementById('share-kakao').addEventListener('click', () => shareKakao({
@@ -221,20 +237,17 @@ function renderFocus(key) {
     }));
     document.getElementById('share-link').addEventListener('click', () => shareLink({ title, text: summary, url }));
 
-    document.title = `${info.name} 오늘의 투자운 (${todayInfo.short}) | 홍스팟 운세`;
 }
 
 function markActive(key) {
     document.querySelectorAll('.zodiac-card').forEach(c => c.classList.toggle('is-active', c.dataset.zodiac === key));
 }
 
-function selectZodiac(key, { scroll = true, push = true } = {}) {
+function selectZodiac(key) {
     if (!ZODIAC_ORDER.includes(key)) return;
     state.key = key;
     renderFocus(key);
     markActive(key);
-    if (push) history.replaceState(null, '', `?zodiac=${key}`);
-    if (scroll) setTimeout(() => document.getElementById('focus').scrollIntoView({ behavior: 'smooth', block: 'start' }), 40);
 }
 
 /* ---------- 로딩 ---------- */
@@ -253,21 +266,22 @@ async function loadData() {
         showNotice(result.isFallback
             ? `오늘 데이터 준비 중이라 ${formatKoreanDate(result.date).short} 투자운을 대신 보여드려요.`
             : '');
-        const fromUrl = new URLSearchParams(location.search).get('zodiac');
-        const key = ZODIAC_ORDER.includes(fromUrl) ? fromUrl : getMyZodiac();
-        if (key) selectZodiac(key, { scroll: false, push: false });
+        // 띠별 페이지(/invest/rat.html)는 그 띠, 목록 페이지는 저장해 둔 내 띠를 보여 준다
+        const key = window.INVEST_KEY || getMyZodiac();
+        if (key) selectZodiac(key);
     } catch (err) {
         console.error('투자운 데이터 로딩 실패:', err);
         document.querySelectorAll('.zc-line').forEach(el => { el.textContent = '투자운을 불러오지 못했어요.'; });
         document.querySelectorAll('.zc-foot, .zc-stance').forEach(el => { el.innerHTML = ''; });
         document.getElementById('top3').innerHTML = '';
         showNotice('네트워크가 불안정해요. <button type="button" class="btn btn-ghost" id="retry" style="margin-left:6px;padding:4px 12px">다시 시도</button>');
-        document.getElementById('retry').addEventListener('click', () => { renderCards(); loadData(); });
+        document.getElementById('retry').addEventListener('click', () => { document.getElementById('invest-grid').innerHTML = ''; renderCards(); loadData(); });
     }
 }
 
 function setupFinder() {
     const form = document.getElementById('finder');
+    if (!form) return;      // 띠별 페이지에는 찾기 칸이 없음
     const input = document.getElementById('birth-year');
     form.addEventListener('submit', e => {
         e.preventDefault();
@@ -279,17 +293,7 @@ function setupFinder() {
         }
         const key = zodiacFromYear(year);
         setMyZodiac(key);
-        if (state.result) { renderCards(); fillCards(state.result); }
-        selectZodiac(key);
-    });
-}
-
-function setupCardClicks() {
-    document.body.addEventListener('click', e => {
-        const a = e.target.closest('a[data-zodiac]');
-        if (!a || !state.result) return;
-        e.preventDefault();
-        selectZodiac(a.dataset.zodiac);
+        location.href = `/invest/${key}.html`;
     });
 }
 
@@ -297,6 +301,5 @@ document.addEventListener('DOMContentLoaded', () => {
     renderDate();
     renderCards();
     setupFinder();
-    setupCardClicks();
     loadData();
 });

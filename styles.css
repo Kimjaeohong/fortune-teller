@@ -2010,3 +2010,29 @@ img { max-width: 100%; display: block; }
     .ilju-grid .dream-card small { display: none; }
 }
 .wd-date small { display: block; font-size: .68rem; color: var(--muted); }
+
+/* ── 날짜별 운세 · 2027년 운세 ───────────────────── */
+.daily-list { margin: 18px 0 8px; }
+.daily-item { scroll-margin-top: 16px; }
+.daily-item h2 a { color: inherit; text-decoration: none; }
+.daily-item h2 a:hover { color: var(--gold-bright); }
+.daily-item h2 small { margin-left: 8px; font-size: .78rem; font-weight: 500; color: var(--muted); }
+.daily-sub { margin-top: 8px; font-size: .92rem; }
+.daily-sub b { margin-right: 6px; color: var(--gold); font-weight: 600; }
+.daily-lucky { margin-top: 10px; font-size: .85rem; color: var(--muted); }
+.daily-balls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 12px; }
+.daily-balls > span { font-size: .82rem; color: var(--gold); font-weight: 600; }
+.daily-balls .balls { margin: 0; }
+.daily-rank { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.daily-rank a { font-weight: 600; color: var(--gold-bright); text-decoration: none; }
+.daily-rank small { display: block; margin-top: 2px; line-height: 1.5; }
+.y27-list { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.y27-list li { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 12px 14px; border-radius: 12px; background: rgba(255, 255, 255, 0.03); line-height: 1.65; }
+.y27-list b { color: var(--gold); font-weight: 600; }
+.y27-list a { color: var(--gold-bright); }
+.dream-section + .fortune-list { margin-top: 18px; }
+.fortune-list + .dream-section { margin-top: 26px; }
+.dream-faq h3 { margin: 0 0 6px; font-size: 1rem; }
+@media (max-width: 480px) {
+    .y27-list li { grid-template-columns: 1fr; gap: 4px; }
+}

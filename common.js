@@ -2,6 +2,20 @@
 //  공통 유틸: 날짜(한국시간), 데이터 로딩, 점수, 공유
 // ─────────────────────────────────────────────
 
+/* ---------- 방문 통계 (config.js 의 GA_ID 를 채우면 켜짐) ---------- */
+
+(function loadAnalytics() {
+    if (typeof CONFIG === 'undefined' || !CONFIG.GA_ID) return;
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${CONFIG.GA_ID}`;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', CONFIG.GA_ID);
+})();
+
 /* ---------- 날짜 (항상 한국시간 기준) ---------- */
 
 function kstDateString(date = new Date()) {
@@ -55,25 +69,25 @@ function starDateRange(key) {
 const FORTUNE_KINDS = {
     zodiac: {
         label: '띠', param: 'zodiac', order: ZODIAC_ORDER,
-        listPage: './', detailPage: 'detail.html', storageKey: 'fortune:my-zodiac',
+        listPage: '/', detailPath: k => `/zodiac/${k}.html`, storageKey: 'fortune:my-zodiac',
         name: k => ZODIAC_INFO[k].name,
         glyph: k => ZODIAC_INFO[k].hanja,
         emoji: k => ZODIAC_INFO[k].emoji,
         sub: (k, year) => `${yearsForZodiac(k, year).join(' · ')}년생`,
         meta: () => '',
         headline: k => `${ZODIAC_INFO[k].name} 오늘의 운세`,
-        shareUrl: k => `${CONFIG.SITE_URL}/detail.html?zodiac=${k}`
+        shareUrl: k => `${CONFIG.SITE_URL}/zodiac/${k}.html`
     },
     star: {
         label: '별자리', param: 'sign', order: STAR_ORDER,
-        listPage: 'star.html', detailPage: 'star-detail.html', storageKey: 'fortune:my-star',
+        listPage: '/star.html', detailPath: k => `/star/${k}.html`, storageKey: 'fortune:my-star',
         name: k => STAR_INFO[k].name,
         glyph: k => STAR_INFO[k].symbol,
         emoji: () => '✨',
         sub: k => starDateRange(k),
         meta: k => `${STAR_INFO[k].element}의 별자리 · 수호성 ${STAR_INFO[k].planet}`,
         headline: k => `${STAR_INFO[k].name} 오늘의 운세`,
-        shareUrl: k => `${CONFIG.SITE_URL}/star-detail.html?sign=${k}`
+        shareUrl: k => `${CONFIG.SITE_URL}/star/${k}.html`
     }
 };
 
@@ -189,7 +203,7 @@ async function fetchJson(url) {
 }
 
 /** 1순위: 사이트에 함께 배포된 {base}YYYY-MM-DD.json (없으면 최근 몇 해 같은 월·일) */
-async function loadFromJson(today, base = 'data/') {
+async function loadFromJson(today, base = '/data/') {
     const [y, m, d] = today.split('-').map(Number);
     const candidates = [today];
     for (let back = 1; back <= 3; back++) {
@@ -233,7 +247,7 @@ async function loadTodayFortunes(kind = 'zodiac') {
     const cached = readCache(cacheKey);
     if (cached) return cached;
 
-    const base = kind === 'star' ? 'data/star/' : 'data/';
+    const base = kind === 'star' ? '/data/star/' : '/data/';
     let found = null;
     try {
         found = await loadFromJson(today, base);

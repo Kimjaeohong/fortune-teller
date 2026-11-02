@@ -16,10 +16,10 @@ const CATEGORY_COLORS = {
     relationship: '#e08a7a'
 };
 
-const detailUrl = key => `${KIND.detailPage}?${KIND.param}=${key}`;
+const detailUrl = key => KIND.detailPath(key);
 
-function getKeyFromURL() {
-    const key = new URLSearchParams(location.search).get(KIND.param);
+function getKeyFromPage() {
+    const key = window.FORTUNE_KEY;
     return key && KIND.order.includes(key) ? key : null;
 }
 
@@ -51,7 +51,7 @@ function renderHero(key) {
         <h1>${KIND.headline(key)}</h1>
         <p class="meta">${todayInfo.full}</p>
         <p class="years">${KIND.sub(key, todayInfo.year)}${meta ? ` · ${meta}` : ''}</p>
-        <div class="score" id="hero-score"><span class="skeleton skeleton-line" style="width:120px"></span></div>
+        <div class="score" id="hero-score">${document.getElementById('hero-score')?.innerHTML || '<span class="skeleton skeleton-line" style="width:120px"></span>'}</div>
         ${isMine ? '' : `<div style="margin-top:14px"><button type="button" class="btn btn-ghost" id="set-mine" style="padding:7px 14px;font-size:.85rem">내 ${KIND.label}로 설정</button></div>`}`;
 
     const btn = document.getElementById('set-mine');
@@ -121,7 +121,7 @@ function renderFortune(key, result) {
         ? `<div class="notice" style="margin:0 0 14px">오늘 데이터 준비 중이라 ${formatKoreanDate(result.date).short} 운세를 대신 보여드려요.</div>`
         : '';
     const investLink = KIND_ID === 'zodiac'
-        ? `<a class="promo promo--tight" href="invest.html?zodiac=${key}">
+        ? `<a class="promo promo--tight" href="/invest/${key}.html">
                 <div>
                     <h3>${KIND.name(key)} 오늘의 투자운 <span class="new-tag">NEW</span></h3>
                     <p>매매 분위기 · 행운의 섹터 · 좋은 시간대 · 오늘의 팁과 주의 포인트</p>
@@ -180,7 +180,7 @@ function setupShare(key, map) {
 }
 
 async function load(key) {
-    renderSkeleton();
+    if (!document.getElementById('fortune-content').children.length) renderSkeleton();
     try {
         const result = await loadTodayFortunes(KIND_ID);
         renderFortune(key, result);
@@ -191,14 +191,12 @@ async function load(key) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const key = getKeyFromURL();
+    const key = getKeyFromPage();
     if (!key) {
         renderInvalid();
         renderOthers(null);
         return;
     }
-    document.title = `${KIND.headline(key)} (${todayInfo.short}) | 홍스팟 운세`;
-
     renderSiblings(key);
     renderHero(key);
     renderOthers(key);

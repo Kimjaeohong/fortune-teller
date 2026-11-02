@@ -7,6 +7,7 @@
     <meta name="description" content="매일 자정(한국시간) 업데이트되는 12띠 오늘의 운세. 종합운·재물운·일·건강·인연운을 무료로 확인하세요.">
     <meta name="keywords" content="오늘의 운세, 띠별 운세, 12띠 운세, 무료 운세, 타로">
     <meta name="theme-color" content="#0c0f1d">
+    <link rel="alternate" type="application/rss+xml" title="홍스팟 운세" href="https://fortune.hongspot.com/feed.xml">
     <meta name="naver-site-verification" content="f40baf7b1a024793f3cf6255a9e38bc2b20d97bb" />
     <link rel="canonical" href="https://fortune.hongspot.com/">
 
@@ -25,7 +26,7 @@
     <link rel="preconnect" href="https://docs.google.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles.css">
 
     <!-- Google AdSense 자동 광고 -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2438640431184534" crossorigin="anonymous"></script>
@@ -35,21 +36,21 @@
 <body>
     <div class="page">
         <header class="topbar">
-            <a href="./" class="brand"><span class="brand-mark">福</span><span class="brand-text">홍스팟 운세</span></a>
+            <a href="/" class="brand"><span class="brand-mark">福</span><span class="brand-text">홍스팟 운세</span></a>
             <nav class="nav" aria-label="주요 메뉴">
-                <a href="./" aria-current="page">띠별 운세</a>
-                <a href="ilgan.html">사주</a>
-                <a href="invest.html">투자운</a>
-                <a href="star.html">별자리</a>
-                <a href="dream/">꿈해몽</a>
-                <a href="name.html">궁합</a>
-                <a href="tarot.html">타로</a>
-                <a href="lotto.html">로또</a>
+                <a href="/" aria-current="page">띠별 운세</a>
+                <a href="/ilgan.html">사주</a>
+                <a href="/invest.html">투자운</a>
+                <a href="/star.html">별자리</a>
+                <a href="/dream/">꿈해몽</a>
+                <a href="/name.html">궁합</a>
+                <a href="/tarot.html">타로</a>
+                <a href="/lotto.html">로또</a>
             </nav>
         </header>
 
         <section class="hero">
-            <div class="eyebrow" id="today-date">오늘의 운세</div>
+            <div class="eyebrow" id="today-date">2026년 11월 2일 월요일</div>
             <h1>오늘, <em>나의 띠</em>에게<br>찾아온 이야기</h1>
             <p class="lead">재미로 보는 하루 운세 · 매일 자정 업데이트</p>
 
@@ -69,42 +70,160 @@
             <span>카드를 눌러 자세히 보기</span>
         </div>
 
-        <div class="zodiac-grid" id="zodiac-grid" aria-live="polite"></div>
+        <div class="zodiac-grid" id="zodiac-grid" aria-live="polite"><!--pre:start-->
+            <a class="zodiac-card" href="/zodiac/rat.html" data-zodiac="rat" style="animation-delay:0ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">子</span>
+                    <div class="zc-name">쥐띠<span class="zc-emoji" aria-hidden="true">🐭</span></div>
+                </div>
+                <div class="zc-years">60 · 72 · 84 · 96 · 08 · 20년생</div>
+                <p class="zc-line">기분 좋은 우연이 겹치면서 하루가 가볍게 흘러가요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 4점</span><span class="stars-label">좋음</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/ox.html" data-zodiac="ox" style="animation-delay:35ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">丑</span>
+                    <div class="zc-name">소띠<span class="zc-emoji" aria-hidden="true">🐮</span></div>
+                </div>
+                <div class="zc-years">61 · 73 · 85 · 97 · 09 · 21년생</div>
+                <p class="zc-line">특별한 일은 없어도 마음은 편안한 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="stars-label">무난</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/tiger.html" data-zodiac="tiger" style="animation-delay:70ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">寅</span>
+                    <div class="zc-name">호랑이띠<span class="zc-emoji" aria-hidden="true">🐯</span></div>
+                </div>
+                <div class="zc-years">62 · 74 · 86 · 98 · 10 · 22년생</div>
+                <p class="zc-line">미뤄둔 일을 하나 끝내면 마음이 가벼워지는 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="stars-label">무난</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/rabbit.html" data-zodiac="rabbit" style="animation-delay:105ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">卯</span>
+                    <div class="zc-name">토끼띠<span class="zc-emoji" aria-hidden="true">🐰</span></div>
+                </div>
+                <div class="zc-years">63 · 75 · 87 · 99 · 11 · 23년생</div>
+                <p class="zc-line">새로운 기회의 문이 살짝 열리는 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 4점</span><span class="stars-label">좋음</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/dragon.html" data-zodiac="dragon" style="animation-delay:140ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">辰</span>
+                    <div class="zc-name">용띠<span class="zc-emoji" aria-hidden="true">🐲</span></div>
+                </div>
+                <div class="zc-years">64 · 76 · 88 · 00 · 12 · 24년생</div>
+                <p class="zc-line">한 해를 마무리할 준비를 시작하기 좋은 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="stars-label">무난</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/snake.html" data-zodiac="snake" style="animation-delay:175ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">巳</span>
+                    <div class="zc-name">뱀띠<span class="zc-emoji" aria-hidden="true">🐍</span></div>
+                </div>
+                <div class="zc-years">65 · 77 · 89 · 01 · 13 · 25년생</div>
+                <p class="zc-line">생각지 못한 도움의 손길이 다가오는 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i></span><span class="sr-only">행운 지수 5점 중 5점</span><span class="stars-label">아주 좋음</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/horse.html" data-zodiac="horse" style="animation-delay:210ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">午</span>
+                    <div class="zc-name">말띠<span class="zc-emoji" aria-hidden="true">🐴</span></div>
+                </div>
+                <div class="zc-years">66 · 78 · 90 · 02 · 14 · 26년생</div>
+                <p class="zc-line">감정이 앞서기 쉬운 날이라 말하기 전 한 번 더 생각해 보세요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 2점</span><span class="stars-label">신중하게</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/sheep.html" data-zodiac="sheep" style="animation-delay:245ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">未</span>
+                    <div class="zc-name">양띠<span class="zc-emoji" aria-hidden="true">🐑</span></div>
+                </div>
+                <div class="zc-years">55 · 67 · 79 · 91 · 03 · 15년생</div>
+                <p class="zc-line">작은 정리가 하루의 분위기를 바꿔 주는 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="stars-label">무난</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/monkey.html" data-zodiac="monkey" style="animation-delay:280ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">申</span>
+                    <div class="zc-name">원숭이띠<span class="zc-emoji" aria-hidden="true">🐵</span></div>
+                </div>
+                <div class="zc-years">56 · 68 · 80 · 92 · 04 · 16년생</div>
+                <p class="zc-line">자신감이 올라와서 무엇이든 해볼 만한 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 4점</span><span class="stars-label">좋음</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/rooster.html" data-zodiac="rooster" style="animation-delay:315ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">酉</span>
+                    <div class="zc-name">닭띠<span class="zc-emoji" aria-hidden="true">🐔</span></div>
+                </div>
+                <div class="zc-years">57 · 69 · 81 · 93 · 05 · 17년생</div>
+                <p class="zc-line">어제와 비슷해 보여도 작은 변화가 숨어 있는 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="stars-label">무난</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/dog.html" data-zodiac="dog" style="animation-delay:350ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">戌</span>
+                    <div class="zc-name">개띠<span class="zc-emoji" aria-hidden="true">🐶</span></div>
+                </div>
+                <div class="zc-years">58 · 70 · 82 · 94 · 06 · 18년생</div>
+                <p class="zc-line">하는 일마다 순조롭게 맞아떨어지는 날이에요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="on">★</i></span><span class="sr-only">행운 지수 5점 중 5점</span><span class="stars-label">아주 좋음</span></div>
+            </a>
+            <a class="zodiac-card" href="/zodiac/pig.html" data-zodiac="pig" style="animation-delay:385ms">
+                <div class="zc-top">
+                    <span class="hanja" aria-hidden="true">亥</span>
+                    <div class="zc-name">돼지띠<span class="zc-emoji" aria-hidden="true">🐷</span></div>
+                </div>
+                <div class="zc-years">59 · 71 · 83 · 95 · 07 · 19년생</div>
+                <p class="zc-line">쌀쌀해진 날씨처럼 차분함이 필요한 하루예요.</p>
+                <div class="zc-foot"><span class="stars" aria-hidden="true"><i class="on">★</i><i class="on">★</i><i class="on">★</i><i class="">★</i><i class="">★</i></span><span class="sr-only">행운 지수 5점 중 3점</span><span class="stars-label">무난</span></div>
+            </a><!--pre:end--></div>
 
         <section class="more" aria-labelledby="more-title">
             <div class="section-head"><h2 id="more-title">더 둘러보기</h2></div>
             <div class="more-grid more-grid--6">
-                <a class="more-tile more-tile--new" href="invest.html">
+                <a class="more-tile more-tile--new" href="/2027/">
+                    <span class="more-icon" aria-hidden="true">未</span>
+                    <strong>2027년 띠별 운세 <span class="new-tag">NEW</span></strong>
+                    <small>정미년 12띠 신년운세 · 삼재 띠 · 출생연도별 흐름</small>
+                </a>
+                <a class="more-tile more-tile--new" href="/daily/">
+                    <span class="more-icon" aria-hidden="true">◈</span>
+                    <strong>날짜별 운세 <span class="new-tag">NEW</span></strong>
+                    <small>12띠 운세와 띠별 로또 번호 모아보기</small>
+                </a>
+                <a class="more-tile" href="/invest.html">
                     <span class="more-icon" aria-hidden="true">₩</span>
                     <strong>오늘의 투자운 <span class="new-tag">NEW</span></strong>
                     <small>띠별 매매 분위기 · 행운의 섹터 · 좋은 시간대</small>
                 </a>
-                <a class="more-tile" href="ilgan.html">
+                <a class="more-tile" href="/ilgan.html">
                     <span class="more-icon" aria-hidden="true">☯</span>
                     <strong>사주 일진 <span class="new-tag">NEW</span></strong>
                     <small>생년월일로 보는 내 일주 오늘의 운세</small>
                 </a>
-                <a class="more-tile" href="dream/">
+                <a class="more-tile" href="/dream/">
                     <span class="more-icon" aria-hidden="true">☁</span>
                     <strong>꿈해몽 사전 <span class="new-tag">NEW</span></strong>
-                    <small>돼지꿈·이빨 빠지는 꿈까지 189가지</small>
+                    <small>돼지꿈·이빨 빠지는 꿈까지 191가지</small>
                 </a>
-                <a class="more-tile" href="star.html">
+                <a class="more-tile" href="/star.html">
                     <span class="more-icon" aria-hidden="true">✦</span>
                     <strong>별자리 운세</strong>
                     <small>오늘의 별자리 순위와 12별자리 운세</small>
                 </a>
-                <a class="more-tile" href="name.html">
+                <a class="more-tile" href="/name.html">
                     <span class="more-icon" aria-hidden="true">♥</span>
                     <strong>이름 궁합</strong>
                     <small>어릴 때 공책에 하던 그 획수 궁합</small>
                 </a>
-                <a class="more-tile" href="tarot.html">
+                <a class="more-tile" href="/tarot.html">
                     <span class="more-icon" aria-hidden="true">☾</span>
                     <strong>오늘의 타로</strong>
                     <small>연애·재물·양자택일까지 8가지 스프레드</small>
                 </a>
-                <a class="more-tile" href="lotto.html">
+                <a class="more-tile" href="/lotto.html">
                     <span class="more-icon" aria-hidden="true">◎</span>
                     <strong>행운의 로또 번호</strong>
                     <small>내 띠·별자리 운세로 뽑는 5게임</small>
@@ -121,11 +240,11 @@
     <footer class="footer">
         <p>운세는 재미로만 봐 주세요</p>
         <p>매일 자정(한국시간) 새로운 운세로 바뀝니다</p>
-        <p><a href="privacy.html">개인정보처리방침</a></p>
+        <p><a href="/about.html">사이트 소개</a> · <a href="/privacy.html">개인정보처리방침</a></p>
     </footer>
 
-    <script src="config.js"></script>
-    <script src="common.js"></script>
-    <script src="script.js"></script>
+    <script src="/config.js"></script>
+    <script src="/common.js"></script>
+    <script src="/script.js"></script>
 </body>
 </html>

@@ -13,8 +13,13 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 | `ilgan/<key>.html` · `ilgan-data.js` | 일간 10가지 소개 페이지와 문장 데이터 (생성기가 만듦, 직접 고치지 말 것) |
 | `invest.html` / `invest.js` | 오늘의 투자운 — 12띠 카드, 순위, 띠별 상세(매매 분위기·행운의 섹터·시간대·팁·주의) |
 | `star.html` / `star.js` | 별자리 목록 — 오늘의 순위, 생일로 내 별자리 찾기 |
-| `detail.html` / `star-detail.html` / `detail.js` | 띠·별자리 상세 (공용 스크립트) — 5개 카테고리, 행운 아이템 |
-| `dream/index.html` · `dream/<slug>.html` | 꿈해몽 사전 — 메인(검색·분류별 목록) + 꿈 하나당 정적 페이지 189개 (생성기가 만듦, 직접 고치지 말 것) |
+| `zodiac/*.html` / `star/*.html` / `detail.js` | 띠·별자리 상세 (생성기가 만듦) — 5개 카테고리, 행운 아이템 |
+| `invest/*.html` | 띠별 투자운 (생성기가 만듦) |
+| `daily/*.html` | 날짜별 12띠 운세·띠별 로또 번호 (생성기가 만듦) |
+| `2027/*.html` | 2027년 띠별 운세 허브 + 12띠 (생성기가 만듦) |
+| `about.html` | 사이트 소개 |
+| `feed.xml` | RSS (생성기가 만듦) |
+| `dream/index.html` · `dream/<slug>.html` | 꿈해몽 사전 — 메인(검색·분류별 목록) + 꿈 하나당 정적 페이지 191개 (생성기가 만듦, 직접 고치지 말 것) |
 | `dream/dream.js` | 꿈해몽 검색·공유 스크립트 |
 | `tarot.html` / `tarot.js` / `tarot-data.js` | 타로 (78장, 8가지 스프레드) |
 | `name.html` / `name.js` | 이름 궁합 — 번갈아 쓰기·획수·숫자 피라미드, 양방향 결과 |
@@ -36,6 +41,28 @@ GitHub Pages로 호스팅하고, 운세 데이터는 구글 스프레드시트�
 | `tools/build_invest.py` / `tools/invest_phrases.py` | 투자운 데이터 생성 (띠 데이터의 재물운 점수와 연동, 휴장일 달력 포함) |
 | `generate_fortune.py` | (선택) Claude API로 특정 날짜를 AI 문장으로 생성 |
 | `.github/workflows/daily-fortune.yml` | 운세 생성 (수동 실행, 예약 실행은 꺼져 있음) |
+
+## 매일 자동으로 돌아가는 것
+
+`.github/workflows/daily-pages.yml` 이 매일 자정(한국시간)에 아래를 실행합니다. API 비용은 없습니다.
+
+1. `tools/build_daily.py` — 오늘의 운세를 정적 HTML로 만듦
+   - `zodiac/<띠>.html`, `star/<별자리>.html`, `invest/<띠>.html` (12개씩)
+   - `daily/<날짜>.html` 오늘~모레, 30일 지나면 자동 삭제 + `daily/index.html`
+   - `index.html`, `star.html`, `invest.html` 의 카드 (`<!--pre:start-->` 구간)
+2. `tools/site_index.py` — 본문이 바뀐 페이지만 사이트맵 수정일 갱신, `feed.xml` 새로 쓰기
+3. `tools/indexnow.py` — 바뀐 주소를 네이버·빙에 알림 (결과는 `tools/indexnow_last.json`)
+
+`detail.html`, `star-detail.html` 은 옛 주소를 새 주소로 넘겨 주는 페이지이고, 상세 페이지의 틀은 `tools/tpl_detail.html`, `tools/tpl_star_detail.html` 입니다.
+`tools/site_common.py` 의 행운 아이템·로또 번호 계산은 `common.js`, `lotto.js` 와 같아야 합니다.
+
+모든 주소를 다시 알리고 싶으면 `tools/indexnow-all.txt` 를 고쳐서 올리면 됩니다.
+
+방문 통계는 `config.js` 의 `GA_ID` 에 측정 ID를 넣으면 켜집니다. 켤 때 `privacy.html` 의 외부 서비스 목록에 Google Analytics 도 추가하세요.
+
+### 2027년 운세 고치기
+
+본문은 `tools/y2027/data_*.json`, 고친 뒤 `python3 tools/build_2027.py` 를 돌리면 `2027/*.html` 과 사이트맵 구간이 다시 만들어져요.
 
 ## 데이터 흐름
 
