@@ -23,12 +23,13 @@ LIMIT = 10000
 
 def post(endpoint, payload):
     req = urllib.request.Request(endpoint, data=json.dumps(payload).encode('utf-8'), method='POST',
-                                 headers={'Content-Type': 'application/json; charset=utf-8'})
+                                 headers={'Content-Type': 'application/json; charset=utf-8',
+                                          'User-Agent': 'hongspot-fortune-indexnow/1.0'})
     try:
         with urllib.request.urlopen(req, timeout=30) as res:
             return res.status
     except urllib.error.HTTPError as err:
-        return err.code
+        return f"{err.code} {err.read(200).decode('utf-8', 'replace')}"
     except Exception as err:
         return str(err)[:120]
 
