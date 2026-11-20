@@ -1,7 +1,7 @@
 {
 "https://fortune.hongspot.com/": {
-"hash": "3eea970fa7b78594",
-"lastmod": "2026-11-20"
+"hash": "4d9d788cff34e89f",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/2027/": {
 "hash": "2e5d2930d263771f",
@@ -60,12 +60,8 @@
 "lastmod": "2026-11-03"
 },
 "https://fortune.hongspot.com/daily/": {
-"hash": "d242f991bba90c8d",
-"lastmod": "2026-11-20"
-},
-"https://fortune.hongspot.com/daily/2026-11-07.html": {
-"hash": "f963e24c54b5bd90",
-"lastmod": "2026-11-06"
+"hash": "c86f04a7bc3c9479",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/daily/2026-11-08.html": {
 "hash": "9ad834b25e1260c7",
@@ -124,8 +120,12 @@
 "lastmod": "2026-11-20"
 },
 "https://fortune.hongspot.com/daily/2026-11-22.html": {
-"hash": "0a5f56bf0b676b6b",
-"lastmod": "2026-11-20"
+"hash": "60e0c540a75d58f6",
+"lastmod": "2026-11-21"
+},
+"https://fortune.hongspot.com/daily/2026-11-23.html": {
+"hash": "2d0a68afdf7a89de",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/dream/": {
 "hash": "4c8ef9c3288f41b2",
@@ -1184,56 +1184,56 @@
 "lastmod": "2026-10-05"
 },
 "https://fortune.hongspot.com/invest.html": {
-"hash": "00f8ffe47b72d649",
-"lastmod": "2026-11-20"
+"hash": "c4922dffbe795433",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/dog.html": {
-"hash": "0d9d6bb2c6034b26",
-"lastmod": "2026-11-20"
+"hash": "8b29fdf68fe653a0",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/dragon.html": {
-"hash": "738fd3e0a22fe692",
-"lastmod": "2026-11-20"
+"hash": "06c59b05a671c568",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/horse.html": {
-"hash": "d62109f61c3db23f",
-"lastmod": "2026-11-20"
+"hash": "07b85840f3c4504a",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/monkey.html": {
-"hash": "3c7a814afd9a56ff",
-"lastmod": "2026-11-20"
+"hash": "214ea4277ffc1b96",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/ox.html": {
-"hash": "ff916bb7eca3de78",
-"lastmod": "2026-11-20"
+"hash": "e5bc1a288d4d68d3",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/pig.html": {
-"hash": "eda0f5fe974767db",
-"lastmod": "2026-11-20"
+"hash": "ef2b6855666a4cf2",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/rabbit.html": {
-"hash": "e97837fee3b1afe9",
-"lastmod": "2026-11-20"
+"hash": "e34d6b1948ae7e45",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/rat.html": {
-"hash": "e0661c999b82d787",
-"lastmod": "2026-11-20"
+"hash": "bd664508cbc41838",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/rooster.html": {
-"hash": "0c4c137606720f43",
-"lastmod": "2026-11-20"
+"hash": "3bd1f91452c92222",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/sheep.html": {
-"hash": "b9564990a77af9a3",
-"lastmod": "2026-11-20"
+"hash": "37f6869e269ffa2c",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/snake.html": {
-"hash": "4ee5c51960263d01",
-"lastmod": "2026-11-20"
+"hash": "f878057a8f3a3833",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/invest/tiger.html": {
-"hash": "65b28cd552779b02",
-"lastmod": "2026-11-20"
+"hash": "a071de7b3b50580e",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/lotto.html": {
 "hash": "bc6ac32b7c5c2ca8",
@@ -1248,107 +1248,107 @@
 "lastmod": "2026-11-02"
 },
 "https://fortune.hongspot.com/star.html": {
-"hash": "9988e95003417a47",
-"lastmod": "2026-11-20"
+"hash": "09c352d5680a3b14",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/aquarius.html": {
-"hash": "e36204ba19c39763",
-"lastmod": "2026-11-20"
+"hash": "7aaddf3dbd41bbc4",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/aries.html": {
-"hash": "c3baa5cf61f321e5",
-"lastmod": "2026-11-20"
+"hash": "f2266d463973b12d",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/cancer.html": {
-"hash": "8030a14a3bbe25c1",
-"lastmod": "2026-11-20"
+"hash": "86d00068f1ef17a2",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/capricorn.html": {
-"hash": "00ca2f2b62ea5311",
-"lastmod": "2026-11-20"
+"hash": "16c241f05d227143",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/gemini.html": {
-"hash": "ae5283036aa99168",
-"lastmod": "2026-11-20"
+"hash": "893a8c0dbd1ae10b",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/leo.html": {
-"hash": "9f44c8b1133af71a",
-"lastmod": "2026-11-20"
+"hash": "cdc77427141142c5",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/libra.html": {
-"hash": "38d0aee4bd1d3f93",
-"lastmod": "2026-11-20"
+"hash": "36aba7f236374afc",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/pisces.html": {
-"hash": "5e31e8688404b811",
-"lastmod": "2026-11-20"
+"hash": "af4eb5a48c1abb2b",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/sagittarius.html": {
-"hash": "10bab046d3aa23bf",
-"lastmod": "2026-11-20"
+"hash": "96dacce01f61c5c1",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/scorpio.html": {
-"hash": "74031e6919369ed3",
-"lastmod": "2026-11-20"
+"hash": "bf82c2ea95a9aa48",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/taurus.html": {
-"hash": "17dc4bd1c32a5b30",
-"lastmod": "2026-11-20"
+"hash": "2a2e60e853486977",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/star/virgo.html": {
-"hash": "643520505c0a4fcd",
-"lastmod": "2026-11-20"
+"hash": "aed99dcce878e752",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/tarot.html": {
 "hash": "077f95f408477eea",
 "lastmod": "2026-11-02"
 },
 "https://fortune.hongspot.com/zodiac/dog.html": {
-"hash": "5ede96c8378040b4",
-"lastmod": "2026-11-20"
+"hash": "dbc1395b075a156f",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/dragon.html": {
-"hash": "6695920665566b8a",
-"lastmod": "2026-11-20"
+"hash": "0cc3b2c9e7161b7c",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/horse.html": {
-"hash": "5e6b0470652b9829",
-"lastmod": "2026-11-20"
+"hash": "23f64e53c292bf52",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/monkey.html": {
-"hash": "73b9cbacd17835ef",
-"lastmod": "2026-11-20"
+"hash": "13edc21bd017979a",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/ox.html": {
-"hash": "48b3af13c124aeba",
-"lastmod": "2026-11-20"
+"hash": "8d63f58645f5e746",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/pig.html": {
-"hash": "6df6a98499d40822",
-"lastmod": "2026-11-20"
+"hash": "4868af4a069dd932",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/rabbit.html": {
-"hash": "cd276f44c90019e0",
-"lastmod": "2026-11-20"
+"hash": "bcbf0494448fd928",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/rat.html": {
-"hash": "fea5744e20613dea",
-"lastmod": "2026-11-20"
+"hash": "fb78f7112e49e702",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/rooster.html": {
-"hash": "8fc80239b86ee24b",
-"lastmod": "2026-11-20"
+"hash": "60b8761b40b1eaed",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/sheep.html": {
-"hash": "2cfd40e5d82f6de7",
-"lastmod": "2026-11-20"
+"hash": "ad92b0c8c1f12b60",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/snake.html": {
-"hash": "f7ff99a3364d76d3",
-"lastmod": "2026-11-20"
+"hash": "a63cb16cac1665bc",
+"lastmod": "2026-11-21"
 },
 "https://fortune.hongspot.com/zodiac/tiger.html": {
-"hash": "2f1fdc877d813d26",
-"lastmod": "2026-11-20"
+"hash": "0e2ffc0a9d6ddf33",
+"lastmod": "2026-11-21"
 }
 }
